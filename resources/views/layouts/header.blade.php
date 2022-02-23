@@ -5,12 +5,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
     <title>{{ config('app.name', 'Laravel') }}</title>
-
     <!-- Styles -->
     <link href="{{ asset('css/app_boots.css') }}" rel="stylesheet">
-
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
 </head>
@@ -20,8 +17,8 @@
         <div class="container">
             <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
                 <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="4 4 38 38" class="bi me-2" width="40"
-                        height="40" role="img" aria-label="Bootstrap">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="4 4 38 38" class="bi me-2" width="60"
+                        height="60" role="img" aria-label="Bootstrap">
                         <path fill="#0d47a1"
                             d="M34.249,42H13.751C9.47,42,6,38.53,6,34.249V13.751C6,9.47,9.47,6,13.751,6h20.497	C38.53,6,42,9.47,42,13.751v20.497C42,38.53,38.53,42,34.249,42z" />
                         <path fill="#1565c0"
@@ -46,24 +43,45 @@
                             d="M12.608,14.87c0,0,6.833,10.327,12.578,13.82c-2.174,0.699-6.894,3.555-15.124-1.492	c2.096,2.873,5.807,8.635,14.891,8.092c3.183-0.155,5.124-1.165,6.91-1.863s3.494-0.621,4.969,2.019	c0.311-2.407,0.388-4.659-2.096-7.221c0,0,2.456-9.363-8.001-16.751c2.174,4.348,3.433,6.8,2.411,12.791	c-2.329-1.553-10.931-8.48-12.872-10.732c1.398,2.485,5.419,7.936,6.816,9.334C20.606,21.159,12.608,14.87,12.608,14.87z" />
                     </svg>
                 </a>
-
-                <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0 fs-5">
                     <li><a href="/" class="nav-link px-2 text-white">Главная</a></li>
                     @if (Auth::check() && Auth::user()->is_admin == true)
-                        <li><a href="#" class="nav-link px-2 text-warning">Заявки</a></li>
+                        <li><a href="" class="nav-link px-2 text-white">Контакты</a></li>
+                        <li><a href="" class="nav-link px-2 text-warning">Заявки</a></li>
+                        <li><a href="" class="nav-link px-2 text-warning">Панель управления</a></li>
                     @else
+                        <li><a href="" class="nav-link px-2 text-white">Контакты</a></li>
                         <li><a href="" class="nav-link px-2 text-white">Заявки</a></li>
                     @endif
-                    <li><a href="" class="nav-link px-2 text-white">Контакты</a></li>
-                    @if (Auth::check() && Auth::user()->is_admin == true)
-                        <li><a href="#" class="nav-link px-2 text-warning">Пользователи</a></li>
-                        <li><a href="#" class="nav-link px-2 text-warning">Панель управления</a></li>
-                    @endif
                 </ul>
-
                 <div class="text-end">
-                    <button type="button" class="btn btn-outline-light me-2">Войти</button>
-                    <button type="button" class="btn btn-warning">Регистрация</button>
+                    @if (Route::has('login'))
+                        @auth
+                            <nav class="navbar navbar-expand-lg navbar-dark py-0">
+                                <div class="container-fluid">
+                                    <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown"
+                                        role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        {{ Auth::user()->name }} <br>
+                                        {{ Auth::user()->email }}
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end"
+                                        aria-labelledby="navbarDropdown">
+                                        <form method="POST" action="{{ route('logout') }}">
+                                            @csrf
+                                            <a class="dropdown-item text-white" href="route('logout')"
+                                                onclick="event.preventDefault();
+                                                                                        this.closest('form').submit();">Выйти</a>
+                                        </form>
+                                    </ul>
+                                </div>
+                            </nav>
+                        @else
+                            <a type="button" class="btn btn-outline-light me-2" href="{{ route('login') }}">Войти</a>
+                            @if (Route::has('register'))
+                                <a type="button" class="btn btn-warning" href="{{ route('register') }}">Регистрация</a>
+                            @endif
+                        @endauth
+                    @endif
                 </div>
             </div>
         </div>
