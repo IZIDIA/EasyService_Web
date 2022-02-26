@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\RequestInfoController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,9 +22,12 @@ Route::get('/', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');*/
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
 Route::get('/admin', function () {
     return view('admin');
 })->middleware(['auth'])->name('admin');
 
+
+Route::get('/requests', [RequestInfoController::class, 'index'])->name('requests')->middleware('auth');
+Route::get('/requests/create', [RequestInfoController::class, 'create'])->name('requests/create')->middleware('auth');
