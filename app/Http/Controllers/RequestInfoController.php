@@ -4,19 +4,21 @@ namespace App\Http\Controllers;
 
 use App\Models\RequestInfo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RequestInfoController extends Controller
 {
-    public function index()
-    {
+	public function index()
+	{
+		if (Auth::check()) {
+			$request_infos = RequestInfo::where('user_id', Auth::user()->id)->get()->reverse();
+			return view('requests/index', ['request_infos' => $request_infos]);
+		}
+	}
 
-        $request_infos = RequestInfo::all();
-
-        return view('requests/index', ['request_infos' => $request_infos]);
-    }
-    public function create()
-    {
-        $request_info = new RequestInfo();
-        return view('requests/create', compact('request_info'));
-    }
+	public function create()
+	{
+		$request_info = new RequestInfo();
+		return view('requests/create', compact('request_info'));
+	}
 }

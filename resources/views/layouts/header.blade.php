@@ -10,6 +10,16 @@
 	<link href="{{ asset('css/app.css') }}" rel="stylesheet">
 	<!-- Scripts -->
 	<script src="{{ asset('js/app.js') }}" defer></script>
+	<style>
+		.requestlink:hover {
+			background-color: #0B5ED7;
+			-webkit-transition: background-color 200ms linear;
+			-ms-transition: background-color 200ms linear;
+			transition: background-color 200ms linear;
+		}
+
+	</style>
+
 </head>
 
 <body class="text-white" style="background-color: #2D3748">
@@ -47,7 +57,7 @@
 					<li><a href="/" class="nav-link px-2 text-white">· Главная</a></li>
 					@if (Auth::check() && Auth::user()->is_admin == true)
 						<li><a href="/contacts" class="nav-link px-2 text-white">· Контакты</a></li>
-						<li><a href="/requests" class="nav-link px-2 text-warning">· Заявки</a></li>
+						<li><a href="/requests" class="nav-link px-2 text-white">· Заявки</a></li>
 						<li><a href="/admin" class="nav-link px-2 text-warning">· Панель управления</a></li>
 					@else
 						<li><a href="/contacts" class="nav-link px-2 text-white">· Контакты</a></li>
@@ -59,7 +69,7 @@
 						@auth
 							<nav class="navbar navbar-expand-lg navbar-dark py-0">
 								<div class="container-fluid">
-									<a class="nav-link dropdown-toggle text-warning fw-bold" href="#" id="navbarDropdown" role="button"
+									<a class="nav-link dropdown-toggle text-white fw-bold" href="#" id="navbarDropdown" role="button"
 										data-bs-toggle="dropdown" aria-expanded="false">
 										{{ Auth::user()->name }} <br>
 										{{ Auth::user()->email }}

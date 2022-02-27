@@ -31,7 +31,3 @@ Route::get('/admin', function () {
 
 Route::get('/requests', [RequestInfoController::class, 'index'])->name('requests')->middleware('auth');
 Route::get('/requests/create', [RequestInfoController::class, 'create'])->name('requests/create')->middleware('auth');
-
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
