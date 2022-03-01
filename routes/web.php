@@ -29,5 +29,8 @@ Route::get('/admin', function () {
 })->middleware(['auth'])->name('admin');
 
 
-Route::get('/requests', [RequestInfoController::class, 'index'])->name('requests')->middleware('auth');
-Route::get('/requests/create', [RequestInfoController::class, 'create'])->name('requests/create')->middleware('auth');
+// Route::get('/requests', [RequestInfoController::class, 'index'])->name('requests')->middleware('auth');
+// Route::get('/requests/create', [RequestInfoController::class, 'create'])->name('requests/create')->middleware('auth');
+
+Route::get('/requests', [RequestInfoController::class, 'index'])->name('requests');
+Route::get('/requests/create', [RequestInfoController::class, 'create'])->name('requests/create');

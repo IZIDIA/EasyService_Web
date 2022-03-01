@@ -18,12 +18,27 @@
 			transition: background-color 200ms linear;
 		}
 
+		.form-control-dark {
+			color: #fff;
+			background-color: var(--bs-dark);
+			border-color: var(--bs-gray);
+		}
+
+		.form-control-dark:focus {
+			color: #fff;
+			background-color: var(--bs-dark);
+			border-color: #fff;
+			box-shadow: 0 0 0 .25rem rgba(255, 255, 255, .25);
+		}
+
 	</style>
 
 </head>
+{{-- rgb(26, 46, 82) --}}
+{{-- background-color: #2D3748 --}}
 
 <body class="text-white" style="background-color: #2D3748">
-	<header class="p-3 text-white" style="background-color: #1A202C">
+	<header class="p-3 text-white" style="background: radial-gradient(rgb(21, 46, 93), #1A202C);">
 		<div class="container">
 			<div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
 				<a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">

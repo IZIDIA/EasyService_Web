@@ -12,39 +12,43 @@
 			<div class="row g-5">
 
 				<div class="col-md-6 offset-md-3">
-					<h4 class="mb-3">Billing address</h4>
 					<form class="needs-validation" novalidate>
 						<div class="row g-3">
+
 							<div class="col-sm-6">
-								<label for="firstName" class="form-label">First name</label>
-								<input type="text" class="form-control" id="firstName" placeholder="" value="" required>
+								<label for="firstName" class="form-label">Имя</label>
+								@if (Auth::check())
+									<input type="text" class="form-control" id="firstName" value="{{ Str::before(Auth::user()->name, ' ') }}"
+										required>
+								@else
+									<input type="text" class="form-control" id="firstName" required>
+								@endif
 								<div class="invalid-feedback">
 									Valid first name is required.
 								</div>
 							</div>
 
 							<div class="col-sm-6">
-								<label for="lastName" class="form-label">Last name</label>
-								<input type="text" class="form-control" id="lastName" placeholder="" value="" required>
+								<label for="lastName" class="form-label">Фамилия</label>
+								@if (Auth::check())
+									<input type="text" class="form-control" id="lastName" value="{{ Str::after(Auth::user()->name, ' ') }}"
+										required>
+								@else
+									<input type="text" class="form-control" id="lastName" required>
+								@endif
 								<div class="invalid-feedback">
 									Valid last name is required.
 								</div>
 							</div>
 
 							<div class="col-12">
-								<label for="username" class="form-label">Username</label>
-								<div class="input-group has-validation">
-									<span class="input-group-text">@</span>
-									<input type="text" class="form-control" id="username" placeholder="Username" required>
-									<div class="invalid-feedback">
-										Your username is required.
-									</div>
-								</div>
-							</div>
+								<label for="email" class="form-label">Email</label>
+								@if (Auth::check())
+									<input type="email" class="form-control" id="email" value="{{ Auth::user()->email }}">
+								@else
+									<input type="email" class="form-control" id="email">
+								@endif
 
-							<div class="col-12">
-								<label for="email" class="form-label">Email <span class="text-muted">(Optional)</span></label>
-								<input type="email" class="form-control" id="email" placeholder="you@example.com">
 								<div class="invalid-feedback">
 									Please enter a valid email address for shipping updates.
 								</div>

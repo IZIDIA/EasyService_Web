@@ -14,6 +14,9 @@ class RequestInfoController extends Controller
 			$request_infos = RequestInfo::where('user_id', Auth::user()->id)->get()->reverse();
 			return view('requests/index', ['request_infos' => $request_infos]);
 		}
+		else{
+			return view('requests/index');
+		}
 	}
 
 	public function create()
