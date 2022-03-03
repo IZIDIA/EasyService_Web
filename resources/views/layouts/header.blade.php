@@ -31,6 +31,26 @@
 			box-shadow: 0 0 0 .25rem rgba(255, 255, 255, .25);
 		}
 
+		.login_oueter {
+			width: 360px;
+			max-width: 100%;
+		}
+
+		.logo_outer {
+			text-align: center;
+		}
+
+		.logo_outer img {
+			width: 120px;
+			margin-bottom: 40px;
+		}
+
+		.noCopy {
+			-moz-user-select: none;
+			-khtml-user-select: none;
+			user-select: none;
+		}
+
 	</style>
 
 </head>
@@ -70,13 +90,11 @@
 				</a>
 				<ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0 fs-5">
 					<li><a href="/" class="nav-link px-2 text-white">· Главная</a></li>
+					<li><a href="/contacts" class="nav-link px-2 text-white">· Контакты</a></li>
+					<li><a href="/requests" class="nav-link px-2 text-white">· Заявки</a></li>
+					<li><a href="/docs" class="nav-link px-2 text-white">· Документы</a></li>
 					@if (Auth::check() && Auth::user()->is_admin == true)
-						<li><a href="/contacts" class="nav-link px-2 text-white">· Контакты</a></li>
-						<li><a href="/requests" class="nav-link px-2 text-white">· Заявки</a></li>
 						<li><a href="/admin" class="nav-link px-2 text-warning">· Панель управления</a></li>
-					@else
-						<li><a href="/contacts" class="nav-link px-2 text-white">· Контакты</a></li>
-						<li><a href="/requests" class="nav-link px-2 text-white">· Заявки</a></li>
 					@endif
 				</ul>
 				<div class="text-end">
@@ -113,5 +131,10 @@
 		{{ $slot }}
 	</div>
 </body>
+
+<footer class="my-2 pt-5 text-muted text-center text-small">
+	<p class="mb-1"> {{ App\Models\Option::find(1)->value('company_name') }}</p>
+</footer>
+</div>
 
 </html>

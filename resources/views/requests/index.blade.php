@@ -24,11 +24,11 @@
 					<a href="/" class="requestlink rounded-3 d-flex pt-3" style="text-decoration: none;">
 
 						@switch($request_info->status)
-							@case('Ожидает обработки')
+							@case('В обработке')
 								<i class="bi bi-info-square-fill me-3 ms-2" style="font-size: 2rem; color: rgb(0, 255, 255);"></i>
 							@break
 
-							@case('В процессе')
+							@case('В работе')
 								<i class="bi bi-person-circle me-3 ms-2" style="font-size: 2rem; color: rgb(255, 157, 0);"></i>
 							@break
 
@@ -55,7 +55,7 @@
 										<span class="me-2" style="color: rgb(0, 255, 255)">{{ $request_info->status }}</span>
 									@break
 
-									@case('В процессе')
+									@case('В работе')
 										<span class="me-2" style="color: rgb(255, 157, 0)">{{ $request_info->status }}</span>
 									@break
 
