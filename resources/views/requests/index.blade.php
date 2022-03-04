@@ -6,7 +6,7 @@
 			href="/requests/create">Создать заявку</a>
 
 		<div class="my-3 p-3 rounded shadow-sm text-white fs-5" style="background-color: #1A202C">
-			<div class="d-flex justify-content-between">
+			<div class="d-flex justify-content-between mb-2">
 				<span class="border-bottom pb-2 mb-0">Ваши заявки:</span>
 				<div class="d-flex">
 					<form class="  me-2 ">

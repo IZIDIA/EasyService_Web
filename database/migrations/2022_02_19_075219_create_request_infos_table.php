@@ -18,16 +18,17 @@ return new class extends Migration
 			$table->boolean('from_pc');
 			//Если с пк, то определяем пользователя по ключу (MAC)
 			$table->string('key', 12)->nullable()->comment('MAC Address');
+			$table->string('name', 128);
+			$table->string('email', 128);
 			//Если с сайта, то по зарегистрировавшемуся пользователю
-			$table->unsignedBigInteger('user_id')->nullable()->comment('id Пользователя');
+			$table->unsignedBigInteger('user_id')->nullable()->comment('id Пользователя');	
 			$table->string('ip_address', 15)->comment('IP Address Пользователя');
 			$table->string('topic', 128);
 			$table->string('inventory_number', 128)->nullable();
 			$table->date('date_create');
 			$table->date('date_closing')->nullable();
 			$table->string('location', 255);
-			$table->string('phone_call_number', 32)->nullable();
-			$table->string('email', 128);
+			$table->string('phone_call_number', 32);
 			$table->boolean('solution_with_me')->nullable();
 			$table->boolean('problem_with_my_pc');
 			$table->string('work_time', 255)->nullable();

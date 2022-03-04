@@ -13,16 +13,16 @@
 			<div class="row g-5">
 
 				<div class="col-md-8 offset-md-2">
-					<form class="needs-validation" novalidate>
+					<form class="needs-validation" novalidate action="/requests" method="POST" enctype="multipart/form-data">
 						<div class="row g-3">
 
 							<div class="col-sm-6">
-								<label for="firstName" class="form-label">Имя</label>
+								<label for="first_name" class="form-label">Имя</label>
 								@if (Auth::check())
-									<input type="text" class="form-control" id="firstName" value="{{ Str::before(Auth::user()->name, ' ') }}"
-										required>
+									<input maxlength="40" type="text" class="form-control" id="first_name" name="first_name"
+										value="{{ Str::before(Auth::user()->name, ' ') }}" required>
 								@else
-									<input type="text" class="form-control" id="firstName" required>
+									<input maxlength="40" type="text" class="form-control" id="first_name" name="first_name" required>
 								@endif
 								<div class="invalid-feedback">
 									Требуется действительное имя.
@@ -30,12 +30,12 @@
 							</div>
 
 							<div class="col-sm-6">
-								<label for="lastName" class="form-label">Фамилия</label>
+								<label for="last_name" class="form-label">Фамилия</label>
 								@if (Auth::check())
-									<input type="text" class="form-control" id="lastName" value="{{ Str::after(Auth::user()->name, ' ') }}"
-										required>
+									<input maxlength="40" type="text" class="form-control" id="last_name" name="last_name"
+										value="{{ Str::after(Auth::user()->name, ' ') }}" required>
 								@else
-									<input type="text" class="form-control" id="lastName" required>
+									<input maxlength="40" type="text" class="form-control" id="last_name" name="last_name" required>
 								@endif
 								<div class="invalid-feedback">
 									Требуется действующая фамилия.
@@ -45,9 +45,10 @@
 							<div class="col-12">
 								<label for="email" class="form-label">Email</label>
 								@if (Auth::check())
-									<input type="email" class="form-control" id="email" value="{{ Auth::user()->email }}" required>
+									<input maxlength="64" type="email" class="form-control" id="email" name="email"
+										value="{{ Auth::user()->email }}" required>
 								@else
-									<input type="email" class="form-control" id="email" required>
+									<input maxlength="64" type="email" class="form-control" id="email" name="email" required>
 								@endif
 								<div class="invalid-feedback">
 									Пожалуйста, введите действующий адрес электронной почты для обратной связи.
@@ -56,7 +57,8 @@
 
 							<div class="col-12">
 								<label for="location" class="form-label">Местонахождение оборудования</label>
-								<input type="text" class="form-control" id="location" placeholder="Здание, комната (кабинет)..." required>
+								<input maxlength="128" type="text" class="form-control" id="location" name="location"
+									placeholder="Здание, комната (кабинет)..." required>
 								<div class="invalid-feedback">
 									Пожалуйста, введите адрес расположения оборудования.
 								</div>
@@ -64,8 +66,8 @@
 
 							<div class="col-12">
 								<label for="phone_call_number" class="form-label">Контактный номер</label>
-								<input pattern="^\d+" type="tel" class="form-control" id="phone_call_number"
-									placeholder="Мобильный или рабочий..." required>
+								<input maxlength="11" pattern="^\d+" type="tel" class="form-control" id="phone_call_number"
+									name="phone_call_number" placeholder="Мобильный или рабочий..." required>
 								<div class="invalid-feedback">
 									Пожалуйста, введите номер телефона состоящий только из цифр.
 								</div>
@@ -75,7 +77,8 @@
 								<label for="phone_call_number" class="form-label">Инвентарный номер оборудования <span
 										class="text-muted">(Если
 										имеется)</span></label>
-								<input type="tel" class="form-control" id="phone_call_number" placeholder="Номер, для ведения учета...">
+								<input maxlength="64" type="tel" class="form-control" id="inventory_number" name="inventory_number"
+									placeholder="Номер, для ведения учета...">
 							</div>
 
 							<hr class="my-4">
@@ -226,22 +229,49 @@
 
 							<hr class="my-1">
 
-							<h4>Сообщение</h4>
-							<div>
-								<textarea class="form-control" id="textarea" onkeyup="charCount();" name="textarea_description" rows="10"
+							<div class="col-12 mb-3">
+								<h4>Тема</h4>
+								<input maxlength="64" type="text" class="form-control" id="topic" name="topic" placeholder="Например: Мерцает монитор..."
+									required>
+								<div class="invalid-feedback">
+									Требуется тема, кратко описывающая вашу проблему.
+								</div>
+							</div>
+
+
+							<div class="mb-2">
+								<h4>Сообщение</h4>
+								<textarea class="form-control mb-1" id="text" name="text" onkeyup="charCount();" name="textarea_description" rows="10"
 									maxlength="4000" minlength="1" placeholder="Опишите вашу проблему..." required></textarea>
-								<span class="textarea_count" id="textarea_count">0/4000</span>
+								<div class="text-end me-1" id="textarea_count">0/4000</div>
 							</div>
 
 							<script type="text/javascript">
 							 function charCount() {
-							  var element = document.getElementById('textarea').value.length;
+							  var element = document.getElementById('text').value.length;
 							  document.getElementById('textarea_count').innerHTML = element + "/4000";
 							 }
 							</script>
 
+							<div class="col-md-6 offset-md-3 text-center">
+								<label class="mb-3" for="validationPoster">Фотография или скриншот (1) <span
+										class="text-muted">(По
+										желанию)</span></label>
+								<input class="form-control mb-1" type="file" name="photo" id="validationPoster" accept=".jpg, .jpeg, .png">
+								<p style=" color: red">
+									@error('photo')
+										{{ $message }}
+									@enderror
+								</p>
+								<small class="notice">Файл должен быть менее 10 МБ. Разрешенные типы файлов: jpg, jpeg, png</small>
+							</div>
+
+
+
+
 							<hr class="my-4">
 
+							@csrf
 							<button class="w-100 btn btn-primary btn-lg" type="submit">Отправить заявку</button>
 
 					</form>
