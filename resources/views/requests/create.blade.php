@@ -20,65 +20,99 @@
 								<label for="first_name" class="form-label">Имя</label>
 								@if (Auth::check())
 									<input maxlength="40" type="text" class="form-control" id="first_name" name="first_name"
-										value="{{ Str::before(Auth::user()->name, ' ') }}" required>
+										value="{{ old('first_name') ?? Str::before(Auth::user()->name, ' ') }}" required>
 								@else
-									<input maxlength="40" type="text" class="form-control" id="first_name" name="first_name" required>
+									<input maxlength="40" type="text" class="form-control" id="first_name" name="first_name" required
+										value="{{ old('first_name') }}">
 								@endif
 								<div class="invalid-feedback">
 									Требуется действительное имя.
 								</div>
+								@error('first_name')
+									<div class="mt-1" style="color: red">
+										Требуется действительное имя.
+									</div>
+								@enderror
 							</div>
 
 							<div class="col-sm-6">
 								<label for="last_name" class="form-label">Фамилия</label>
 								@if (Auth::check())
 									<input maxlength="40" type="text" class="form-control" id="last_name" name="last_name"
-										value="{{ Str::after(Auth::user()->name, ' ') }}" required>
+										value="{{ old('last_name') ?? Str::after(Auth::user()->name, ' ') }}" required>
 								@else
-									<input maxlength="40" type="text" class="form-control" id="last_name" name="last_name" required>
+									<input maxlength="40" type="text" class="form-control" id="last_name" name="last_name" required
+										value="{{ old('last_name') }}">
 								@endif
 								<div class="invalid-feedback">
 									Требуется действующая фамилия.
 								</div>
+								@error('last_name')
+									<div class="mt-1" style="color: red">
+										Требуется действующая фамилия.
+									</div>
+								@enderror
 							</div>
 
 							<div class="col-12">
 								<label for="email" class="form-label">Email</label>
 								@if (Auth::check())
 									<input maxlength="64" type="email" class="form-control" id="email" name="email"
-										value="{{ Auth::user()->email }}" required>
+										value="{{ old('email') ?? Auth::user()->email }}" required>
 								@else
-									<input maxlength="64" type="email" class="form-control" id="email" name="email" required>
+									<input maxlength="64" type="email" class="form-control" id="email" name="email" required
+										value="{{ old('email') }}">
 								@endif
 								<div class="invalid-feedback">
 									Пожалуйста, введите действующий адрес электронной почты для обратной связи.
 								</div>
+								@error('email')
+									<div class="mt-1" style="color: red">
+										Пожалуйста, введите действующий адрес электронной почты для обратной связи.
+									</div>
+								@enderror
 							</div>
 
 							<div class="col-12">
 								<label for="location" class="form-label">Местонахождение оборудования</label>
 								<input maxlength="128" type="text" class="form-control" id="location" name="location"
-									placeholder="Здание, комната (кабинет)..." required>
+									placeholder="Здание, комната (кабинет)..." required value="{{ old('location') }}">
 								<div class="invalid-feedback">
 									Пожалуйста, введите адрес расположения оборудования.
 								</div>
+								@error('location')
+									<div class="mt-1" style="color: red">
+										Пожалуйста, введите адрес расположения оборудования.
+									</div>
+								@enderror
 							</div>
 
 							<div class="col-12">
 								<label for="phone_call_number" class="form-label">Контактный номер</label>
 								<input maxlength="11" pattern="^\d+" type="tel" class="form-control" id="phone_call_number"
-									name="phone_call_number" placeholder="Мобильный или рабочий..." required>
+									name="phone_call_number" placeholder="Мобильный или рабочий..." required
+									value="{{ old('phone_call_number') }}">
 								<div class="invalid-feedback">
 									Пожалуйста, введите номер телефона состоящий только из цифр.
 								</div>
+								@error('phone_call_number')
+									<div class="mt-1" style="color: red">
+										Пожалуйста, введите номер телефона состоящий только из цифр.
+									</div>
+								@enderror
 							</div>
 
 							<div class="col-12">
-								<label for="phone_call_number" class="form-label">Инвентарный номер оборудования <span
+								<label for="inventory_number" class="form-label">Инвентарный номер оборудования <span
 										class="text-muted">(Если
 										имеется)</span></label>
 								<input maxlength="64" type="tel" class="form-control" id="inventory_number" name="inventory_number"
-									placeholder="Номер, для ведения учета...">
+									placeholder="Номер, для ведения учета..." value="{{ old('inventory_number') }}">
+								@error('inventory_number')
+									<div class="mt-1" style="color: red">
+										Максимальная длина номера 64 символа.
+									</div>
+								@enderror
 							</div>
 
 							<hr class="my-4">
@@ -86,23 +120,23 @@
 							<h4 class="mb-1">Решить проблему в вашем присутствии?</h4>
 							<div class="my-2">
 								<div class="form-check">
-									<input id="anyway_with" name="solution_with_me" type="radio" class="form-check-input" checked required
-										onclick="showDataTableFunction()">
+									<input value="1" id="anyway_with" name="solution_with_me" type="radio" class="form-check-input" checked
+										required onclick="showDataTableFunction()">
 									<label class="form-check-label" for="anyway_with">Неважно</label>
 								</div>
 								<div class="form-check">
-									<input id="yes_with" name="solution_with_me" type="radio" class="form-check-input" required
-										onclick="showDataTableFunction()">
+									<input value="2" id="yes_with" name="solution_with_me" type="radio" class="form-check-input" required
+										{{ old('solution_with_me') == '2' ? 'checked' : '' }} onclick="showDataTableFunction()">
 									<label class="form-check-label" for="yes_with">Да, решить проблему в моём присутствии</label>
 								</div>
 								<div class="form-check">
-									<input id="no_with" name="solution_with_me" type="radio" class="form-check-input" required
-										onclick="showDataTableFunction()">
+									<input value="3" id="no_with" name="solution_with_me" type="radio" class="form-check-input" required
+										{{ old('solution_with_me') == '3' ? 'checked' : '' }} onclick="showDataTableFunction()">
 									<label class="form-check-label" for="no_with">Нет, решить проблему в моё отсутствие</label>
 								</div>
 							</div>
 
-							<div id="dataDiv" style="visibility: hidden">
+							<div id="dataDiv" style="visibility: @if (old('solution_with_me') == '2' || old('solution_with_me') == '3') visible @else hidden @endif ">
 								<h4 class="mb-2">График вашей работы: <span class="text-muted fs-5">(Если
 										график не получается задать по шаблону, сообщите о нём в тексте заявки)</span></h4>
 								<div class="form-check ">
@@ -202,48 +236,51 @@
 							<div class="my-3">
 								<h4 class="mb-3">Проблема с вашим рабочим ПК?</h4>
 								<div class="form-check mb-3">
-									<input type="checkbox" class="form-check-input" id="zCheck" onclick="showPasswordInputFunction()">
+									<input type="checkbox" class="form-check-input" id="zCheck" name="problem_with_my_pc"
+										@if (old('problem_with_my_pc') == 'on') checked @endif onclick="showPasswordInputFunction()">
 									<label class="form-check-label" for="same-address">Да, проблема с моим ПК</label>
 								</div>
-								<div class="col-12" id="zDiv" style="visibility: hidden">
+								<div class="col-sm-4" id="zDiv"
+									style="visibility: @if (old('problem_with_my_pc') == 'on') visible @else hidden @endif">
 									<label for="user_password">Пароль пользователя: <span class="text-muted">(Если
 											имеется)</span></label> <br>
-									<input class="mt-2" type="password" name="password" id="user_password" />
-									<i class="bi bi-eye-slash" id="togglePassword"></i>
+									<input class="form-control" type="text" name="user_password" id="user_password"
+										value="{{ old('user_password') }}" />
 								</div>
 							</div>
 
-							<script>
-							 const togglePassword = document.querySelector("#togglePassword");
-							 const password = document.querySelector("#user_password");
-							 togglePassword.addEventListener("click", function() {
-							  const type = password.getAttribute("type") === "password" ? "text" : "password";
-							  password.setAttribute("type", type);
-							  this.classList.toggle("bi-eye");
-							 });
-							 const form = document.querySelector("form");
-							 form.addEventListener('submit', function(e) {
-							  e.preventDefault();
-							 });
-							</script>
 
 							<hr class="my-1">
 
 							<div class="col-12 mb-3">
 								<h4>Тема</h4>
-								<input maxlength="64" type="text" class="form-control" id="topic" name="topic" placeholder="Например: Мерцает монитор..."
-									required>
+								<input maxlength="64" type="text" class="form-control" id="topic" name="topic"
+									placeholder="Например: Мерцает монитор..." required value="{{ old('topic') }}">
 								<div class="invalid-feedback">
 									Требуется тема, кратко описывающая вашу проблему.
 								</div>
+								@error('topic')
+									<div class="mt-1" style="color: red">
+										Требуется тема, кратко описывающая вашу проблему.
+									</div>
+								@enderror
 							</div>
 
 
 							<div class="mb-2">
 								<h4>Сообщение</h4>
-								<textarea class="form-control mb-1" id="text" name="text" onkeyup="charCount();" name="textarea_description" rows="10"
-									maxlength="4000" minlength="1" placeholder="Опишите вашу проблему..." required></textarea>
-								<div class="text-end me-1" id="textarea_count">0/4000</div>
+								<textarea class="form-control mb-1" id="text" name="text" onkeyup="charCount();" rows="10" maxlength="4000"
+									minlength="1" placeholder="Опишите вашу проблему..." required>{{ old('text') }}</textarea>
+								<div class="invalid-feedback">
+									Требуется описание вашей проблемы.
+								</div>
+								@error('text')
+									<div class="mt-1" style="color: red">
+										Требуется описание вашей проблемы.
+									</div>
+								@enderror
+								<div class="text-end me-1" id="textarea_count" name="textarea_count">
+									{{ old('textarea_count') ?? '0/4000' }}</div>
 							</div>
 
 							<script type="text/javascript">
@@ -254,18 +291,39 @@
 							</script>
 
 							<div class="col-md-6 offset-md-3 text-center">
-								<label class="mb-3" for="validationPoster">Фотография или скриншот (1) <span
-										class="text-muted">(По
+								<label class="mb-3" for="file">Фотография или скриншот (1) <span class="text-muted">(По
 										желанию)</span></label>
-								<input class="form-control mb-1" type="file" name="photo" id="validationPoster" accept=".jpg, .jpeg, .png">
-								<p style=" color: red">
-									@error('photo')
-										{{ $message }}
-									@enderror
-								</p>
-								<small class="notice">Файл должен быть менее 10 МБ. Разрешенные типы файлов: jpg, jpeg, png</small>
+								<input @error('photo') autofocus @enderror class="form-control mb-1" type="file" name="photo" id="file"
+									accept=".jpg, .jpeg, .png" onchange="return fileValidation()">
+								<small class="error_message" @error('photo') style="color: red" @enderror>Файл должен быть менее 15 МБ.
+									Разрешенные типы файлов: jpg, jpeg, png</small>
 							</div>
 
+
+
+							<script>
+							 function fileValidation() {
+							  var fileInput =
+							   document.getElementById('file');
+							  var filePath = fileInput.value;
+							  // Allowing file type
+							  var allowedExtensions =
+							   /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+							  if (!allowedExtensions.exec(filePath)) {
+							   alert('Неверный тип файла');
+							   fileInput.value = '';
+							   return false;
+							  } else {
+							   // Image preview
+
+							  }
+							 }
+							</script>
+							@if ($errors->any())
+								<script>
+								 charCount();
+								</script>
+							@endif
 
 
 

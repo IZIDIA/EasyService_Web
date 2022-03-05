@@ -47,32 +47,35 @@
 
 						<div class="pb-3 mb-0 lh-sm w-100">
 							<div class="d-flex justify-content-between">
-								<strong
-									class="text-gray-dark text-warning">{{ '№' . $request_info->id . ' ' . Str::limit($request_info->topic, 25) }}</strong>
-
+								<div>
+									<strong
+										class="text-gray-dark text-warning">{{ '№' . $request_info->id . ' ' . Str::limit($request_info->topic, 25) }}
+									</strong>
+									<span class="d-block text-white fst-italic">{{ $request_info->date_create->format('d.m.y') }}</span>
+								</div>
 								@switch($request_info->status)
 									@case('В обработке')
-										<span class="me-2" style="color: rgb(0, 255, 255)">{{ $request_info->status }}</span>
+										<span class="me-2 mt-2" style="color: rgb(0, 255, 255)">{{ $request_info->status }}</span>
 									@break
 
 									@case('В работе')
-										<span class="me-2" style="color: rgb(255, 157, 0)">{{ $request_info->status }}</span>
+										<span class="me-2 mt-2" style="color: rgb(255, 157, 0)">{{ $request_info->status }}</span>
 									@break
 
 									@case('Завершено')
-										<span class="me-2" style="color: rgb(0, 255, 0)">{{ $request_info->status }}</span>
+										<span class="me-2 mt-2" style="color: rgb(0, 255, 0)">{{ $request_info->status }}</span>
 									@break
 
 									@case('Отменено')
-										<span class="me-2" style="color: rgb(173, 0, 0)">{{ $request_info->status }}</span>
+										<span class="me-2 mt-2" style="color: rgb(173, 0, 0)">{{ $request_info->status }}</span>
 									@break
 
 									@default
-										<span class="me-2" style="color: white">{{ $request_info->status }}</span>
+										<span class="me-2 mt-2" style="color: white">{{ $request_info->status }}</span>
 								@endswitch
 
 							</div>
-							<span class="d-block text-white fst-italic">{{ $request_info->date_create->format('d.m.y') }}</span>
+
 						</div>
 					</a>
 					@empty

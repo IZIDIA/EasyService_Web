@@ -27,6 +27,7 @@ window.showPasswordInputFunction = function () {
 	var divBlock = document.getElementById("zDiv");
 	var password = document.getElementById("user_password");
 	if (checkBox.checked == true) {
+		password.value = '';
 		divBlock.style = null;
 	} else {
 		password.value = '';

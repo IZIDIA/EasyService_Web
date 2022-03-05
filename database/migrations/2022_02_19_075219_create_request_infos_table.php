@@ -21,7 +21,7 @@ return new class extends Migration
 			$table->string('name', 128);
 			$table->string('email', 128);
 			//Если с сайта, то по зарегистрировавшемуся пользователю
-			$table->unsignedBigInteger('user_id')->nullable()->comment('id Пользователя');	
+			$table->unsignedBigInteger('user_id')->nullable()->comment('id Пользователя');
 			$table->string('ip_address', 15)->comment('IP Address Пользователя');
 			$table->string('topic', 128);
 			$table->string('inventory_number', 128)->nullable();
@@ -35,6 +35,7 @@ return new class extends Migration
 			$table->string('user_password', 128)->nullable();
 			$table->string('text', 4096);
 			$table->string('status', 128);
+			$table->string('photo')->comment('Фотография')->nullable();
 			$table->timestamps();
 
 			$table->foreign('user_id')->references('id')->on('users');
