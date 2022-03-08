@@ -11,6 +11,15 @@
 	<!-- Scripts -->
 	<script src="{{ asset('js/app.js') }}" defer></script>
 	<style>
+		@font-face {
+			font-family: 'Roboto';
+			src: url(/fonts/Roboto-Regular.ttf);
+		}
+
+		* {
+			font-family: 'Roboto', 'Nunito', sans-serif;
+		}
+
 		.requestlink:hover {
 			background-color: #0B5ED7;
 			-webkit-transition: background-color 200ms linear;
@@ -54,8 +63,6 @@
 	</style>
 
 </head>
-{{-- rgb(26, 46, 82) --}}
-{{-- background-color: #2D3748 --}}
 
 <body class="text-white" style="background-color: #2D3748">
 	<header class="p-3 text-white" style="background: radial-gradient(rgb(21, 46, 93), #1A202C);">

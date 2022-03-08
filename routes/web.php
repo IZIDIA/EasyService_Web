@@ -15,17 +15,22 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+	return view('welcome');
 });
 
-/*Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');*/
+Route::get('/docs', function () {
+	return view('docs');
+});
+
+Route::get('/contacts', function () {
+	return view('contacts');
+});
+
 
 require __DIR__ . '/auth.php';
 
 Route::get('/admin', function () {
-    return view('admin');
+	return view('admin');
 })->middleware(['auth'])->name('admin');
 
 

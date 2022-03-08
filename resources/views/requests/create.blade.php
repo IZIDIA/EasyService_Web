@@ -4,7 +4,7 @@
 		<main class="noCopy">
 			<div class="py-5 text-center">
 				<h2>Форма для отправки заявки</h2>
-				<p class="lead text-warning">Если проблема связанна с вашим компьютером или оборудованием, подключённым к нему,
+				<p class="lead text-warning mx-2">Если проблема связанна с вашим компьютером или оборудованием, подключённым к нему,
 					желательно заполнить и отправить заявку в приложении, установленном на вашем компьютере.</p>
 			</div>
 
@@ -139,94 +139,141 @@
 							<div id="dataDiv" style="visibility: @if (old('solution_with_me') == '2' || old('solution_with_me') == '3') visible @else hidden @endif ">
 								<h4 class="mb-2">График вашей работы: <span class="text-muted fs-5">(Если
 										график не получается задать по шаблону, сообщите о нём в тексте заявки)</span></h4>
+
 								<div class="form-check ">
 									<span style="display: inline-block;  width: 1px;">
-										<input type="checkbox" class="form-check-input" id="monday" checked
-											onchange="showOrHide('monday', 'time_monday');">
+										<input type="checkbox" class="form-check-input" name="monday" id="monday"
+											onchange="showOrHide('monday', 'time_monday');"
+											@if (old('monday') == 'on') checked
+											@else
+													@if (old('solution_with_me') == null)
+													checked @endif
+											@endif>
 										<label class="form-check-label" for="monday">ПН</label>
 									</span>
-									<span id='time_monday'>
+									<span id='time_monday' @if (old('solution_with_me') != null && old('monday') != 'on') style="visibility: hidden" @endif>
 										<label class="ms-5" for="from_monday">С:</label>
-										<input class="ms-1" type="time" id="from_monday" value="09:00">
+										<input class="ms-1" type="time" id="from_monday" name="from_monday"
+											value="{{ old('from_monday') ?? '09:00' }}">
 										<label class="ms-1" for="to_monday">До:</label>
-										<input class="ms-1" type="time" id="to_monday" value="18:00">
+										<input class="ms-1" type="time" id="to_monday" name="to_monday"
+											value="{{ old('to_monday') ?? '18:00' }}">
 									</span>
 								</div>
+
 								<div class="form-check ">
 									<span style="display: inline-block;  width: 1px;">
-										<input type="checkbox" class="form-check-input" id="tuesday" checked
-											onchange="showOrHide('tuesday', 'time_tuesday');">
+										<input type="checkbox" class="form-check-input" name="tuesday" id="tuesday"
+											onchange="showOrHide('tuesday', 'time_tuesday');"
+											@if (old('tuesday') == 'on') checked
+											@else
+													@if (old('solution_with_me') == null)
+													checked @endif
+											@endif>
 										<label class="form-check-label" for="tuesday">ВТ</label>
 									</span>
-									<span id='time_tuesday'>
+									<span id='time_tuesday' @if (old('solution_with_me') != null && old('tuesday') != 'on') style="visibility: hidden" @endif>
 										<label class="ms-5" for="from_tuesday">С:</label>
-										<input class="ms-1" type="time" id="from_tuesday" value="09:00">
-										<label class="ms-1" for="to_tuesday">До:</label>
-										<input class="ms-1" type="time" id="to_tuesday" value="18:00">
+										<input class="ms-1" type="time" id="from_tuesday" name="from_tuesday"
+											value="{{ old('from_tuesday') ?? '09:00' }}">
+										<label class="  ms-1" for="to_tuesday">До:</label>
+										<input class="ms-1" type="time" id="to_tuesday" name="to_tuesday"
+											value="{{ old('to_tuesday') ?? '18:00' }}">
 									</span>
 								</div>
+
 								<div class="form-check">
 									<span style="display: inline-block;  width: 1px;">
-										<input type="checkbox" class="form-check-input" id="wednesday" checked
-											onchange="showOrHide('wednesday', 'time_wednesday');">
+										<input type="checkbox" class="form-check-input" name="wednesday" id="wednesday"
+											onchange="showOrHide('wednesday', 'time_wednesday');"
+											@if (old('wednesday') == 'on') checked
+											@else
+													@if (old('solution_with_me') == null)
+													checked @endif
+											@endif>
 										<label class="form-check-label" for="wednesday">СР</label>
 									</span>
-									<span id='time_wednesday'>
+									<span id='time_wednesday' @if (old('solution_with_me') != null && old('wednesday') != 'on') style="visibility: hidden" @endif>
 										<label class="ms-5" for="from_wednesday">С:</label>
-										<input class="ms-1" type="time" id="from_wednesday" value="09:00">
-										<label class="ms-1" for="to_wednesday">До:</label>
-										<input class="ms-1" type="time" id="to_wednesday" value="18:00">
+										<input class="ms-1" type="time" id="from_wednesday" name="from_wednesday"
+											value="{{ old('from_wednesday') ?? '09:00' }}">
+										<label class="  ms-1" for="to_wednesday">До:</label>
+										<input class="ms-1" type="time" id="to_wednesday" name="to_wednesday"
+											value="{{ old('to_wednesday') ?? '18:00' }}">
 									</span>
 								</div>
+
 								<div class="form-check">
 									<span style="display: inline-block;  width: 1px;">
-										<input type="checkbox" class="form-check-input" id="thursday" checked
-											onchange="showOrHide('thursday', 'time_thursday');">
+										<input type="checkbox" class="form-check-input" name="thursday" id="thursday"
+											onchange="showOrHide('thursday', 'time_thursday');"
+											@if (old('thursday') == 'on') checked
+											@else
+													@if (old('solution_with_me') == null)
+													checked @endif
+											@endif>
 										<label class="form-check-label" for="thursday">ЧТ</label>
 									</span>
-									<span id='time_thursday'>
+									<span id='time_thursday' @if (old('solution_with_me') != null && old('thursday') != 'on') style="visibility: hidden" @endif>
 										<label class="ms-5" for="from_thursday">С:</label>
-										<input class="ms-1" type="time" id="from_thursday" value="09:00">
-										<label class="ms-1" for="to_thursday">До:</label>
-										<input class="ms-1" type="time" id="to_thursday" value="18:00">
+										<input class="ms-1" type="time" id="from_thursday" name="from_thursday"
+											value="{{ old('from_thursday') ?? '09:00' }}">
+										<label class="   ms-1" for="to_thursday">До:</label>
+										<input class="ms-1" type="time" id="to_thursday" name="to_thursday"
+											value="{{ old('to_thursday') ?? '18:00' }}">
 									</span>
 								</div>
+
 								<div class="form-check">
 									<span style="display: inline-block;  width: 1px;">
-										<input type="checkbox" class="form-check-input" id="friday" checked
-											onchange="showOrHide('friday', 'time_friday');">
+										<input type="checkbox" class="form-check-input" name="friday" id="friday"
+											onchange="showOrHide('friday', 'time_friday');"
+											@if (old('friday') == 'on') checked
+											@else
+													@if (old('solution_with_me') == null)
+													checked @endif
+											@endif>
 										<label class="form-check-label" for="friday">ПТ</label>
 									</span>
-									<span id='time_friday'>
+									<span id='time_friday' @if (old('solution_with_me') != null && old('friday') != 'on') style="visibility: hidden" @endif>
 										<label class="ms-5" for="from_friday">С:</label>
-										<input class="ms-1" type="time" id="from_friday" value="09:00">
-										<label class="ms-1" for="to_friday">До:</label>
-										<input class="ms-1" type="time" id="to_friday" value="18:00">
+										<input class="ms-1" type="time" id="from_friday" name="from_friday"
+											value="{{ old('from_friday') ?? '09:00' }}">
+										<label class="   ms-1" for="to_friday">До:</label>
+										<input class="ms-1" type="time" id="to_friday" name="to_friday"
+											value="{{ old('to_friday') ?? '18:00' }}">
 									</span>
 								</div>
+
 								<div class="form-check">
 									<span style="display: inline-block;  width: 1px;">
-										<input type="checkbox" class="form-check-input" id="saturday"
-											onchange="showOrHide('saturday', 'time_saturday');">
+										<input type="checkbox" class="form-check-input" name="saturday" id="saturday"
+											onchange="showOrHide('saturday', 'time_saturday');" @if (old('saturday') == 'on') checked @endif>
 										<label class="form-check-label" for="saturday">СБ</label>
 									</span>
-									<span id='time_saturday' style="visibility: hidden">
+									<span id='time_saturday' @if (old('saturday') != 'on') style="visibility: hidden" @endif>
 										<label class="ms-5" for="from_saturday">С:</label>
-										<input class="ms-1" type="time" id="from_saturday" value="09:00">
-										<label class="ms-1" for="to_saturday">До:</label>
-										<input class="ms-1" type="time" id="to_saturday" value="18:00">
+										<input class="ms-1" type="time" id="from_saturday" name="from_saturday"
+											value="{{ old('from_saturday') ?? '09:00' }}">
+										<label class="   ms-1" for="to_saturday">До:</label>
+										<input class="ms-1" type="time" id="to_saturday" name="to_saturday"
+											value="{{ old('to_saturday') ?? '18:00' }}">
 									</span>
 								</div>
+
 								<div class="form-check">
 									<span style="display: inline-block;  width: 1px;">
-										<input type="checkbox" class="form-check-input" id="sunday" onchange="showOrHide('sunday', 'time_sunday');">
+										<input type="checkbox" class="form-check-input" name="sunday" id="sunday"
+											onchange="showOrHide('sunday', 'time_sunday');" @if (old('sunday') == 'on') checked @endif>
 										<label class="form-check-label" for="sunday">ВС</label>
 									</span>
-									<span id='time_sunday' style="visibility: hidden">
+									<span id='time_sunday' @if (old('sunday') != 'on') style="visibility: hidden" @endif>
 										<label class="ms-5" for="from_sunday">С:</label>
-										<input class="ms-1" type="time" id="from_sunday" value="09:00">
-										<label class="ms-1" for="to_sunday">До:</label>
-										<input class="ms-1" type="time" id="to_sunday" value="18:00">
+										<input class="ms-1" type="time" id="from_sunday" name="from_sunday"
+											value="{{ old('from_sunday') ?? '09:00' }}">
+										<label class="   ms-1" for="to_sunday">До:</label>
+										<input class="ms-1" type="time" id="to_sunday" name="to_sunday"
+											value="{{ old('to_sunday') ?? '18:00' }}">
 									</span>
 								</div>
 							</div>
@@ -249,7 +296,6 @@
 								</div>
 							</div>
 
-
 							<hr class="my-1">
 
 							<div class="col-12 mb-3">
@@ -265,7 +311,6 @@
 									</div>
 								@enderror
 							</div>
-
 
 							<div class="mb-2">
 								<h4>Сообщение</h4>
@@ -299,33 +344,26 @@
 									Разрешенные типы файлов: jpg, jpeg, png</small>
 							</div>
 
-
-
 							<script>
 							 function fileValidation() {
 							  var fileInput =
 							   document.getElementById('file');
 							  var filePath = fileInput.value;
-							  // Allowing file type
 							  var allowedExtensions =
 							   /(\.jpg|\.jpeg|\.png|\.gif)$/i;
 							  if (!allowedExtensions.exec(filePath)) {
 							   alert('Неверный тип файла');
 							   fileInput.value = '';
 							   return false;
-							  } else {
-							   // Image preview
-
-							  }
+							  } else {}
 							 }
 							</script>
+
 							@if ($errors->any())
 								<script>
 								 charCount();
 								</script>
 							@endif
-
-
 
 							<hr class="my-4">
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\RequestInfo;
 use Carbon\Carbon;
+use Dotenv\Util\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
@@ -28,12 +29,6 @@ class RequestInfoController extends Controller
 
 	public function store(Request $request)
 	{
-		//Валидация данных, которые нельзя сразу добавить в массив
-		// request()->validate([
-		// 	'first_name' => 'required|max:40',
-		// 	'last_name' => 'required|max:40'
-		// ]);
-		//Валидация данных, которые пойдут в итоговый массив
 		$data = $this->validateData();
 		$data['from_pc'] = false;
 		$data['name'] = $request->first_name . ' ' . $request->last_name;
@@ -42,12 +37,35 @@ class RequestInfoController extends Controller
 		$data['status'] = 'В обработке';
 		if ($request['solution_with_me'] == 1) {
 			$data['solution_with_me'] = NULL;
-		} else if ($request['solution_with_me'] == 2) {
-			$data['solution_with_me'] = true;
 		} else {
-			$data['solution_with_me'] = false;
+			if ($request['solution_with_me'] == 2) {
+				$data['solution_with_me'] = true;
+			} else {
+				$data['solution_with_me'] = false;
+			}
+			$data['work_time'] = '';
+			if ($request['monday'] == 'on') {
+				$data['work_time'] .= 'ПН ' . 'С: ' . $request['from_monday'] . ' До: ' . $request['to_monday'] . PHP_EOL;
+			}
+			if ($request['tuesday'] == 'on') {
+				$data['work_time'] .= 'ВТ ' . 'С: ' . $request['from_tuesday'] . ' До: ' . $request['to_tuesday'] . PHP_EOL;
+			}
+			if ($request['wednesday'] == 'on') {
+				$data['work_time'] .= 'СР ' . 'С: ' . $request['from_wednesday'] . ' До: ' . $request['to_wednesday'] . PHP_EOL;
+			}
+			if ($request['thursday'] == 'on') {
+				$data['work_time'] .= 'ЧТ ' . 'С: ' . $request['from_thursday'] . ' До: ' . $request['to_thursday'] . PHP_EOL;
+			}
+			if ($request['friday'] == 'on') {
+				$data['work_time'] .= 'ПТ ' . 'С: ' . $request['from_friday'] . ' До: ' . $request['to_friday'] . PHP_EOL;
+			}
+			if ($request['saturday'] == 'on') {
+				$data['work_time'] .= 'СБ ' . 'С: ' . $request['from_saturday'] . ' До: ' . $request['to_saturday'] . PHP_EOL;
+			}
+			if ($request['sunday'] == 'on') {
+				$data['work_time'] .= 'ВС ' . 'С: ' . $request['from_sunday'] . ' До: ' . $request['to_sunday'] . PHP_EOL;
+			}
 		}
-		$data['work_time'] = '';
 		if ($request['problem_with_my_pc'] == 'on') {
 			$data['problem_with_my_pc'] = true;
 			$data['user_password'] = $request->user_password;
