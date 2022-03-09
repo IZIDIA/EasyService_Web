@@ -60,6 +60,16 @@
 			user-select: none;
 		}
 
+		.icon-square {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			width: 3rem;
+			height: 3rem;
+			font-size: 2rem;
+			border-radius: .75rem;
+		}
+
 	</style>
 
 </head>

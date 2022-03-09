@@ -114,4 +114,13 @@ class RequestInfoController extends Controller
 			]);
 		}
 	}
+
+	public function show($request_id)
+	{
+		$request_info = RequestInfo::findOrFail($request_id);
+		if (Auth::check() &&  Auth::user()->id == $request_info->user_id) {
+			return view('requests.show', compact('request_info'));
+		}
+		abort(404);
+	}
 }

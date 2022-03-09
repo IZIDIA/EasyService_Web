@@ -4,8 +4,6 @@
 		<main class="noCopy">
 			<div class="py-5 text-center">
 				<h2>Форма для отправки заявки</h2>
-				<p class="lead text-warning mx-2">Если проблема связанна с вашим компьютером или оборудованием, подключённым к нему,
-					желательно заполнить и отправить заявку в приложении, установленном на вашем компьютере.</p>
 			</div>
 
 
@@ -88,7 +86,7 @@
 							</div>
 
 							<div class="col-12">
-								<label for="phone_call_number" class="form-label">Контактный номер</label>
+								<label for="phone_call_number" class="form-label">Контактный номер <span class="text-muted">(Пример: 89995401122) Без +</span></label>
 								<input maxlength="11" pattern="^\d+" type="tel" class="form-control" id="phone_call_number"
 									name="phone_call_number" placeholder="Мобильный или рабочий..." required
 									value="{{ old('phone_call_number') }}">

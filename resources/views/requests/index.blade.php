@@ -21,7 +21,7 @@
 
 
 				@forelse ($request_infos as $request_info)
-					<a href="/" class="requestlink rounded-3 d-flex pt-3" style="text-decoration: none;">
+					<a href="/requests/{{ $request_info->id }}" class="requestlink rounded-3 d-flex pt-3" style="text-decoration: none;">
 
 						@switch($request_info->status)
 							@case('В обработке')
