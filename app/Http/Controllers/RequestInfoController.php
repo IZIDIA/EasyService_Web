@@ -94,6 +94,7 @@ class RequestInfoController extends Controller
 			'location' => 'required|max:255',
 			'phone_call_number' => 'required|max:32',
 			'inventory_number' => 'max:64',
+			'user_password' => 'max:64',
 			'topic' => 'required|max:128',
 			'text' => 'required|max:4096',
 		]), function () {

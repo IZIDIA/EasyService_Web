@@ -13,6 +13,11 @@ class RequestInfo extends Model
 
 	public function pc_info()
 	{
-		return $this->belongsTo(PcInfo::class);
+		return $this->hasOne(PcInfo::class);
+	}
+
+	public function admin_queue()
+	{
+		return $this->belongsTo(AdminQueue::class);
 	}
 }

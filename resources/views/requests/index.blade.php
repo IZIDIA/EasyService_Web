@@ -51,7 +51,7 @@
 									<strong
 										class="text-gray-dark text-warning">{{ '№' . $request_info->id . ' ' . Str::limit($request_info->topic, 25) }}
 									</strong>
-									<span class="d-block text-white fst-italic">{{ $request_info->date_create->format('d.m.y') }}</span>
+									<span class="d-block text-white fst-italic">{{ $request_info->created_at->format('d.m.y H:i') }}</span>
 								</div>
 								@switch($request_info->status)
 									@case('В обработке')

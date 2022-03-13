@@ -25,8 +25,6 @@ return new class extends Migration
 			$table->string('ip_address', 15)->comment('IP Address Пользователя');
 			$table->string('topic', 128);
 			$table->string('inventory_number', 128)->nullable();
-			$table->date('date_create');
-			$table->date('date_closing')->nullable();
 			$table->string('location', 255);
 			$table->string('phone_call_number', 32);
 			$table->boolean('solution_with_me')->nullable();
@@ -36,6 +34,7 @@ return new class extends Migration
 			$table->string('text', 4096);
 			$table->string('status', 128);
 			$table->string('photo')->comment('Фотография')->nullable();
+			$table->timestamp('closed_at')->nullable();
 			$table->timestamps();
 
 			$table->foreign('user_id')->references('id')->on('users');

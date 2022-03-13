@@ -5,7 +5,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="csrf-token" content="{{ csrf_token() }}">
-	<title>{{ config('app.name', 'Laravel') }}</title>
+	<title>Easy Service</title>
 	<!-- Styles -->
 	<link href="{{ asset('css/app.css') }}" rel="stylesheet">
 	<!-- Scripts -->
@@ -22,6 +22,13 @@
 
 		.requestlink:hover {
 			background-color: #0B5ED7;
+			-webkit-transition: background-color 200ms linear;
+			-ms-transition: background-color 200ms linear;
+			transition: background-color 200ms linear;
+		}
+
+		.headerlink:hover {
+			background-color: rgb(21, 46, 93);
 			-webkit-transition: background-color 200ms linear;
 			-ms-transition: background-color 200ms linear;
 			transition: background-color 200ms linear;
@@ -75,7 +82,7 @@
 </head>
 
 <body class="text-white" style="background-color: #2D3748">
-	<header class="p-3 text-white" style="background: radial-gradient(rgb(21, 46, 93), #1A202C);">
+	<header class="p-2 text-white" style="background: radial-gradient(rgb(21, 46, 93), #1A202C);">
 		<div class="container">
 			<div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
 				<a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
@@ -106,12 +113,12 @@
 					</svg>
 				</a>
 				<ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0 fs-5">
-					<li><a href="/" class="nav-link px-2 text-white">· Главная</a></li>
-					<li><a href="/contacts" class="nav-link px-2 text-white">· Контакты</a></li>
-					<li><a href="/requests" class="nav-link px-2 text-white">· Заявки</a></li>
-					<li><a href="/docs" class="nav-link px-2 text-white">· Документы</a></li>
+					<li><a href="/" class="nav-link px-2 text-white me-1 rounded headerlink">· Главная</a></li>
+					<li><a href="/contacts" class="nav-link px-2 text-white me-1 rounded headerlink">· Контакты</a></li>
+					<li><a href="/requests" class="nav-link px-2 text-white me-1 rounded headerlink">· Заявки</a></li>
+					<li><a href="/docs" class="nav-link px-2 text-white me-1 rounded headerlink">· Документы</a></li>
 					@if (Auth::check() && Auth::user()->is_admin == true)
-						<li><a href="/admin" class="nav-link px-2 text-warning">· Панель управления</a></li>
+						<li><a href="/admin" class="nav-link px-2 text-warning rounded headerlink">· Админ-панель</a></li>
 					@endif
 				</ul>
 				<div class="text-end">
@@ -119,10 +126,18 @@
 						@auth
 							<nav class="navbar navbar-expand-lg navbar-dark py-0">
 								<div class="container-fluid">
-									<a class="nav-link dropdown-toggle text-white fw-bold" href="#" id="navbarDropdown" role="button"
+									<a class="nav-link dropdown-toggle text-white fw-bold py-0 rounded headerlink" href="#" id="navbarDropdown" role="button"
 										data-bs-toggle="dropdown" aria-expanded="false">
-										{{ Auth::user()->name }} <br>
-										{{ Auth::user()->email }}
+										<div class="me-2" style="display: inline-block;">
+											<div>{{ Auth::user()->name }}</div>
+											<div> {{ Auth::user()->email }}</div>
+										</div>
+										@if (Auth::user()->is_admin == true)
+											<i class="bi bi-emoji-sunglasses-fill d-inline-flex text-warning" style="font-size: 30px;"></i>
+										@else
+											<i class="bi bi-person-circle d-inline-flex" style="font-size: 30px;"></i>
+										@endif
+
 									</a>
 									<ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="navbarDropdown">
 										<form method="POST" action="{{ route('logout') }}">
@@ -144,9 +159,9 @@
 			</div>
 		</div>
 	</header>
-	<div>
+	
 		{{ $slot }}
-	</div>
+	
 </body>
 
 <footer class="my-2 pt-5 text-muted text-center text-small">

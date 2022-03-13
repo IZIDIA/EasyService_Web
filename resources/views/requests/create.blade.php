@@ -86,7 +86,8 @@
 							</div>
 
 							<div class="col-12">
-								<label for="phone_call_number" class="form-label">Контактный номер <span class="text-muted">(Пример: 89995401122) Без +</span></label>
+								<label for="phone_call_number" class="form-label">Контактный номер <span class="text-muted">(Без
+										+)</span></label>
 								<input maxlength="11" pattern="^\d+" type="tel" class="form-control" id="phone_call_number"
 									name="phone_call_number" placeholder="Мобильный или рабочий..." required
 									value="{{ old('phone_call_number') }}">
@@ -134,7 +135,7 @@
 								</div>
 							</div>
 
-							<div id="dataDiv" style="visibility: @if (old('solution_with_me') == '2' || old('solution_with_me') == '3') visible @else hidden @endif ">
+							<div id="dataDiv" style="display: @if (old('solution_with_me') == '2' || old('solution_with_me') == '3') block @else none @endif ">
 								<h4 class="mb-2">График вашей работы: <span class="text-muted fs-5">(Если
 										график не получается задать по шаблону, сообщите о нём в тексте заявки)</span></h4>
 
@@ -286,12 +287,17 @@
 									<label class="form-check-label" for="same-address">Да, проблема с моим ПК</label>
 								</div>
 								<div class="col-sm-4" id="zDiv"
-									style="visibility: @if (old('problem_with_my_pc') == 'on') visible @else hidden @endif">
+									style="display: @if (old('problem_with_my_pc') == 'on') block @else none @endif">
 									<label for="user_password">Пароль пользователя: <span class="text-muted">(Если
 											имеется)</span></label> <br>
-									<input class="form-control" type="text" name="user_password" id="user_password"
+									<input class="form-control" type="text" name="user_password" id="user_password" maxlength="64"
 										value="{{ old('user_password') }}" />
 								</div>
+								@error('user_password')
+									<div class="mt-1" style="color: red">
+										{{ $message }}
+									</div>
+								@enderror
 							</div>
 
 							<hr class="my-1">
@@ -334,7 +340,7 @@
 							</script>
 
 							<div class="col-md-6 offset-md-3 text-center">
-								<label class="mb-3" for="file">Фотография или скриншот (1) <span class="text-muted">(По
+								<label class="mb-3" for="file">Фотография или скриншот проблемы (1) <span class="text-muted">(По
 										желанию)</span></label>
 								<input @error('photo') autofocus @enderror class="form-control mb-1" type="file" name="photo" id="file"
 									accept=".jpg, .jpeg, .png" onchange="return fileValidation()">

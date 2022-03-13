@@ -28,10 +28,10 @@ window.showPasswordInputFunction = function () {
 	var password = document.getElementById("user_password");
 	if (checkBox.checked == true) {
 		password.value = '';
-		divBlock.style = null;
+		divBlock.style.display = "block";
 	} else {
 		password.value = '';
-		divBlock.style.visibility = "hidden";
+		divBlock.style.display = "none";
 	}
 }
 
@@ -40,9 +40,9 @@ window.showDataTableFunction = function () {
 	var radioNo = document.getElementById("no_with");
 	var divBlock = document.getElementById("dataDiv");
 	if (radioYes.checked == true || radioNo.checked == true) {
-		divBlock.style = null;
+		divBlock.style.display = "block";
 	} else {
-		divBlock.style.visibility = "hidden";
+		divBlock.style.display = "none";
 	}
 }
 
