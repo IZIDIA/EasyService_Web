@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\RequestInfo;
 use Carbon\Carbon;
 use Dotenv\Util\Str;
+use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
@@ -80,6 +81,7 @@ class RequestInfoController extends Controller
 			$this->storeImage($request_info);
 			return redirect('/requests/');
 		}
+		$data['session_id'] = session()->getId();
 		$request_info = RequestInfo::create($data);
 		$this->storeImage($request_info);
 		return redirect('/requests/' . $request_info->id);
@@ -119,7 +121,7 @@ class RequestInfoController extends Controller
 	public function show($request_id)
 	{
 		$request_info = RequestInfo::findOrFail($request_id);
-		if (Auth::check() &&  Auth::user()->id == $request_info->user_id) {
+		if ($request_info->session_id == session()->getId() || (Auth::check() &&  Auth::user()->id == $request_info->user_id)) {
 			return view('requests.show', compact('request_info'));
 		}
 		abort(404);

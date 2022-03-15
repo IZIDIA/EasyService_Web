@@ -22,6 +22,7 @@ return new class extends Migration
 			$table->string('email', 128);
 			//Если с сайта, то по зарегистрировавшемуся пользователю
 			$table->unsignedBigInteger('user_id')->nullable()->comment('id Пользователя');
+			$table->string('session_id', 128)->nullable()->comment('id Сессии, если пользователь не зарегистрирован');	
 			$table->string('ip_address', 15)->comment('IP Address Пользователя');
 			$table->string('topic', 128);
 			$table->string('inventory_number', 128)->nullable();

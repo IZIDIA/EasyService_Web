@@ -15,7 +15,7 @@ return new class extends Migration
 	{
 		Schema::create('admin_queues', function (Blueprint $table) {
 			$table->id();
-			$table->unsignedBigInteger('admin_id')->nullable()->comment('id Администратора');
+			$table->unsignedBigInteger('admin_id')->unique()->comment('id Администратора');
 			$table->unsignedBigInteger('request_id')->nullable()->comment('id Заявки');
 			$table->timestamps();
 
