@@ -30,42 +30,45 @@ class RequestInfoController extends Controller
 
 	public function store(Request $request)
 	{
-		$data = $this->validateData();
-		$data['from_pc'] = false;
-		$data['name'] = $request->first_name . ' ' . $request->last_name;
-		$data['ip_address'] = request()->ip();
-		$data['date_create'] = Carbon::now();
-		$data['status'] = 'В обработке';
-		if ($request['solution_with_me'] == 1) {
-			$data['solution_with_me'] = NULL;
-		} else {
-			if ($request['solution_with_me'] == 2) {
-				$data['solution_with_me'] = true;
+		if ($request['anonym'] == 0) {
+			$data = $this->validateData();
+			$data['name'] = $request->first_name . ' ' . $request->last_name;
+			if ($request['solution_with_me'] == 1) {
+				$data['solution_with_me'] = NULL;
 			} else {
-				$data['solution_with_me'] = false;
+				if ($request['solution_with_me'] == 2) {
+					$data['solution_with_me'] = true;
+				} else {
+					$data['solution_with_me'] = false;
+				}
+				$data['work_time'] = '';
+				if ($request['monday'] == 'on') {
+					$data['work_time'] .= 'ПН ' . 'С: ' . $request['from_monday'] . ' До: ' . $request['to_monday'] . PHP_EOL;
+				}
+				if ($request['tuesday'] == 'on') {
+					$data['work_time'] .= 'ВТ ' . 'С: ' . $request['from_tuesday'] . ' До: ' . $request['to_tuesday'] . PHP_EOL;
+				}
+				if ($request['wednesday'] == 'on') {
+					$data['work_time'] .= 'СР ' . 'С: ' . $request['from_wednesday'] . ' До: ' . $request['to_wednesday'] . PHP_EOL;
+				}
+				if ($request['thursday'] == 'on') {
+					$data['work_time'] .= 'ЧТ ' . 'С: ' . $request['from_thursday'] . ' До: ' . $request['to_thursday'] . PHP_EOL;
+				}
+				if ($request['friday'] == 'on') {
+					$data['work_time'] .= 'ПТ ' . 'С: ' . $request['from_friday'] . ' До: ' . $request['to_friday'] . PHP_EOL;
+				}
+				if ($request['saturday'] == 'on') {
+					$data['work_time'] .= 'СБ ' . 'С: ' . $request['from_saturday'] . ' До: ' . $request['to_saturday'] . PHP_EOL;
+				}
+				if ($request['sunday'] == 'on') {
+					$data['work_time'] .= 'ВС ' . 'С: ' . $request['from_sunday'] . ' До: ' . $request['to_sunday'] . PHP_EOL;
+				}
 			}
-			$data['work_time'] = '';
-			if ($request['monday'] == 'on') {
-				$data['work_time'] .= 'ПН ' . 'С: ' . $request['from_monday'] . ' До: ' . $request['to_monday'] . PHP_EOL;
-			}
-			if ($request['tuesday'] == 'on') {
-				$data['work_time'] .= 'ВТ ' . 'С: ' . $request['from_tuesday'] . ' До: ' . $request['to_tuesday'] . PHP_EOL;
-			}
-			if ($request['wednesday'] == 'on') {
-				$data['work_time'] .= 'СР ' . 'С: ' . $request['from_wednesday'] . ' До: ' . $request['to_wednesday'] . PHP_EOL;
-			}
-			if ($request['thursday'] == 'on') {
-				$data['work_time'] .= 'ЧТ ' . 'С: ' . $request['from_thursday'] . ' До: ' . $request['to_thursday'] . PHP_EOL;
-			}
-			if ($request['friday'] == 'on') {
-				$data['work_time'] .= 'ПТ ' . 'С: ' . $request['from_friday'] . ' До: ' . $request['to_friday'] . PHP_EOL;
-			}
-			if ($request['saturday'] == 'on') {
-				$data['work_time'] .= 'СБ ' . 'С: ' . $request['from_saturday'] . ' До: ' . $request['to_saturday'] . PHP_EOL;
-			}
-			if ($request['sunday'] == 'on') {
-				$data['work_time'] .= 'ВС ' . 'С: ' . $request['from_sunday'] . ' До: ' . $request['to_sunday'] . PHP_EOL;
-			}
+		} else {
+			$data = $this->anonymValidateData();
+			$data['name'] = 'Аноним';
+			$data['email'] = 'Неизвестно';
+			$data['phone_call_number'] = 'Неизвестно';
 		}
 		if ($request['problem_with_my_pc'] == 'on') {
 			$data['problem_with_my_pc'] = true;
@@ -73,6 +76,9 @@ class RequestInfoController extends Controller
 		} else {
 			$data['problem_with_my_pc'] = false;
 		}
+		$data['from_pc'] = false;
+		$data['ip_address'] = request()->ip();
+		$data['date_create'] = Carbon::now();
 		$data['status'] = 'В обработке';
 
 		if (Auth::check()) {
@@ -97,6 +103,23 @@ class RequestInfoController extends Controller
 			'phone_call_number' => 'required|max:32',
 			'inventory_number' => 'max:64',
 			'user_password' => 'max:64',
+			'topic' => 'required|max:128',
+			'text' => 'required|max:4096',
+		]), function () {
+			if (request()->hasFile('photo')) {
+				request()->validate([
+					'photo' => 'file|image|max:15000'
+				]);
+			}
+		});
+		return $validateData;
+	}
+
+	protected function anonymValidateData()
+	{
+		return tap($validateData =  request()->validate([
+			'location' => 'required|max:255',
+			'inventory_number' => 'max:64',
 			'topic' => 'required|max:128',
 			'text' => 'required|max:4096',
 		]), function () {

@@ -2,7 +2,11 @@
 
 	<div class="container">
 		<main class="noCopy">
-			<div class="py-5 text-center">
+			<div class="my-4 text-center">
+				@if (!Auth::check())
+					<p class="lead text-warning">Внимание: вы создаёте заявку без предварительной регистрации и не сможете
+						отслеживать подробную информацию, только статус выполнения.</p>
+				@endif
 				<h2>Форма для отправки заявки</h2>
 			</div>
 
@@ -14,11 +18,22 @@
 					<form class="needs-validation" novalidate action="/requests" method="POST" enctype="multipart/form-data">
 						<div class="row g-3">
 
-							<div class="col-sm-6">
+							<div class="my-3">
+								<div class="form-check">
+									<input type="checkbox" class="form-check-input" id="anonym" name="anonym"
+										@if (old('anonym') == 'on') checked @endif onclick="enableAnonym()">
+									<label class="form-check-label" for="anonym">Анонимная заявка <span class="text-muted">(Администратор
+											не сможет связаться с вами, в случае необходимости)</span></label>
+								</div>
+							</div>
+
+							<hr class="my-0">
+
+							<div class="col-sm-6" id="first_name_div">
 								<label for="first_name" class="form-label">Имя</label>
 								@if (Auth::check())
 									<input maxlength="40" type="text" class="form-control" id="first_name" name="first_name"
-										value="{{ old('first_name') ?? Str::before(Auth::user()->name, ' ') }}" required>
+										value="{{ old('first_name') ?? Str::before(Auth::user()->name, ' ') }}" required="false">
 								@else
 									<input maxlength="40" type="text" class="form-control" id="first_name" name="first_name" required
 										value="{{ old('first_name') }}">
@@ -33,7 +48,7 @@
 								@enderror
 							</div>
 
-							<div class="col-sm-6">
+							<div class="col-sm-6" id="last_name_div">
 								<label for="last_name" class="form-label">Фамилия</label>
 								@if (Auth::check())
 									<input maxlength="40" type="text" class="form-control" id="last_name" name="last_name"
@@ -52,7 +67,7 @@
 								@enderror
 							</div>
 
-							<div class="col-12">
+							<div class="col-12" id="email_div">
 								<label for="email" class="form-label">Email</label>
 								@if (Auth::check())
 									<input maxlength="64" type="email" class="form-control" id="email" name="email"
@@ -85,9 +100,9 @@
 								@enderror
 							</div>
 
-							<div class="col-12">
-								<label for="phone_call_number" class="form-label">Контактный номер <span class="text-muted">(Без
-										+)</span></label>
+							<div class="col-12" id="phone_call_number_div">
+								<label for="phone_call_number" class="form-label">Контактный номер <span class="text-muted">(Пример:
+										89991234455 или 79991234455)</span></label>
 								<input maxlength="11" pattern="^\d+" type="tel" class="form-control" id="phone_call_number"
 									name="phone_call_number" placeholder="Мобильный или рабочий..." required
 									value="{{ old('phone_call_number') }}">
@@ -114,10 +129,10 @@
 								@enderror
 							</div>
 
-							<hr class="my-4">
+							<hr class="mt-4">
 
-							<h4 class="mb-1">Решить проблему в вашем присутствии?</h4>
-							<div class="my-2">
+							<div class="my-2" id="work_time_div">
+								<h4 class="mb-2">Решить проблему в вашем присутствии?</h4>
 								<div class="form-check">
 									<input value="1" id="anyway_with" name="solution_with_me" type="radio" class="form-check-input" checked
 										required onclick="showDataTableFunction()">
@@ -277,21 +292,21 @@
 								</div>
 							</div>
 
-							<hr class="my-1">
+							<hr class="my-1" id="work_time_hr">
 
-							<div class="my-3">
-								<h4 class="mb-3">Проблема с вашим рабочим ПК?</h4>
+							<div class="my-3" id="problem_with_pc_div">
+								<h4 class="mb-2">Проблема с текущим рабочим ПК?</h4>
 								<div class="form-check mb-3">
 									<input type="checkbox" class="form-check-input" id="zCheck" name="problem_with_my_pc"
 										@if (old('problem_with_my_pc') == 'on') checked @endif onclick="showPasswordInputFunction()">
-									<label class="form-check-label" for="same-address">Да, проблема с моим ПК</label>
+									<label class="form-check-label" for="zCheck">Да, проблема с текущим ПК</label>
 								</div>
 								<div class="col-sm-4" id="zDiv"
 									style="display: @if (old('problem_with_my_pc') == 'on') block @else none @endif">
 									<label for="user_password">Пароль пользователя: <span class="text-muted">(Если
 											имеется)</span></label> <br>
 									<input class="form-control" type="text" name="user_password" id="user_password" maxlength="64"
-										value="{{ old('user_password') }}" />
+										placeholder="Для входа в систему..." value="{{ old('user_password') }}" />
 								</div>
 								@error('user_password')
 									<div class="mt-1" style="color: red">
@@ -300,7 +315,7 @@
 								@enderror
 							</div>
 
-							<hr class="my-1">
+							<hr class="my-1" id="problem_with_pc_hr">
 
 							<div class="col-12 mb-3">
 								<h4>Тема</h4>
@@ -319,7 +334,7 @@
 							<div class="mb-2">
 								<h4>Сообщение</h4>
 								<textarea class="form-control mb-1" id="text" name="text" onkeyup="charCount();" rows="10" maxlength="4000"
-									minlength="1" placeholder="Опишите вашу проблему..." required>{{ old('text') }}</textarea>
+         minlength="1" placeholder="Опишите вашу проблему..." required>{{ old('text') }}</textarea>
 								<div class="invalid-feedback">
 									Требуется описание вашей проблемы.
 								</div>
@@ -366,6 +381,7 @@
 							@if ($errors->any())
 								<script>
 								 charCount();
+								 enableAnonym();
 								</script>
 							@endif
 

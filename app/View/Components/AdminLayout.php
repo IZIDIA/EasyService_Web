@@ -4,7 +4,7 @@ namespace App\View\Components;
 
 use Illuminate\View\Component;
 
-class HeaderLayout extends Component
+class AdminLayout extends Component
 {
 	/**
 	 * Get the view / contents that represents the component.
@@ -13,6 +13,6 @@ class HeaderLayout extends Component
 	 */
 	public function render()
 	{
-		return view('layouts.header');
+		return view('layouts.admin');
 	}
 }

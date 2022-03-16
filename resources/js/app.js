@@ -55,3 +55,43 @@ window.showOrHide = function (hak, cat) {
 		cat.style.visibility = "hidden";
 	}
 }
+
+window.enableAnonym = function () {
+	var anonym = document.getElementById("anonym");
+	var first_name_div = document.getElementById("first_name_div");
+	var last_name_div = document.getElementById("last_name_div");
+	var email_div = document.getElementById("email_div");
+	var phone_call_number_div = document.getElementById("phone_call_number_div");
+	var work_time_div = document.getElementById("work_time_div");
+	var work_time_hr = document.getElementById("work_time_hr");
+	var dataDiv = document.getElementById("dataDiv");
+	var first_name = document.getElementById("first_name");
+	var last_name = document.getElementById("last_name");
+	var email = document.getElementById("email");
+	var phone_call_number = document.getElementById("phone_call_number");
+	if (anonym.checked) {
+		first_name.required = false;
+		last_name.required = false;
+		email.required = false;
+		phone_call_number.required = false;
+		first_name_div.style.display = "none";
+		last_name_div.style.display = "none";
+		email_div.style.display = "none";
+		phone_call_number_div.style.display = "none";
+		work_time_div.style.display = "none";
+		work_time_hr.style.display = "none";
+		dataDiv.style.display = "none";
+	} else {
+		first_name.required = true;
+		last_name.required = true;
+		email.required = true;
+		phone_call_number.required = true;
+		first_name_div.style.display = "block";
+		last_name_div.style.display = "block";
+		email_div.style.display = "block";
+		phone_call_number_div.style.display = "block";
+		work_time_div.style.display = "block";
+		work_time_hr.style.display = "block";
+		showDataTableFunction();
+	}
+}

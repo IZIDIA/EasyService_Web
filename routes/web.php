@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\RequestInfoController;
 use Illuminate\Support\Facades\Route;
 
@@ -29,10 +30,10 @@ Route::get('/contacts', function () {
 
 require __DIR__ . '/auth.php';
 
-Route::get('/admin', function () {
-	return view('admin');
-})->middleware(['auth'])->name('admin');
 
+
+Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+Route::get('/admin/my', [AdminController::class, 'my'])->middleware(['auth'])->name('admin.my');
 
 // Route::get('/requests', [RequestInfoController::class, 'index'])->name('requests')->middleware('auth');
 // Route::get('/requests/create', [RequestInfoController::class, 'create'])->name('requests/create')->middleware('auth');

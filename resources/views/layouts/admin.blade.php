@@ -21,13 +21,6 @@
 			font-family: 'Roboto', 'Nunito', sans-serif;
 		}
 
-		.requestlink:hover {
-			background-color: #0B5ED7;
-			-webkit-transition: background-color 200ms linear;
-			-ms-transition: background-color 200ms linear;
-			transition: background-color 200ms linear;
-		}
-
 		.headerlink:hover {
 			background-color: rgb(21, 46, 93);
 			-webkit-transition: background-color 200ms linear;
@@ -35,47 +28,47 @@
 			transition: background-color 200ms linear;
 		}
 
-		.form-control-dark {
-			color: #fff;
-			background-color: var(--bs-dark);
-			border-color: var(--bs-gray);
+		.sidebar {
+			position: fixed;
+			top: 0;
+			bottom: 0;
+			left: 0;
+			z-index: 100;
+			padding: 50px 0 0;
+			box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
 		}
 
-		.form-control-dark:focus {
-			color: #fff;
-			background-color: var(--bs-dark);
-			border-color: #fff;
-			box-shadow: 0 0 0 .25rem rgba(255, 255, 255, .25);
+		.sidebar-sticky {
+			position: relative;
+			top: 0;
+			height: calc(100vh - 48px);
+			padding-top: .5rem;
+			overflow-x: hidden;
+			overflow-y: auto;
 		}
 
-		.login_oueter {
-			width: 360px;
-			max-width: 100%;
+		.sidebar .nav-link {
+			font-weight: 500;
+			color: #333;
 		}
 
-		.logo_outer {
-			text-align: center;
+		.sidebar .nav-link .feather {
+			margin-right: 4px;
+			color: #727272;
 		}
 
-		.logo_outer img {
-			width: 120px;
-			margin-bottom: 40px;
+		.sidebar .nav-link.active {
+			color: #3187ff;
 		}
 
-		.noCopy {
-			-moz-user-select: none;
-			-khtml-user-select: none;
-			user-select: none;
+		.sidebar .nav-link:hover .feather,
+		.sidebar .nav-link.active .feather {
+			color: inherit;
 		}
 
-		.icon-square {
-			display: inline-flex;
-			align-items: center;
-			justify-content: center;
-			width: 3rem;
-			height: 3rem;
-			font-size: 2rem;
-			border-radius: .75rem;
+		.sidebar-heading {
+			font-size: .75rem;
+			text-transform: uppercase;
 		}
 
 	</style>
@@ -83,8 +76,11 @@
 </head>
 
 <body class="text-white" style="background-color: #2D3748">
-	<header class="sticky-xl-top shadow p-2 text-white" style="background: radial-gradient(rgb(21, 46, 93), #1A202C);">
+
+	<header class="sticky-top p-2 text-white " style="background: radial-gradient(rgb(21, 46, 93), #1A202C);">
+
 		<div class="container">
+
 			<div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
 				<a href="/" class="d-none d-lg-block d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
 					<svg xmlns="http://www.w3.org/2000/svg" viewBox="4 4 38 38" class="bi me-2" width="60" height="60" role="img"
@@ -113,16 +109,18 @@
 							d="M12.608,14.87c0,0,6.833,10.327,12.578,13.82c-2.174,0.699-6.894,3.555-15.124-1.492	c2.096,2.873,5.807,8.635,14.891,8.092c3.183-0.155,5.124-1.165,6.91-1.863s3.494-0.621,4.969,2.019	c0.311-2.407,0.388-4.659-2.096-7.221c0,0,2.456-9.363-8.001-16.751c2.174,4.348,3.433,6.8,2.411,12.791	c-2.329-1.553-10.931-8.48-12.872-10.732c1.398,2.485,5.419,7.936,6.816,9.334C20.606,21.159,12.608,14.87,12.608,14.87z" />
 					</svg>
 				</a>
-				<ul class="nav me-lg-auto mb-2 justify-content-center mb-md-0 fs-5">
+				<ul class="nav me-sm-auto justify-content-center mb-md-0 fs-5">
 					<li><a href="/" class="nav-link px-2 text-white me-1 rounded headerlink">· Главная</a></li>
-					<li><a href="/contacts" class="nav-link px-2 text-white me-1 rounded headerlink">· Контакты</a></li>
-					<li><a href="/requests" class="nav-link px-2 text-white me-1 rounded headerlink">· Заявки</a></li>
-					<li><a href="/docs" class="nav-link px-2 text-white me-1 rounded headerlink">· Документы</a></li>
+					<li><a href="/contacts" class="d-none d-lg-block nav-link px-2 text-white me-1 rounded headerlink">· Контакты</a>
+					</li>
+					<li><a href="/requests" class="d-none d-lg-block nav-link px-2 text-white me-1 rounded headerlink">· Заявки</a></li>
+					<li><a href="/docs" class="d-none d-lg-block nav-link px-2 text-white me-1 rounded headerlink">· Документы</a></li>
 					@if (Auth::check() && Auth::user()->is_admin == true)
-						<li><a href="/admin" class="nav-link px-2 text-warning rounded headerlink">· Админ-панель</a></li>
+						<li><a href="/admin" class="d-none d-lg-block nav-link px-2 text-warning rounded headerlink">· Админ-панель</a>
+						</li>
 					@endif
 				</ul>
-				<div class="text-end">
+				<div class="text-end" style="font-size: ">
 					@if (Route::has('login'))
 						@auth
 							<nav class="navbar navbar-expand-lg navbar-dark py-0">
@@ -138,7 +136,6 @@
 										@else
 											<i class="bi bi-person-fill d-inline-flex" style="font-size: 30px;"></i>
 										@endif
-
 									</a>
 									<ul class="me-2 mt-lg-3 mt-2 dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="navbarDropdown">
 										<form method="POST" action="{{ route('logout') }}">
@@ -159,14 +156,89 @@
 				</div>
 			</div>
 		</div>
+
+		<div class="navbar-dark ">
+			<button style="right: 10px; margin-top:15px; padding:0;" class="navbar-toggler position-absolute d-md-none collapsed"
+				type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu"
+				aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+		</div>
+
 	</header>
 
-	{{ $slot }}
+
+	<div class="container-fluid">
+		<div class="row">
+			<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse shadow" style="background-color: #1A202C">
+				<div class="position-sticky pt-5">
+					<ul class="nav flex-column fs-5">
+						<li class="nav-item">
+							<a class="nav-link active" aria-current="page" href="#">
+								<i class="bi bi-pen-fill feather"></i>
+								Мои заявки
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link text-white" href="#">
+								<i class="bi bi-bar-chart-line feather"></i>
+								Все заявки
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link text-white" href="#">
+								<i class="bi bi-people-fill feather"></i>
+								Пользователи
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link text-white" href="#">
+								<i class="bi bi-telephone-fill feather"></i>
+								Контакты
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link text-white" href="#">
+								<i class="bi bi-file-text-fill feather"></i>
+								Документы
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link text-white" href="#">
+								<i class="bi bi-bar-chart-line-fill feather"></i>
+								Статистика
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link text-white" href="#">
+								<i class="bi bi-gear-fill feather"></i>
+								Настройки
+							</a>
+						</li>
+					</ul>
+				</div>
+			</nav>
+
+			<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+
+
+				{{ $slot }}
+
+				<footer class="my-2 pt-5 text-muted text-center text-small">
+					<p class="mb-1"> {{ App\Models\Option::find(1)->value('company_name') }}</p>
+				</footer>
+
+
+			</main>
+		</div>
+	</div>
+
+
+
 
 </body>
 
-<footer class="my-2 pt-5 text-muted text-center text-small">
-	<p class="mb-1"> {{ App\Models\Option::find(1)->value('company_name') }}</p>
-</footer>
+
+
 
 </html>
