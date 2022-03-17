@@ -15,14 +15,15 @@ return new class extends Migration
 	{
 		Schema::create('request_infos', function (Blueprint $table) {
 			$table->id();
+			$table->unsignedBigInteger('admin_id')->nullable()->comment('id Исполнителя');
 			$table->boolean('from_pc');
-			//Если с пк, то определяем пользователя по ключу (MAC)
-			$table->string('key', 12)->nullable()->comment('MAC Address');
+			//Если с пк, то определяем пользователя по MAC
+			$table->string('mac', 12)->nullable()->comment('MAC Address');
 			$table->string('name', 128);
 			$table->string('email', 128);
 			//Если с сайта, то по зарегистрировавшемуся пользователю
 			$table->unsignedBigInteger('user_id')->nullable()->comment('id Пользователя');
-			$table->string('session_id', 128)->nullable()->comment('id Сессии, если пользователь не зарегистрирован');	
+			$table->string('session_id', 128)->nullable()->comment('id Сессии, если пользователь не зарегистрирован');
 			$table->string('ip_address', 15)->comment('IP Address Пользователя');
 			$table->string('topic', 128);
 			$table->string('inventory_number', 128)->nullable();
@@ -33,12 +34,13 @@ return new class extends Migration
 			$table->string('work_time', 255)->nullable();
 			$table->string('user_password', 128)->nullable();
 			$table->string('text', 4096);
-			$table->string('status', 128);
+			$table->string('status', 128)->comment('[В обработке, В работе, Завершено, Отменено]');
 			$table->string('photo')->comment('Фотография')->nullable();
 			$table->timestamp('closed_at')->nullable();
 			$table->timestamps();
 
 			$table->foreign('user_id')->references('id')->on('users');
+			$table->foreign('admin_id')->references('id')->on('users');
 		});
 	}
 

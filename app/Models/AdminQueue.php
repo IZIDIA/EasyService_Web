@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use GuzzleHttp\Psr7\Request;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,13 +10,16 @@ class AdminQueue extends Model
 	protected $guarded = ['id'];
 	use HasFactory;
 
+	//Нет необходимости
+	/*
 	public function user()
 	{
-		return $this->hasOne(User::class);
+		return $this->hasOne(User::class, 'id'); 
 	}
 
 	public function request_info()
 	{
-		return $this->hasOne(Request::class);
+		return $this->hasOne(RequestInfo::class, 'admin_id');
 	}
+	*/
 }

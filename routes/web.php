@@ -32,11 +32,10 @@ require __DIR__ . '/auth.php';
 
 
 
-Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+Route::get('/admin', [AdminController::class, 'index'])->middleware(['auth'])->name('admin.index');
 Route::get('/admin/my', [AdminController::class, 'my'])->middleware(['auth'])->name('admin.my');
-
-// Route::get('/requests', [RequestInfoController::class, 'index'])->name('requests')->middleware('auth');
-// Route::get('/requests/create', [RequestInfoController::class, 'create'])->name('requests/create')->middleware('auth');
+Route::get('/admin/requests', [AdminController::class, 'requests'])->middleware(['auth'])->name('admin.requests.index');
+Route::get('/admin/requests/{request}', [AdminController::class, 'show'])->middleware(['auth'])->name('admin.requests.show');
 
 Route::get('/requests', [RequestInfoController::class, 'index'])->name('requests.index');
 Route::get('/requests/create', [RequestInfoController::class, 'create'])->name('requests.create');

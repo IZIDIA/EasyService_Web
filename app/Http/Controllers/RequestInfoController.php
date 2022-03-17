@@ -15,7 +15,7 @@ class RequestInfoController extends Controller
 	public function index()
 	{
 		if (Auth::check()) {
-			$request_infos = RequestInfo::where('user_id', Auth::user()->id)->get()->reverse();
+			$request_infos = RequestInfo::where('user_id', Auth::user()->id)->orderBy('created_at', 'desc')->paginate(10);
 			return view('requests/index', ['request_infos' => $request_infos]);
 		} else {
 			return view('requests/index');
@@ -144,7 +144,7 @@ class RequestInfoController extends Controller
 	public function show($request_id)
 	{
 		$request_info = RequestInfo::findOrFail($request_id);
-		if ($request_info->session_id == session()->getId() || (Auth::check() &&  Auth::user()->id == $request_info->user_id)) {
+		if ($request_info->session_id == session()->getId() || (Auth::check() && (Auth::user()->id == $request_info->user_id || Auth::user()->is_admin == true))) {
 			return view('requests.show', compact('request_info'));
 		}
 		abort(404);

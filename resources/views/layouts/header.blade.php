@@ -22,7 +22,7 @@
 		}
 
 		.requestlink:hover {
-			background-color: #0B5ED7;
+			background-color: rgb(21, 46, 93);
 			-webkit-transition: background-color 200ms linear;
 			-ms-transition: background-color 200ms linear;
 			transition: background-color 200ms linear;
@@ -140,7 +140,7 @@
 										@endif
 
 									</a>
-									<ul class="me-2 mt-lg-3 mt-2 dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="navbarDropdown">
+									<ul class="shadow me-2 mt-lg-3 mt-2 dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="navbarDropdown">
 										<form method="POST" action="{{ route('logout') }}">
 											@csrf
 											<a class="dropdown-item text-white" href="route('logout')"
