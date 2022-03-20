@@ -19,7 +19,10 @@ class AdminController extends Controller
 	{
 		if (Auth::user()->is_admin == 1) {
 			$my_requests = RequestInfo::where('admin_id', Auth::user()->id)->where('status', 'В работе')->paginate(20);
-			$request_id = AdminQueue::where('admin_id', Auth::user()->id)->first()->request_id;
+			$request_id = null;
+			if (($request = AdminQueue::where('admin_id', Auth::user()->id)->first()) !== null) {
+				$request_id = $request->request_id;
+			}
 			$recommend_request = RequestInfo::where('id', $request_id)->first();
 			return view('admin.my', [
 				'my_requests' => $my_requests,

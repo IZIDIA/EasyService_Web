@@ -11,30 +11,70 @@
 
 
 			<div class="container" id="hanging-icons" style="word-break: break-all;">
-				<h2 class="pb-2 border-bottom">Статус: @switch($request_info->status)
-						@case('В обработке')
-							<span class="fw-bold" style="color: rgb(0, 255, 255)">{{ $request_info->status }}</span>
-						@break
 
-						@case('В работе')
-							<span class="fw-bold" style="color: rgb(255, 157, 0)">{{ $request_info->status }}</span>
-						@break
+				<div class="pb-2 px-2 border-bottom row row-cols-1 row-cols-lg-2">
+					<div>
+						<h2 class="">Статус: @switch($request_info->status)
+								@case('В обработке')
+									<span class="fw-bold" style="color: rgb(0, 255, 255)">{{ $request_info->status }}</span>
+								@break
 
-						@case('Завершено')
-							<span class="fw-bold" style="color: rgb(0, 255, 0)">{{ $request_info->status }}</span>
-						@break
+								@case('В работе')
+									<span class="fw-bold" style="color: rgb(255, 157, 0)">{{ $request_info->status }}</span>
+								@break
 
-						@case('Отменено')
-							<span class="fw-bold" style="color: rgb(173, 0, 0)">{{ $request_info->status }}</span>
-						@break
+								@case('Завершено')
+									<span class="fw-bold" style="color: rgb(0, 255, 0)">{{ $request_info->status }}</span>
+								@break
 
-						@default
-							<span class="fw-bold" style="color: white">{{ $request_info->status }}</span>
-					@endswitch
-				</h2>
-				<div class="row gx-2 py-2 row-cols-1 row-cols-lg-3">
+								@case('Отменено')
+									<span class="fw-bold" style="color: rgb(173, 0, 0)">{{ $request_info->status }}</span>
+								@break
+
+								@default
+									<span class="fw-bold" style="color: white">{{ $request_info->status }}</span>
+							@endswitch
+						</h2>
+					</div>
+					<div class="d-flex align-items-center flex-lg-row-reverse fs-5" style="color: #96FBFE">
+						<div><strong>Исполнитель:</strong>
+							{{ App\Models\User::firstWhere('id', $request_info->admin_id)->name ?? 'Не назначен' }}</div>
+					</div>
+				</div>
+
+				<div class="row gx-2 py-2 ">
+					<div class="pt-3 col-lg-8 align-items-start">
+						<div class="p-3 d-flex " style="border-radius: 10px; background-color:#283141; height: 190px;">
+							<pre id="comments" class="rounded" style="
+								width: 100%;
+								height:100%; 
+								white-space: pre-wrap;
+								font-family: Consolas, Roboto;
+								">{{ $request_info->comments }}</pre>
+							<script type="text/javascript">
+							 var block = document.getElementById("comments");
+							 block.scrollTop = block.scrollHeight;
+							</script>
+						</div>
+					</div>
+					<div class="pt-3 col-lg-4 align-items-start">
+						<div class="p-3 shadow-sm" style="border-radius: 10px; background-color:#283141; height: 100%;">
+							<strong>Коментарий к заявке:</strong>
+							<form action="/requests/{{ $request_info->id }}/comment" method="POST">
+								<textarea maxlength="512" style="resize:none;" class="form-control mt-1" rows="3" minlength="1" name="comment_text"></textarea>
+								<div class="d-flex justify-content-end mt-2">
+									@method('PATCH')
+									@csrf
+									<button class="shadow btn btn-primary">Добавить</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+
+				<div class="row gx-2 pb-3 row-cols-1 row-cols-lg-3">
 					<div class="pt-3 col align-items-start">
-						<div class="p-3 d-flex" style="border-radius: 10px; background-color:#283141; height: 100%;">
+						<div class="p-3 d-flex shadow-sm" style="border-radius: 10px; background-color:#283141; height: 100%;">
 							<div class="icon-square bg-dark text-light flex-shrink-0 me-3">
 								<i class="bi bi-person-fill"></i>
 							</div>
@@ -53,7 +93,7 @@
 						</div>
 					</div>
 					<div class="pt-3 col align-items-start ">
-						<div class="p-3 d-flex" style="border-radius: 10px; background-color:#283141; height: 100%;">
+						<div class="p-3 d-flex shadow-sm" style="border-radius: 10px; background-color:#283141; height: 100%;">
 							<div class="icon-square bg-dark text-light flex-shrink-0 me-3">
 								<i class="bi bi-geo-alt-fill"></i>
 							</div>
@@ -77,8 +117,8 @@
 							</div>
 						</div>
 					</div>
-					<div class="pt-3 col align-items-start ">
-						<div class="p-3 d-flex" style="border-radius: 10px; background-color:#283141; height: 100%;">
+					<div class="pt-3 col align-items-start">
+						<div class="p-3 d-flex shadow-sm" style="border-radius: 10px; background-color:#283141; height: 100%;">
 							<div class="icon-square bg-dark text-light flex-shrink-0 me-3">
 								<i class="bi bi-toggles"></i>
 							</div>
@@ -129,19 +169,31 @@
 				</div>
 
 
-				<div class="col p-3 mt-1 fs-5" style="border-radius: 10px; background-color:#283141; height: 100%;">
+				<div class="col p-3 mt-1 fs-5 shadow-sm"
+					style="border-radius: 10px; background-color:#283141; height: 100%; min-height: 420px">
 					<div class="col-lg-8 mx-auto">
 						<div class="text-center mb-4">
 							<p><strong>Тема: </strong>{{ $request_info->topic }}</p>
 						</div>
 						<div class="mb-3">
-							<strong>Сообщение:</strong>
-							<textarea class="form-control" rows="15" minlength="1" readonly>{{ $request_info->text }}</textarea>
+							<strong>Текст заявки:</strong>
+							<textarea style="background-color: #212529" class="form-control text-white" rows="12" minlength="1"
+        readonly>{{ $request_info->text }}</textarea>
 						</div>
 					</div>
 
 				</div>
 
+				@if (!($request_info->status == 'Отменено' || $request_info->status == 'Завершено'))
+					<div class="d-flex justify-content-center mt-3">
+						<form action="/requests/{{ $request_info->id }}/cancel" method="POST"
+							onSubmit="return confirm('Вы действительно хотите отменить заявку №{{ $request_info->id }} ?');">
+							@method('PATCH')
+							@csrf
+							<button type="submit" class="shadow btn btn-danger">Отменить заявку</button>
+						</form>
+					</div>
+				@endif
 
 			</div>
 

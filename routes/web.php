@@ -41,3 +41,8 @@ Route::get('/requests', [RequestInfoController::class, 'index'])->name('requests
 Route::get('/requests/create', [RequestInfoController::class, 'create'])->name('requests.create');
 Route::post('/requests', [RequestInfoController::class, 'store'])->name('requests.store');
 Route::get('/requests/{request}', [RequestInfoController::class, 'show'])->name('requests.show');
+Route::patch('/requests/{request}/cancel', [RequestInfoController::class, 'cancel'])->middleware('auth');
+Route::patch('/requests/{request}/comment', [RequestInfoController::class, 'comment'])->middleware('auth');
+Route::get('/requests/{request}/cancel', function () {
+	abort(404);
+});

@@ -80,7 +80,7 @@ class RequestInfoController extends Controller
 		$data['ip_address'] = request()->ip();
 		$data['date_create'] = Carbon::now();
 		$data['status'] = 'В обработке';
-
+		$data['comments'] = '>[' . Carbon::now()->format('d.m.y H:i') . '] Система: Заявка создана';
 		if (Auth::check()) {
 			$data['user_id'] = Auth::user()->id;
 			$request_info = RequestInfo::create($data);
@@ -146,6 +146,29 @@ class RequestInfoController extends Controller
 		$request_info = RequestInfo::findOrFail($request_id);
 		if ($request_info->session_id == session()->getId() || (Auth::check() && (Auth::user()->id == $request_info->user_id || Auth::user()->is_admin == true))) {
 			return view('requests.show', compact('request_info'));
+		}
+		abort(404);
+	}
+
+	public function cancel(RequestInfo $request)
+	{
+		if ($request->user_id == Auth::user()->id || Auth::user()->is_admin == true) {
+			$request->status = 'Отменено';
+			$request->comments .= PHP_EOL . '>[' . Carbon::now()->format('d.m.y H:i') . '] Система: Заявка отменена, пользователем ' . '"' . Auth::user()->name . '"';
+			$request->save();
+			return redirect('/requests/' . $request->id);
+		}
+		abort(404);
+	}
+	public function comment(RequestInfo $request)
+	{
+		if ($request->user_id == Auth::user()->id || Auth::user()->is_admin == true) {
+			$data =  request()->validate([
+				'comment_text' => 'required|min:1|max:512',
+			]);
+			$request->comments .= PHP_EOL . '>[' . Carbon::now()->format('d.m.y H:i') . '] ' . Auth::user()->name . ': ' . str_replace(PHP_EOL, ' ', $data['comment_text']);;
+			$request->save();
+			return redirect('/requests/' . $request->id);
 		}
 		abort(404);
 	}

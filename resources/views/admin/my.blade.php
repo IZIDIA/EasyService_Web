@@ -68,7 +68,7 @@
 			@endforelse
 		</div>
 
-		{!! $my_requests->links() !!}
+		{{ $my_requests->links() }}
 
 	</div>
 

@@ -55,7 +55,7 @@
 
 			</div>
 
-			{!! $all_requests->links() !!}
+			{{ $all_requests->links() }}
 
 
 
