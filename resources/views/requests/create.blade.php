@@ -333,8 +333,8 @@
 
 							<div class="mb-2">
 								<h4>Сообщение</h4>
-								<textarea class="form-control mb-1" id="text" name="text" onkeyup="charCount();" rows="10" maxlength="4000"
-         minlength="1" placeholder="Опишите вашу проблему..." required>{{ old('text') }}</textarea>
+								<textarea class="form-control mb-1" id="text" name="text" rows="10" maxlength="4000" minlength="1"
+         placeholder="Опишите вашу проблему..." required>{{ old('text') }}</textarea>
 								<div class="invalid-feedback">
 									Требуется описание вашей проблемы.
 								</div>
@@ -347,7 +347,14 @@
 									{{ old('textarea_count') ?? '0/4000' }}</div>
 							</div>
 
-							<script type="text/javascript">
+							<script>
+							 var input = document.getElementById('text');
+							 input.oninput = function() {
+							  var element = document.getElementById('text').value.length;
+							  document.getElementById('textarea_count').innerHTML = element + "/4000";
+							 };
+							</script>
+							<script>
 							 function charCount() {
 							  var element = document.getElementById('text').value.length;
 							  document.getElementById('textarea_count').innerHTML = element + "/4000";

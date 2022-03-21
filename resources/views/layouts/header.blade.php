@@ -83,7 +83,7 @@
 </head>
 
 <body class="text-white" style="background-color: #2D3748">
-	<header class="sticky-xl-top shadow p-2 text-white" style="background: radial-gradient(rgb(21, 46, 93), #1A202C);">
+	<header class="sticky-xxl-top shadow p-2 text-white" style="background: radial-gradient(rgb(21, 46, 93), #1A202C);">
 		<div class="container">
 			<div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
 				<a href="/" class="d-none d-lg-block d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">

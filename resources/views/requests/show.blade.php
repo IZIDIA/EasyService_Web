@@ -9,7 +9,6 @@
 				<h2 class="fw-bold">Заявка №{{ $request_info->id }}</h2>
 			</div>
 
-
 			<div class="container" id="hanging-icons" style="word-break: break-all;">
 
 				<div class="pb-2 px-2 border-bottom row row-cols-1 row-cols-lg-2">
@@ -42,9 +41,9 @@
 					</div>
 				</div>
 
-				<div class="row gx-2 py-2 ">
+				<div class="row gx-2 pt-2 ">
 					<div class="pt-3 col-lg-8 align-items-start">
-						<div class="p-3 d-flex " style="border-radius: 10px; background-color:#283141; height: 190px;">
+						<div class="p-3 d-flex shadow-sm" style="border-radius: 10px; background-color:#283141; height: 190px;">
 							<pre id="comments" class="rounded" style="
 								width: 100%;
 								height:100%; 
@@ -61,18 +60,29 @@
 						<div class="p-3 shadow-sm" style="border-radius: 10px; background-color:#283141; height: 100%;">
 							<strong>Коментарий к заявке:</strong>
 							<form action="/requests/{{ $request_info->id }}/comment" method="POST">
-								<textarea maxlength="512" style="resize:none;" class="form-control mt-1" rows="3" minlength="1" name="comment_text"></textarea>
+								<textarea maxlength="512" style="resize:none;" class="form-control mt-1" rows="3" minlength="1" name="comment_text"
+         id="comment_text"></textarea>
 								<div class="d-flex justify-content-end mt-2">
 									@method('PATCH')
 									@csrf
-									<button class="shadow btn btn-primary">Добавить</button>
+									<button disabled id="comment_btn" class="shadow btn btn-primary">Добавить</button>
 								</div>
 							</form>
+							<script>
+							 var input = document.getElementById('comment_text');
+							 input.oninput = function() {
+							  var element = document.getElementById('comment_text').value.length;
+							  if (element == 0)
+							   document.getElementById('comment_btn').disabled = true;
+							  else
+							   document.getElementById('comment_btn').disabled = false;
+							 };
+							</script>
 						</div>
 					</div>
 				</div>
 
-				<div class="row gx-2 pb-3 row-cols-1 row-cols-lg-3">
+				<div class="row gx-2 row-cols-1 row-cols-lg-3">
 					<div class="pt-3 col align-items-start">
 						<div class="p-3 d-flex shadow-sm" style="border-radius: 10px; background-color:#283141; height: 100%;">
 							<div class="icon-square bg-dark text-light flex-shrink-0 me-3">
@@ -88,7 +98,6 @@
 								@if ($request_info->closed_at !== null)
 									<p><strong>Дата завершения:</strong> {{ $request_info->closed_at }}</p>
 								@endif
-
 							</div>
 						</div>
 					</div>
@@ -162,27 +171,64 @@
 								@if ($request_info->user_password !== null)
 									<p><strong>Пароль пользователя: </strong>{{ $request_info->user_password }}</p>
 								@endif
-
 							</div>
 						</div>
 					</div>
 				</div>
 
-
-				<div class="col p-3 mt-1 fs-5 shadow-sm"
-					style="border-radius: 10px; background-color:#283141; height: 100%; min-height: 420px">
-					<div class="col-lg-8 mx-auto">
-						<div class="text-center mb-4">
-							<p><strong>Тема: </strong>{{ $request_info->topic }}</p>
-						</div>
-						<div class="mb-3">
-							<strong>Текст заявки:</strong>
-							<textarea style="background-color: #212529" class="form-control text-white" rows="12" minlength="1"
-        readonly>{{ $request_info->text }}</textarea>
+				@if ($request_info->photo == null)
+					<div class="pt-3">
+						<div class="col p-3 mt-1 fs-5 shadow-sm"
+							style="border-radius: 10px; background-color:#283141; height: 100%; min-height: 420px">
+							<div class="col-lg-8 mx-auto">
+								<div class="text-center mb-4">
+									<p><strong>Тема: </strong>{{ $request_info->topic }}</p>
+								</div>
+								<div class="mb-3">
+									<strong>Текст заявки:</strong>
+									<textarea style="background-color: #212529" class="form-control text-white" rows="12" minlength="1"
+          readonly>{{ $request_info->text }}</textarea>
+								</div>
+							</div>
 						</div>
 					</div>
+				@else
+					<div class="row gx-2">
+						<div class="pt-3 col-lg-8 align-items-start">
+							<div class="p-3  shadow-sm"
+								style="border-radius: 10px; background-color:#283141; height: 100%; min-height: 420px">
+								<div class="col-lg-10 mx-auto fs-5">
+									<div class="text-center mb-4">
+										<p><strong>Тема: </strong>{{ $request_info->topic }}</p>
+									</div>
+									<div class="pb-3">
+										<strong>Текст заявки:</strong>
+										<textarea style="background-color: #212529;" class="form-control text-white" rows="12" minlength="1"
+           readonly>{{ $request_info->text }}</textarea>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="pt-3 col-lg-4 align-items-start">
+							<div class="p-3 d-flex flex-column shadow-sm"
+								style="border-radius: 10px; background-color:#283141; height: 100%; max-height: 420px">
+								<div class="d-flex">
+									<div class="icon-square bg-dark text-light flex-shrink-0 me-3">
+										<i class="bi bi-image"></i>
+									</div>
+									<div>
+										<h2 class="pt-2 mb-3">Изображение:</h2>
+									</div>
+								</div>
+								<div class="d-flex justify-content-center align-items-center" style="flex-grow: 1;">
+									<img src="{{ asset('storage/' . $request_info->photo) }}" style="max-height: 330px"
+										class="rounded img-fluid shadow zoom-dark" alt="...">
+								</div>
+							</div>
+						</div>
+					</div>
+				@endif
 
-				</div>
 
 				@if (!($request_info->status == 'Отменено' || $request_info->status == 'Завершено'))
 					<div class="d-flex justify-content-center mt-3">
@@ -196,8 +242,6 @@
 				@endif
 
 			</div>
-
-
 
 		</main>
 	</div>

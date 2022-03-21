@@ -1,25 +1,31 @@
 require('./bootstrap');
 
 import Alpine from 'alpinejs';
+import mediumZoom from 'medium-zoom';
 
 window.Alpine = Alpine;
 
 Alpine.start();
 
-(function () {
-	'use strict'
-	var forms = document.querySelectorAll('.needs-validation')
-	Array.prototype.slice.call(forms)
-		.forEach(function (form) {
-			form.addEventListener('submit', function (event) {
-				if (!form.checkValidity()) {
-					event.preventDefault()
-					event.stopPropagation()
-				}
-				form.classList.add('was-validated')
-			}, false)
-		})
-})()
+mediumZoom('.zoom-dark', {
+	background: '#0000009b',
+	margin: 90,
+});
+
+	(function () {
+		'use strict'
+		var forms = document.querySelectorAll('.needs-validation')
+		Array.prototype.slice.call(forms)
+			.forEach(function (form) {
+				form.addEventListener('submit', function (event) {
+					if (!form.checkValidity()) {
+						event.preventDefault()
+						event.stopPropagation()
+					}
+					form.classList.add('was-validated')
+				}, false)
+			})
+	})()
 
 
 window.showPasswordInputFunction = function () {

@@ -84,7 +84,7 @@
 
 <body class="text-white" style="background-color: #2D3748">
 
-	<header class="sticky-top p-2 text-white " style="background: radial-gradient(rgb(21, 46, 93), #1A202C);">
+	<header class="sticky-top shadow p-2 text-white " style="background: radial-gradient(#152e5d, #1A202C);">
 
 		<div class="container">
 

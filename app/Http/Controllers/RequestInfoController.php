@@ -152,9 +152,9 @@ class RequestInfoController extends Controller
 
 	public function cancel(RequestInfo $request)
 	{
-		if ($request->user_id == Auth::user()->id || Auth::user()->is_admin == true) {
+		if ($request->session_id == session()->getId() || (Auth::check() && Auth::user()->id == $request->user_id)) {
 			$request->status = 'Отменено';
-			$request->comments .= PHP_EOL . '>[' . Carbon::now()->format('d.m.y H:i') . '] Система: Заявка отменена, пользователем ' . '"' . Auth::user()->name . '"';
+			$request->comments .= PHP_EOL . '>[' . Carbon::now()->format('d.m.y H:i') . '] Система: Заявка отменена, заявителем ' . '"' . $request->name . '"';
 			$request->save();
 			return redirect('/requests/' . $request->id);
 		}
@@ -162,11 +162,11 @@ class RequestInfoController extends Controller
 	}
 	public function comment(RequestInfo $request)
 	{
-		if ($request->user_id == Auth::user()->id || Auth::user()->is_admin == true) {
+		if ($request->session_id == session()->getId() || (Auth::check() && Auth::user()->id == $request->user_id)) {
 			$data =  request()->validate([
 				'comment_text' => 'required|min:1|max:512',
 			]);
-			$request->comments .= PHP_EOL . '>[' . Carbon::now()->format('d.m.y H:i') . '] ' . Auth::user()->name . ': ' . str_replace(PHP_EOL, ' ', $data['comment_text']);;
+			$request->comments .= PHP_EOL . '>[' . Carbon::now()->format('d.m.y H:i') . '] ' . $request->name . ': ' . str_replace(PHP_EOL, ' ', $data['comment_text']);;
 			$request->save();
 			return redirect('/requests/' . $request->id);
 		}
