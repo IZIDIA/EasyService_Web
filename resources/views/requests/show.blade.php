@@ -11,45 +11,51 @@
 
 			<div class="container" id="hanging-icons" style="word-break: break-all;">
 
-				<div class="pb-2 px-2 border-bottom row row-cols-1 row-cols-lg-2">
-					<div>
-						<h2 class="">Статус: @switch($request_info->status)
-								@case('В обработке')
-									<span class="fw-bold" style="color: rgb(0, 255, 255)">{{ $request_info->status }}</span>
-								@break
+				<div class="pb-1 px-1 border-bottom row row-cols-1 row-cols-lg-2">
+					<div class="d-flex align-items-center fs-2 gap-2">Статус: @switch($request_info->status)
+							@case('В обработке')
+								<span class="fw-bold" style="color: rgb(0, 255, 255)">{{ $request_info->status }}</span>
+							@break
 
-								@case('В работе')
-									<span class="fw-bold" style="color: rgb(255, 157, 0)">{{ $request_info->status }}</span>
-								@break
+							@case('В работе')
+								<span class="fw-bold" style="color: rgb(255, 157, 0)">{{ $request_info->status }}</span>
+							@break
 
-								@case('Завершено')
-									<span class="fw-bold" style="color: rgb(0, 255, 0)">{{ $request_info->status }}</span>
-								@break
+							@case('Завершено')
+								<span class="fw-bold" style="color: rgb(0, 255, 0)">{{ $request_info->status }}</span>
+							@break
 
-								@case('Отменено')
-									<span class="fw-bold" style="color: rgb(173, 0, 0)">{{ $request_info->status }}</span>
-								@break
+							@case('Отменено')
+								<span class="fw-bold" style="color: rgb(173, 0, 0)">{{ $request_info->status }}</span>
+							@break
 
-								@default
-									<span class="fw-bold" style="color: white">{{ $request_info->status }}</span>
-							@endswitch
-						</h2>
+							@default
+								<span class="fw-bold" style="color: white">{{ $request_info->status }}</span>
+						@endswitch
 					</div>
 					<div class="d-flex align-items-center flex-lg-row-reverse fs-5" style="color: #96FBFE">
 						<div><strong>Исполнитель:</strong>
-							{{ App\Models\User::firstWhere('id', $request_info->admin_id)->name ?? 'Не назначен' }}</div>
+							{{ App\Models\User::firstWhere('id', $request_info->admin_id)->name ?? 'Не назначен' }}
+						</div>
 					</div>
 				</div>
 
 				<div class="row gx-2 pt-2 ">
 					<div class="pt-3 col-lg-8 align-items-start">
 						<div class="p-3 d-flex shadow-sm" style="border-radius: 10px; background-color:#283141; height: 190px;">
-							<pre id="comments" class="rounded" style="
+							@if ($comments !== null)
+								<pre id="comments" class="rounded" style="
 								width: 100%;
 								height:100%; 
 								white-space: pre-wrap;
 								font-family: Consolas, Roboto;
-								">{{ $request_info->comments }}</pre>
+								font-size: 14px;
+								">
+@foreach ($comments as $item)
+>[{{ $item['Time'] }}] {{ $item['Name'] }}: {{ $item['Message'] }}
+@endforeach
+</pre>
+							@endif
 							<script type="text/javascript">
 							 var block = document.getElementById("comments");
 							 block.scrollTop = block.scrollHeight;
@@ -179,14 +185,14 @@
 				@if ($request_info->photo == null)
 					<div class="pt-3">
 						<div class="col p-3 mt-1 fs-5 shadow-sm"
-							style="border-radius: 10px; background-color:#283141; height: 100%; min-height: 420px">
+							style="border-radius: 10px; background-color:#283141; height: 100%; min-height: 396px">
 							<div class="col-lg-8 mx-auto">
-								<div class="text-center mb-4">
-									<p><strong>Тема: </strong>{{ $request_info->topic }}</p>
+								<div class="text-center">
+									<p class="m-0"><strong>Тема: </strong>{{ $request_info->topic }}</p>
 								</div>
 								<div class="mb-3">
 									<strong>Текст заявки:</strong>
-									<textarea style="background-color: #212529" class="form-control text-white" rows="12" minlength="1"
+									<textarea style="resize:none; background-color: #212529" class="form-control text-white" rows="12" minlength="1"
           readonly>{{ $request_info->text }}</textarea>
 								</div>
 							</div>
@@ -196,14 +202,14 @@
 					<div class="row gx-2">
 						<div class="pt-3 col-lg-8 align-items-start">
 							<div class="p-3  shadow-sm"
-								style="border-radius: 10px; background-color:#283141; height: 100%; min-height: 420px">
+								style="border-radius: 10px; background-color:#283141; height: 100%; min-height: 396px">
 								<div class="col-lg-10 mx-auto fs-5">
-									<div class="text-center mb-4">
-										<p><strong>Тема: </strong>{{ $request_info->topic }}</p>
+									<div class="text-center">
+										<p class="m-0"><strong>Тема: </strong>{{ $request_info->topic }}</p>
 									</div>
 									<div class="pb-3">
 										<strong>Текст заявки:</strong>
-										<textarea style="background-color: #212529;" class="form-control text-white" rows="12" minlength="1"
+										<textarea style="resize:none; background-color: #212529;" class="form-control text-white" rows="12" minlength="1"
            readonly>{{ $request_info->text }}</textarea>
 									</div>
 								</div>
@@ -211,7 +217,7 @@
 						</div>
 						<div class="pt-3 col-lg-4 align-items-start">
 							<div class="p-3 d-flex flex-column shadow-sm"
-								style="border-radius: 10px; background-color:#283141; height: 100%; max-height: 420px">
+								style="border-radius: 10px; background-color:#283141; height: 100%; max-height: 396px">
 								<div class="d-flex">
 									<div class="icon-square bg-dark text-light flex-shrink-0 me-3">
 										<i class="bi bi-image"></i>
@@ -221,7 +227,7 @@
 									</div>
 								</div>
 								<div class="d-flex justify-content-center align-items-center" style="flex-grow: 1;">
-									<img src="{{ asset('storage/' . $request_info->photo) }}" style="max-height: 330px"
+									<img src="{{ asset('storage/' . $request_info->photo) }}" style="max-height: 305px"
 										class="rounded img-fluid shadow zoom-dark" alt="...">
 								</div>
 							</div>

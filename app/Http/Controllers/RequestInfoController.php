@@ -80,7 +80,15 @@ class RequestInfoController extends Controller
 		$data['ip_address'] = request()->ip();
 		$data['date_create'] = Carbon::now();
 		$data['status'] = 'В обработке';
-		$data['comments'] = '>[' . Carbon::now()->format('d.m.y H:i') . '] Система: Заявка создана';
+		$json_comment = json_encode(array(
+			0 =>
+			array(
+				'Time' => Carbon::now()->format('d.m.y H:i'),
+				'Name' => 'Система',
+				'Message' => 'Заявка создана',
+			),
+		));
+		$data['comments'] = $json_comment;
 		if (Auth::check()) {
 			$data['user_id'] = Auth::user()->id;
 			$request_info = RequestInfo::create($data);
@@ -145,7 +153,7 @@ class RequestInfoController extends Controller
 	{
 		$request_info = RequestInfo::findOrFail($request_id);
 		if ($request_info->session_id == session()->getId() || (Auth::check() && (Auth::user()->id == $request_info->user_id || Auth::user()->is_admin == true))) {
-			return view('requests.show', compact('request_info'));
+			return view('requests.show', compact('request_info'))->with('comments', json_decode($request_info->comments, true));
 		}
 		abort(404);
 	}
@@ -154,7 +162,14 @@ class RequestInfoController extends Controller
 	{
 		if ($request->session_id == session()->getId() || (Auth::check() && Auth::user()->id == $request->user_id)) {
 			$request->status = 'Отменено';
-			$request->comments .= PHP_EOL . '>[' . Carbon::now()->format('d.m.y H:i') . '] Система: Заявка отменена, заявителем ' . '"' . $request->name . '"';
+			$json_comment = json_decode($request->comments, true);
+			$json_comment[] =
+				array(
+					'Time' => Carbon::now()->format('d.m.y H:i'),
+					'Name' => 'Система',
+					'Message' => 'Заявка отменена, заявителем ' . '"' . $request->name . '"',
+				);
+			$request->comments = json_encode($json_comment);
 			$request->save();
 			return redirect('/requests/' . $request->id);
 		}
@@ -163,10 +178,17 @@ class RequestInfoController extends Controller
 	public function comment(RequestInfo $request)
 	{
 		if ($request->session_id == session()->getId() || (Auth::check() && Auth::user()->id == $request->user_id)) {
-			$data =  request()->validate([
+			$data = request()->validate([
 				'comment_text' => 'required|min:1|max:512',
 			]);
-			$request->comments .= PHP_EOL . '>[' . Carbon::now()->format('d.m.y H:i') . '] ' . $request->name . ': ' . str_replace(PHP_EOL, ' ', $data['comment_text']);;
+			$json_comment = json_decode($request->comments, true);
+			$json_comment[] =
+				array(
+					'Time' => Carbon::now()->format('d.m.y H:i'),
+					'Name' => $request->name,
+					'Message' => str_replace(PHP_EOL, ' ', $data['comment_text']),
+				);
+			$request->comments = json_encode($json_comment);
 			$request->save();
 			return redirect('/requests/' . $request->id);
 		}

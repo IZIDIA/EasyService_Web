@@ -36,7 +36,7 @@ return new class extends Migration
 			$table->string('text', 4096);
 			$table->string('status', 128)->comment('[В обработке, В работе, Завершено, Отменено]');
 			$table->string('photo')->comment('Фотография')->nullable();
-			$table->text('comments')->comment('Комментарии/События')->nullable();
+			$table->json('comments')->comment('Комментарии/События')->nullable();
 			$table->timestamp('closed_at')->nullable();
 			$table->timestamps();
 

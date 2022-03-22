@@ -12,71 +12,6 @@
 	<!-- Scripts -->
 	<script src="{{ asset('js/app.js') }}" defer></script>
 	<style>
-		@font-face {
-			font-family: 'Roboto';
-			src: url(/fonts/Roboto-Regular.ttf);
-		}
-
-		* {
-			font-family: 'Roboto', 'Nunito', sans-serif;
-		}
-
-		.requestlink:hover {
-			background-color: rgb(21, 46, 93);
-			-webkit-transition: background-color 200ms linear;
-			-ms-transition: background-color 200ms linear;
-			transition: background-color 200ms linear;
-		}
-
-		.headerlink:hover {
-			background-color: rgb(21, 46, 93);
-			-webkit-transition: background-color 200ms linear;
-			-ms-transition: background-color 200ms linear;
-			transition: background-color 200ms linear;
-		}
-
-		.form-control-dark {
-			color: #fff;
-			background-color: var(--bs-dark);
-			border-color: var(--bs-gray);
-		}
-
-		.form-control-dark:focus {
-			color: #fff;
-			background-color: var(--bs-dark);
-			border-color: #fff;
-			box-shadow: 0 0 0 .25rem rgba(255, 255, 255, .25);
-		}
-
-		.login_oueter {
-			width: 360px;
-			max-width: 100%;
-		}
-
-		.logo_outer {
-			text-align: center;
-		}
-
-		.logo_outer img {
-			width: 120px;
-			margin-bottom: 40px;
-		}
-
-		.noCopy {
-			-moz-user-select: none;
-			-khtml-user-select: none;
-			user-select: none;
-		}
-
-		.icon-square {
-			display: inline-flex;
-			align-items: center;
-			justify-content: center;
-			width: 3rem;
-			height: 3rem;
-			font-size: 2rem;
-			border-radius: .75rem;
-		}
 
 	</style>
 
@@ -140,7 +75,8 @@
 										@endif
 
 									</a>
-									<ul class="shadow me-2 mt-lg-3 mt-2 dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="navbarDropdown">
+									<ul class="shadow me-2 mt-lg-3 mt-2 dropdown-menu dropdown-menu-dark dropdown-menu-end"
+										aria-labelledby="navbarDropdown">
 										<form method="POST" action="{{ route('logout') }}">
 											@csrf
 											<a class="dropdown-item text-white" href="route('logout')"
