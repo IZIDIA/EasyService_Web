@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -16,7 +17,6 @@ return new class extends Migration
 		Schema::create('users', function (Blueprint $table) {
 			$table->id();
 			$table->boolean('is_admin')->default(false)->comment('Администратор');
-			$table->boolean('get_recommendation')->default(false)->comment('Получение распределённых заявок');
 			$table->string('name');
 			$table->string('email')->unique();
 			$table->timestamp('email_verified_at')->nullable();
@@ -24,6 +24,12 @@ return new class extends Migration
 			$table->rememberToken();
 			$table->timestamps();
 		});
+		$admin = new User();
+		$admin->is_admin = true;
+		$admin->name = 'Главный Администратор';
+		$admin->email = 'admin@mail.com';
+		$admin->password = '$2y$10$0ZnubMvEkECnQprz3mgzKOJ7PgVELXdrlOlvMf0LLEEJhBvos01iW'; // Xdq59svn
+		$admin->save();
 	}
 
 	/**

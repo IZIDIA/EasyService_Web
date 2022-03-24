@@ -36,7 +36,7 @@
 						@endswitch
 					</div>
 					<div class="d-flex align-items-center flex-row-reverse gap-2 fs-5" style="color: #96FBFE">
-						@if (!($request_info->status == 'Отменено' || $request_info->status == 'Завершено'))
+						@if ($request_info->status == 'В обработке' || ($request_info->status == 'В работе' && $request_info->admin_id == Auth::user()->id))
 							<form action="/admin/requests/{{ $request_info->id }}/cancel" method="POST">
 								@method('PATCH')
 								@csrf
@@ -50,14 +50,14 @@
 								<button type="submit" class="shadow btn btn-success">Взять</button>
 							</form>
 						@endif
-						@if ($request_info->status == 'В работе')
+						@if ($request_info->status == 'В работе' && $request_info->admin_id == Auth::user()->id)
 							<form action="/admin/requests/{{ $request_info->id }}/deny" method="POST">
 								@method('PATCH')
 								@csrf
 								<button type="submit" class="shadow btn btn-warning">Отказаться</button>
 							</form>
 						@endif
-						@if ($request_info->status == 'В работе')
+						@if ($request_info->status == 'В работе' && $request_info->admin_id == Auth::user()->id)
 							<form action="/admin/requests/{{ $request_info->id }}/complete" method="POST">
 								@method('PATCH')
 								@csrf
@@ -136,7 +136,7 @@
 								<p><strong>IP-адрес:</strong> {{ $request_info->ip_address }}</p>
 								<p><strong>Дата создания:</strong> {{ $request_info->created_at->format('d.m.y H:i') }}</p>
 								@if ($request_info->closed_at !== null)
-									<p><strong>Дата завершения:</strong> {{ $request_info->closed_at }}</p>
+									<p><strong>Дата завершения:</strong> {{ $request_info->closed_at->format('d.m.y H:i') }}</p>
 								@endif
 							</div>
 						</div>
@@ -251,7 +251,7 @@
 						</div>
 						<div class="pt-3 col-lg-4 align-items-start">
 							<div class="p-3 d-flex flex-column shadow-sm"
-								style="border-radius: 10px; background-color:#283141; height: 100%; max-height: 396px">
+								style="border-radius: 10px; background-color:#283141; height: 100%;">
 								<div class="d-flex">
 									<div class="icon-square bg-dark text-light flex-shrink-0 me-3">
 										<i class="bi bi-image"></i>
@@ -268,6 +268,66 @@
 						</div>
 					</div>
 				@endif
+
+				<div class="row gx-2">
+					<div class="pt-3 col-lg-8 align-items-start">
+						<div class="p-3 shadow-sm" style="border-radius: 10px; background-color:#283141; height: 100%;">
+
+						</div>
+					</div>
+
+					<div class="pt-3 col-lg-4 align-items-start">
+						<div class="p-3 d-flex flex-column shadow-sm"
+							style="border-radius: 10px; background-color:#283141; height: 100%;">
+
+							@if ($request_info->admin_id == Auth::user()->id)
+								<div>
+									<div style="font-size: 1rem">
+										Время на выполнение:
+									</div>
+									<div class="row justify-content-center border rounded-pill shadow mx-1 mt-1" id="countdown">
+										00d 00h 00m 00s
+									</div>
+									<div class="d-flex justify-content-center align-items-center">
+										<form action="/admin/requests/{{ $request_info->id }}/time" method="POST">
+											@method('PATCH')
+											@csrf
+											<button type="submit" class="shadow btn btn-warning mt-2">Добавить 24 часа</button>
+										</form>
+									</div>
+								</div>
+								<script>
+								 var yourDateToGo = new Date('{{ $request_info->updated_at }}');
+								 yourDateToGo.setHours(yourDateToGo.getHours() + {{ $time_to_work }});
+								 var timing =
+								  setInterval(
+								   function() {
+								    var currentDate = new Date().getTime();
+								    var timeLeft = yourDateToGo - currentDate;
+								    var days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+								    if (days < 10) days = "0" +
+								     days;
+								    var hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+								    if (hours < 10) hours = "0" + hours;
+								    var minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+								    if (minutes < 10) minutes = "0" + minutes;
+								    var seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+								    if (seconds < 10) seconds = "0" + seconds;
+								    document.getElementById("countdown").innerHTML = days + "d " + hours + "h " + minutes + "m " + seconds +
+								     "s";
+								    if (timeLeft <= 0) {
+								     clearInterval(timing);
+								     document.getElementById("countdown").innerHTML =
+								      "It's over";
+								    }
+								   }, 1000);
+								</script>
+							@endif
+
+						</div>
+					</div>
+
+				</div>
 
 			</div>
 

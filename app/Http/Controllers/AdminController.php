@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AdminQueue;
+use App\Models\Option;
 use App\Models\RequestInfo;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -46,7 +47,9 @@ class AdminController extends Controller
 	{
 		if (Auth::user()->is_admin == 1) {
 			$request_info = RequestInfo::findOrFail($request_id);
-			return view('admin.requests.show', compact('request_info'))->with('comments', json_decode($request_info->comments, true));
+			return view('admin.requests.show', compact('request_info'))
+				->with('comments', json_decode($request_info->comments, true))
+				->with('time_to_work', Option::first()->time_to_work);
 		}
 		abort(404);
 	}
@@ -73,18 +76,21 @@ class AdminController extends Controller
 
 	public function cancel(RequestInfo $request)
 	{
-		if (Auth::user()->is_admin == true && !($request->status == 'Отменено' || $request->status == 'Завершено')) {
-			$request->status = 'Отменено';
-			$request->admin_id = NULL;
-			$json_comment = json_decode($request->comments, true);
-			$json_comment[] =
-				array(
-					'Time' => Carbon::now()->format('d.m.y H:i'),
-					'Name' => 'Система',
-					'Message' => 'Заявка отменена, администратором ' . '"' . Auth::user()->name . '"',
-				);
-			$request->comments = json_encode($json_comment);
-			$request->save();
+		if (Auth::user()->is_admin == true) {
+			if ($request->status == 'В обработке' || ($request->status == 'В работе' &&  $request->admin_id == Auth::user()->id)) {
+				$request->status = 'Отменено';
+				$request->closed_at = Carbon::now();
+				$request->admin_id = NULL;
+				$json_comment = json_decode($request->comments, true);
+				$json_comment[] =
+					array(
+						'Time' => Carbon::now()->format('d.m.y H:i'),
+						'Name' => 'Система',
+						'Message' => 'Заявка отменена, администратором ' . '"' . Auth::user()->name . '"',
+					);
+				$request->comments = json_encode($json_comment);
+				$request->save();
+			}
 			return redirect('/admin/requests/' . $request->id);
 		}
 		abort(404);
@@ -92,18 +98,20 @@ class AdminController extends Controller
 
 	public function accept(RequestInfo $request)
 	{
-		if (Auth::user()->is_admin == true && $request->status == 'В обработке') {
-			$request->status = 'В работе';
-			$request->admin_id = Auth::user()->id;
-			$json_comment = json_decode($request->comments, true);
-			$json_comment[] =
-				array(
-					'Time' => Carbon::now()->format('d.m.y H:i'),
-					'Name' => 'Система',
-					'Message' => 'Заявка принята в работу, администратором ' . '"' . Auth::user()->name . '"',
-				);
-			$request->comments = json_encode($json_comment);
-			$request->save();
+		if (Auth::user()->is_admin == true) {
+			if ($request->status == 'В обработке') {
+				$request->status = 'В работе';
+				$request->admin_id = Auth::user()->id;
+				$json_comment = json_decode($request->comments, true);
+				$json_comment[] =
+					array(
+						'Time' => Carbon::now()->format('d.m.y H:i'),
+						'Name' => 'Система',
+						'Message' => 'Заявка принята в работу, администратором ' . '"' . Auth::user()->name . '"',
+					);
+				$request->comments = json_encode($json_comment);
+				$request->save();
+			}
 			return redirect('/admin/requests/' . $request->id);
 		}
 		abort(404);
@@ -111,7 +119,7 @@ class AdminController extends Controller
 
 	public function deny(RequestInfo $request)
 	{
-		if (Auth::user()->is_admin == true && $request->status == 'В работе') {
+		if (Auth::user()->is_admin == true  && $request->admin_id == Auth::user()->id && $request->status == 'В работе') {
 			$request->status = 'В обработке';
 			$request->admin_id = NULL;
 			$json_comment = json_decode($request->comments, true);
@@ -130,8 +138,9 @@ class AdminController extends Controller
 
 	public function complete(RequestInfo $request)
 	{
-		if (Auth::user()->is_admin == true && $request->status == 'В работе') {
+		if (Auth::user()->is_admin == true && $request->admin_id == Auth::user()->id && $request->status == 'В работе') {
 			$request->status = 'Завершено';
+			$request->closed_at = Carbon::now();
 			$json_comment = json_decode($request->comments, true);
 			$json_comment[] =
 				array(
@@ -148,18 +157,21 @@ class AdminController extends Controller
 
 	public function restore(RequestInfo $request)
 	{
-		if (Auth::user()->is_admin == true && ($request->status == 'Отменено' || $request->status == 'Завершено')) {
-			$request->status = 'В обработке';
-			$request->admin_id = NULL;
-			$json_comment = json_decode($request->comments, true);
-			$json_comment[] =
-				array(
-					'Time' => Carbon::now()->format('d.m.y H:i'),
-					'Name' => 'Система',
-					'Message' => 'Заявка восстановлена, администратором ' . '"' . Auth::user()->name . '"',
-				);
-			$request->comments = json_encode($json_comment);
-			$request->save();
+		if (Auth::user()->is_admin == true) {
+			if ($request->status == 'Отменено' || $request->status == 'Завершено') {
+				$request->status = 'В обработке';
+				$request->closed_at = NULL;
+				$request->admin_id = NULL;
+				$json_comment = json_decode($request->comments, true);
+				$json_comment[] =
+					array(
+						'Time' => Carbon::now()->format('d.m.y H:i'),
+						'Name' => 'Система',
+						'Message' => 'Заявка восстановлена, администратором ' . '"' . Auth::user()->name . '"',
+					);
+				$request->comments = json_encode($json_comment);
+				$request->save();
+			}
 			return redirect('/admin/requests/' . $request->id);
 		}
 		abort(404);

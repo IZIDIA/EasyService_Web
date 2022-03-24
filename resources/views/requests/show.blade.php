@@ -217,7 +217,7 @@
 						</div>
 						<div class="pt-3 col-lg-4 align-items-start">
 							<div class="p-3 d-flex flex-column shadow-sm"
-								style="border-radius: 10px; background-color:#283141; height: 100%; max-height: 396px">
+								style="border-radius: 10px; background-color:#283141; height: 100%;">
 								<div class="d-flex">
 									<div class="icon-square bg-dark text-light flex-shrink-0 me-3">
 										<i class="bi bi-image"></i>
