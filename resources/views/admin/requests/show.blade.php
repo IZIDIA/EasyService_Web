@@ -2,7 +2,15 @@
 
 	<div class="container">
 		<main>
-			<div class="my-4 d-flex justify-content-center">
+
+			<div class="mt-4 text-center">
+				@if (!is_null($distributed_request))
+					<p class="lead text-warning">Распределена для администратора:
+						"{{ App\Models\User::firstWhere('id', $distributed_request->admin_id)->name }}"</p>
+				@endif
+			</div>
+
+			<div class="d-flex justify-content-center">
 				<div class="d-flex align-items-center fw-bold me-2 fs-3">
 					Заявка №{{ $request_info->id }}
 				</div>
@@ -133,7 +141,6 @@
 								<p><strong> Заявитель:</strong> {{ $request_info->name }}</p>
 								<p><strong>Email:</strong> {{ $request_info->email }}</p>
 								<p><strong>Номер:</strong> {{ $request_info->phone_call_number }}</p>
-								<p><strong>IP-адрес:</strong> {{ $request_info->ip_address }}</p>
 								<p><strong>Дата создания:</strong> {{ $request_info->created_at->format('d.m.y H:i') }}</p>
 								@if ($request_info->closed_at !== null)
 									<p><strong>Дата завершения:</strong> {{ $request_info->closed_at->format('d.m.y H:i') }}</p>
@@ -149,6 +156,7 @@
 							<div>
 								<h2 class="pt-2 mb-3">Локация:</h2>
 								<p><strong>Местонахождение:</strong> {{ $request_info->location }}</p>
+								<p><strong>IP-адрес:</strong> {{ $request_info->ip_address }}</p>
 								<p><strong>Инвентарный номер:</strong> {{ $request_info->inventory_number }}</p>
 								<p><strong>Отправлено из приложения:</strong> @switch($request_info->from_pc)
 										@case(1)
@@ -270,17 +278,26 @@
 				@endif
 
 				<div class="row gx-2">
-					<div class="pt-3 col-lg-8 align-items-start">
-						<div class="p-3 shadow-sm" style="border-radius: 10px; background-color:#283141; height: 100%;">
 
+					@if ($pc_info !== null)
+						<div class="pt-3 col-lg-8 align-items-start">
+							<div class="p-3 shadow-sm" style="border-radius: 10px; background-color:#283141; height: 100%;">
+								<div>
+									<div class="fs-5">
+										Подробная информация об устройстве заявителя:
+									</div>
+									<div>
+										{{ $pc_info->operating_system }}
+									</div>
+								</div>
+							</div>
 						</div>
-					</div>
+					@endif
 
-					<div class="pt-3 col-lg-4 align-items-start">
-						<div class="p-3 d-flex flex-column shadow-sm"
-							style="border-radius: 10px; background-color:#283141; height: 100%;">
-
-							@if ($request_info->admin_id == Auth::user()->id)
+					@if ($request_info->admin_id == Auth::user()->id && $request_info->status == 'В работе')
+						<div class="pt-3 col-lg-4 align-items-start">
+							<div class="p-3 d-flex flex-column shadow-sm"
+								style="border-radius: 10px; background-color:#283141; height: 100%;">
 								<div>
 									<div style="font-size: 1rem">
 										Время на выполнение:
@@ -288,48 +305,58 @@
 									<div class="row justify-content-center border rounded-pill shadow mx-1 mt-1" id="countdown">
 										00d 00h 00m 00s
 									</div>
-									<div class="d-flex justify-content-center align-items-center">
+									<div class="d-flex justify-content-center">
 										<form action="/admin/requests/{{ $request_info->id }}/time" method="POST">
 											@method('PATCH')
 											@csrf
-											<button type="submit" class="shadow btn btn-warning mt-2">Добавить 24 часа</button>
+											<button @if (Session::has('autofocus')) ) autofocus @endif type="submit"
+												class="shadow btn btn-outline-warning mt-2">Добавить 24 часа</button>
 										</form>
 									</div>
 								</div>
 								<script>
 								 var yourDateToGo = new Date('{{ $request_info->updated_at }}');
-								 yourDateToGo.setHours(yourDateToGo.getHours() + {{ $time_to_work }});
+								 yourDateToGo.setHours(yourDateToGo.getHours() + {{ $request_info->time_remaining }});
 								 var timing =
 								  setInterval(
 								   function() {
 								    var currentDate = new Date().getTime();
 								    var timeLeft = yourDateToGo - currentDate;
-								    var days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+								    var days = Math.floor(timeLeft / (86400000));
 								    if (days < 10) days = "0" +
 								     days;
-								    var hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+								    var hours = Math.floor((timeLeft % (86400000)) / (3600000));
 								    if (hours < 10) hours = "0" + hours;
-								    var minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+								    var minutes = Math.floor((timeLeft % (3600000)) / (60000));
 								    if (minutes < 10) minutes = "0" + minutes;
-								    var seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+								    var seconds = Math.floor((timeLeft % (60000)) / 1000);
 								    if (seconds < 10) seconds = "0" + seconds;
 								    document.getElementById("countdown").innerHTML = days + "d " + hours + "h " + minutes + "m " + seconds +
 								     "s";
 								    if (timeLeft <= 0) {
 								     clearInterval(timing);
 								     document.getElementById("countdown").innerHTML =
-								      "It's over";
+								      "Время закончилось...";
 								    }
 								   }, 1000);
 								</script>
-							@endif
-
+							</div>
 						</div>
-					</div>
-
+					@endif
 				</div>
 
 			</div>
+
+			@if ($request_info->status != 'В работе' || $request_info->admin_id == Auth::user()->id)
+				<div class="d-flex justify-content-center mt-3">
+					<form action="/admin/requests/{{ $request_info->id }}" method="POST"
+						onSubmit="return confirm('Вы действительно хотите удалить заявку №{{ $request_info->id }}? Восстановить заявку будет невозможно.');">
+						@method('DELETE')
+						@csrf
+						<button type="submit" class="shadow btn btn-outline-danger mt-2">Удалить заявку</button>
+					</form>
+				</div>
+			@endif
 
 		</main>
 	</div>

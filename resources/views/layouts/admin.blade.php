@@ -110,50 +110,49 @@
 
 	</header>
 
-
 	<div class="container-fluid">
 		<div class="row">
 			<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse shadow" style="background-color: #1A202C">
 				<div class="position-sticky pt-5">
 					<ul class="nav flex-column fs-5">
 						<li class="nav-item">
-							<a class="nav-link {{ request()->is('admin/my') ? 'active' : 'text-white' }}" href="/admin/my">
+							<a class="nav-link {{ request()->is('admin/my') ? 'active' : 'text-white' }} text-nowrap" href="/admin/my">
 								<i class="bi bi-pen-fill feather"></i>
 								Мои заявки
 							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link {{ request()->is('admin/requests') ? 'active' : 'text-white' }}" href="/admin/requests">
+							<a class="nav-link {{ request()->is('admin/requests') ? 'active' : 'text-white' }} text-nowrap" href="/admin/requests">
 								<i class="bi bi-archive-fill feather"></i>
 								Все заявки
 							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link text-white" href="#">
+							<a class="nav-link text-white text-nowrap" href="#">
 								<i class="bi bi-people-fill feather"></i>
 								Пользователи
 							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link text-white" href="#">
+							<a class="nav-link text-white text-nowrap" href="#">
 								<i class="bi bi-telephone-fill feather"></i>
 								Контакты
 							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link text-white" href="#">
+							<a class="nav-link text-white text-nowrap" href="#">
 								<i class="bi bi-file-text-fill feather"></i>
 								Документы
 							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link text-white" href="#">
+							<a class="nav-link text-white text-nowrap" href="#">
 								<i class="bi bi-bar-chart-line-fill feather"></i>
 								Статистика
 							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link text-white" href="#">
+							<a class="nav-link text-white text-nowrap" href="#">
 								<i class="bi bi-gear-fill feather"></i>
 								Настройки
 							</a>
@@ -164,24 +163,16 @@
 
 			<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
 
-
 				{{ $slot }}
 
 				<footer class="my-2 pt-5 text-muted text-center text-small">
 					<p class="mb-1"> {{ App\Models\Option::find(1)->value('company_name') }}</p>
 				</footer>
 
-
 			</main>
 		</div>
 	</div>
 
-
-
-
 </body>
-
-
-
 
 </html>

@@ -1,7 +1,7 @@
 <x-header-layout>
 	<div class="container">
 		<main>
-			<div class="my-4 text-center">
+			<div class="mt-4 text-center">
 				@if (!Auth::check())
 					<p class="lead text-warning">Заявка создана без предварительной регистрации. Вы больше не сможете открыть
 						данную страницу с подробной информацией. Запомните номер заявки, для дальнейшего отслеживания статуса.</p>
@@ -99,7 +99,6 @@
 								<p><strong> Заявитель:</strong> {{ $request_info->name }}</p>
 								<p><strong>Email:</strong> {{ $request_info->email }}</p>
 								<p><strong>Номер:</strong> {{ $request_info->phone_call_number }}</p>
-								<p><strong>IP-адрес:</strong> {{ $request_info->ip_address }}</p>
 								<p><strong>Дата создания:</strong> {{ $request_info->created_at->format('d.m.y H:i') }}</p>
 								@if ($request_info->closed_at !== null)
 									<p><strong>Дата завершения:</strong> {{ $request_info->closed_at }}</p>
@@ -115,6 +114,7 @@
 							<div>
 								<h2 class="pt-2 mb-3">Локация:</h2>
 								<p><strong>Местонахождение:</strong> {{ $request_info->location }}</p>
+								<p><strong>IP-адрес:</strong> {{ $request_info->ip_address }}</p>
 								<p><strong>Инвентарный номер:</strong> {{ $request_info->inventory_number }}</p>
 								<p><strong>Отправлено из приложения:</strong> @switch($request_info->from_pc)
 										@case(1)
@@ -239,7 +239,7 @@
 				@if (!($request_info->status == 'Отменено' || $request_info->status == 'Завершено'))
 					<div class="d-flex justify-content-center mt-3">
 						<form action="/requests/{{ $request_info->id }}/cancel" method="POST"
-							onSubmit="return confirm('Вы действительно хотите отменить заявку №{{ $request_info->id }} ?');">
+							onSubmit="return confirm('Вы действительно хотите отменить заявку №{{ $request_info->id }}?');">
 							@method('PATCH')
 							@csrf
 							<button type="submit" class="shadow btn btn-danger">Отменить заявку</button>

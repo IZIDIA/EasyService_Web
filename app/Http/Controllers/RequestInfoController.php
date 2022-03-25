@@ -67,8 +67,8 @@ class RequestInfoController extends Controller
 		} else {
 			$data = $this->anonymValidateData();
 			$data['name'] = 'Аноним';
-			$data['email'] = 'Неизвестно';
-			$data['phone_call_number'] = 'Неизвестно';
+			$data['email'] = NULL;
+			$data['phone_call_number'] = NULL;
 		}
 		if ($request['problem_with_my_pc'] == 'on') {
 			$data['problem_with_my_pc'] = true;

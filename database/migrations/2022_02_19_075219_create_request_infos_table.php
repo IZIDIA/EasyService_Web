@@ -17,26 +17,25 @@ return new class extends Migration
 			$table->id();
 			$table->unsignedBigInteger('admin_id')->nullable()->comment('id Исполнителя');
 			$table->boolean('from_pc');
-			//Если с пк, то определяем пользователя по MAC
 			$table->string('mac', 12)->nullable()->comment('MAC Address');
-			$table->string('name', 128);
-			$table->string('email', 128);
-			//Если с сайта, то по зарегистрировавшемуся пользователю
+			$table->string('name', 128)->comment('Имя заявителя');
+			$table->string('email', 128)->nullable()->comment('Почта заявителя');
 			$table->unsignedBigInteger('user_id')->nullable()->comment('id Пользователя');
 			$table->string('session_id', 128)->nullable()->comment('id Сессии, если пользователь не зарегистрирован');
 			$table->string('ip_address', 15)->comment('IP Address Пользователя');
-			$table->string('topic', 128);
-			$table->string('inventory_number', 128)->nullable();
-			$table->string('location', 255);
-			$table->string('phone_call_number', 32);
-			$table->boolean('solution_with_me')->nullable();
-			$table->boolean('problem_with_my_pc');
-			$table->string('work_time', 255)->nullable();
-			$table->string('user_password', 128)->nullable();
-			$table->string('text', 4096);
+			$table->string('topic', 128)->comment('Тема заявки');
+			$table->string('inventory_number', 128)->nullable()->comment('Инвентарный номер');
+			$table->string('location', 255)->comment('Местонахождение');
+			$table->string('phone_call_number', 32)->nullable()->comment('Телефонный номер');
+			$table->boolean('solution_with_me')->nullable()->comment('Присутствие заявителя во время выполнения');
+			$table->boolean('problem_with_my_pc')->comment('Проблема с ПК заявителя');
+			$table->string('work_time', 255)->nullable()->comment('Рабочее время');
+			$table->string('user_password', 128)->nullable()->comment('Пароль ПК заявителя');
+			$table->string('text', 4096)->comment('Текст заявки');
 			$table->string('status', 128)->comment('[В обработке, В работе, Завершено, Отменено]');
-			$table->string('photo')->comment('Фотография')->nullable();
-			$table->json('comments')->comment('Комментарии/События')->nullable();
+			$table->string('photo')->nullable()->comment('Фотография');
+			$table->json('comments')->nullable()->comment('Комментарии/События');
+			$table->integer('time_remaining')->nullable()->comment('Время на выполнение заявки');
 			$table->timestamp('closed_at')->nullable();
 			$table->timestamps();
 

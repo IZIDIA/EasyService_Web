@@ -47,6 +47,11 @@ Route::patch('/admin/requests/{request}/restore', [AdminController::class, 'rest
 Route::get('/admin/requests/{request}/restore', function () {
 	abort(404);
 });
+Route::patch('/admin/requests/{request}/time', [AdminController::class, 'time'])->middleware(['auth']);
+Route::get('/admin/requests/{request}/time', function () {
+	abort(404);
+});
+Route::delete('/admin/requests/{request}', [AdminController::class, 'destroy'])->middleware('auth');
 
 //Пользователь
 Route::get('/requests', [RequestInfoController::class, 'index'])->name('requests.index');

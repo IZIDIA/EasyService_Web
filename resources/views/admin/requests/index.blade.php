@@ -7,43 +7,49 @@
 				<span class="border-bottom pb-2 mb-0">Список всех заявок:</span>
 			</div>
 
-			@forelse ($all_requests as $all_request)
-				<a href="/admin/requests/{{ $all_request->id }}" class="requestlink rounded-3 d-flex pt-3"
-					style="text-decoration: none;">
-					@switch($all_request->status)
+			@forelse ($requests as $request)
+				<a href="/admin/requests/{{ $request->id }}" class="requestlink rounded-3 d-flex py-2 shadow-sm"
+					style="text-decoration: none; ">
+					@switch($request->status)
 						@case('В обработке')
-							<i class="bi bi-clock-history me-3 ms-3" style="font-size: 2rem; color: rgb(0, 255, 255);"></i>
+							<i class="bi bi-clock-history mx-3 d-flex align-items-center" style="font-size: 2rem; color: rgb(0, 255, 255);"></i>
 						@break
 
 						@case('В работе')
-							<i class="bi bi-wrench-adjustable-circle me-3 ms-3" style="font-size: 2rem; color: rgb(255, 157, 0);"></i>
+							<i class="bi bi-wrench-adjustable-circle mx-3 d-flex align-items-center"
+								style="font-size: 2rem; color: rgb(255, 157, 0);"></i>
 						@break
 
 						@case('Завершено')
-							<i class="bi bi-check-circle me-3 ms-3" style="font-size: 2rem; color: rgb(0, 255, 0);"></i>
+							<i class="bi bi-check-circle mx-3 d-flex align-items-center" style="font-size: 2rem; color: rgb(0, 255, 0);"></i>
 						@break
 
 						@case('Отменено')
-							<i class="bi bi-x-circle me-3 ms-3" style="font-size: 2rem; color: rgb(173, 0, 0);"></i>
+							<i class="bi bi-x-circle mx-3 d-flex align-items-center" style="font-size: 2rem; color: rgb(173, 0, 0);"></i>
 						@break
 
 						@default
-							<i class="bi bi-question-circle me-3 ms-3" style="font-size: 2rem; color: white"></i>
+							<i class="bi bi-question-circle mx-3 d-flex align-items-center" style="font-size: 2rem; color: white"></i>
 					@endswitch
-					<div class="pb-3 mb-0 lh-sm w-100">
-						<div class="d-flex justify-content-between">
-							<div>
-								<strong
-									class="text-gray-dark text-warning">{{ '№' . $all_request->id . ' ' . Str::limit($all_request->topic, 25) }}
+					<div class="mb-0 lh-sm w-100">
+						<div class="row">
+							<div class="col-xl-4 col d-flex flex-column justify-content-center">
+								<strong class="text-gray-dark text-warning">{{ '№' . $request->id . ' ' . Str::limit($request->topic, 25) }}
 								</strong>
-								<span class="d-block text-white">{{ $all_request->location }}</span>
+								<span class="d-block text-white">{{ Str::limit($request->location, 25) }}</span>
 							</div>
-							<div class="me-3 text-end">
+							@if (isset($request->admin_id))
+								<div class="d-none d-xxl-flex col-5 align-items-center text-white">
+									<span class="text-secondary">Исполнитель:
+										{{ App\Models\User::firstWhere('id', $request->admin_id)->name }}</span>
+								</div>
+							@endif
+							<div class="col me-3 d-flex flex-column text-end justify-content-center">
 								<div class="text-white fst-italic">
-									{{ $all_request->name }}
+									{{ $request->name }}
 								</div>
 								<div class="text-white fst-italic">
-									{{ $all_request->created_at->format('d.m.y H:i') }}
+									{{ $request->created_at->format('d.m.y H:i') }}
 								</div>
 							</div>
 						</div>
@@ -55,7 +61,7 @@
 
 			</div>
 
-			{{ $all_requests->links() }}
+			{{ $requests->links() }}
 
 
 

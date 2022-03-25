@@ -9,7 +9,7 @@
 			<div class="d-flex justify-content-between mb-2">
 				<span class="border-bottom pb-2 mb-0">Ваши заявки:</span>
 				<div class="d-flex">
-					<form class="  me-2 ">
+					<form class="me-2 ">
 						<input size="10" type="search" class="form-control form-control-dark" placeholder="№ заявки" aria-label="Search">
 					</form>
 					<a type="button" class="btn btn-outline-info fw-bold" href="/">Узнать статус</a>
@@ -17,62 +17,66 @@
 			</div>
 
 			@if (Auth::check())
-
 				@forelse ($request_infos as $request_info)
-					<a href="/requests/{{ $request_info->id }}" class="requestlink rounded-3 d-flex pt-3"
+					<a href="/requests/{{ $request_info->id }}" class="requestlink rounded-3 d-flex py-2 shadow-sm"
 						style="text-decoration: none;">
 						@switch($request_info->status)
 							@case('В обработке')
-								<i class="bi bi-clock-history me-3 ms-3" style="font-size: 2rem; color: rgb(0, 255, 255);"></i>
+								<i class="bi bi-clock-history mx-3 d-flex align-items-center" style="font-size: 2rem; color: rgb(0, 255, 255);"></i>
 							@break
 
 							@case('В работе')
-								<i class="bi bi-wrench-adjustable-circle me-3 ms-3" style="font-size: 2rem; color: rgb(255, 157, 0);"></i>
+								<i class="bi bi-wrench-adjustable-circle mx-3 d-flex align-items-center" style="font-size: 2rem; color: rgb(255, 157, 0);"></i>
 							@break
 
 							@case('Завершено')
-								<i class="bi bi-check-circle me-3 ms-3" style="font-size: 2rem; color: rgb(0, 255, 0);"></i>
+								<i class="bi bi-check-circle mx-3 d-flex align-items-center" style="font-size: 2rem; color: rgb(0, 255, 0);"></i>
 							@break
 
 							@case('Отменено')
-								<i class="bi bi-x-circle me-3 ms-3" style="font-size: 2rem; color: rgb(173, 0, 0);"></i>
+								<i class="bi bi-x-circle mx-3 d-flex align-items-center" style="font-size: 2rem; color: rgb(173, 0, 0);"></i>
 							@break
 
 							@default
-								<i class="bi bi-question-circle me-3 ms-3" style="font-size: 2rem; color: white"></i>
+								<i class="bi bi-question-circle mx-3 d-flex align-items-center" style="font-size: 2rem; color: white"></i>
 						@endswitch
-
-						<div class="pb-3 mb-0 lh-sm w-100">
-							<div class="d-flex justify-content-between">
-								<div>
+						<div class="mb-0 lh-sm w-100">
+							<div class="row">
+								<div class="col-xl-4 col d-flex flex-column justify-content-center">
 									<strong
 										class="text-gray-dark text-warning">{{ '№' . $request_info->id . ' ' . Str::limit($request_info->topic, 25) }}
 									</strong>
 									<span class="d-block text-white fst-italic">{{ $request_info->created_at->format('d.m.y H:i') }}</span>
 								</div>
-								@switch($request_info->status)
-									@case('В обработке')
-										<span class="me-3 mt-2" style="color: rgb(0, 255, 255)">{{ $request_info->status }}</span>
-									@break
+								@if (isset($request_info->admin_id))
+									<div class="d-none d-xl-flex col-5 align-items-center text-white">
+										<span class="text-secondary">Исполнитель:
+											{{ App\Models\User::firstWhere('id', $request_info->admin_id)->name }}</span>
+									</div>
+								@endif
+								<div class="col d-flex align-items-center flex-row-reverse">
+									@switch($request_info->status)
+										@case('В обработке')
+											<span class="me-3" style="color: rgb(0, 255, 255)">{{ $request_info->status }}</span>
+										@break
 
-									@case('В работе')
-										<span class="me-3 mt-2" style="color: rgb(255, 157, 0)">{{ $request_info->status }}</span>
-									@break
+										@case('В работе')
+											<span class="me-3" style="color: rgb(255, 157, 0)">{{ $request_info->status }}</span>
+										@break
 
-									@case('Завершено')
-										<span class="me-3 mt-2" style="color: rgb(0, 255, 0)">{{ $request_info->status }}</span>
-									@break
+										@case('Завершено')
+											<span class="me-3" style="color: rgb(0, 255, 0)">{{ $request_info->status }}</span>
+										@break
 
-									@case('Отменено')
-										<span class="me-3 mt-2" style="color: rgb(173, 0, 0)">{{ $request_info->status }}</span>
-									@break
+										@case('Отменено')
+											<span class="me-3" style="color: rgb(173, 0, 0)">{{ $request_info->status }}</span>
+										@break
 
-									@default
-										<span class="me-3 mt-2" style="color: white">{{ $request_info->status }}</span>
-								@endswitch
-
+										@default
+											<span class="me-3" style="color: white">{{ $request_info->status }}</span>
+									@endswitch
+								</div>
 							</div>
-
 						</div>
 					</a>
 					@empty
