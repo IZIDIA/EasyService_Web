@@ -31,26 +31,32 @@
 						@default
 							<i class="bi bi-question-circle mx-3 d-flex align-items-center" style="font-size: 2rem; color: white"></i>
 					@endswitch
-					<div class="mb-0 lh-sm w-100">
-						<div class="row">
-							<div class="col-xl-4 col d-flex flex-column justify-content-center">
-								<strong class="text-gray-dark text-warning">{{ '№' . $request->id . ' ' . Str::limit($request->topic, 25) }}
-								</strong>
-								<span class="d-block text-white">{{ Str::limit($request->location, 25) }}</span>
+					<div class="mb-0 lh-sm w-100 row">
+						<div class="col-xl-4 col d-flex flex-column justify-content-center">
+							<strong class="text-warning">{{ '№' . $request->id . ' ' . Str::limit($request->topic, 25) }}
+							</strong>
+							<span class="d-block text-white">{{ Str::limit($request->location, 25) }}</span>
+						</div>
+						@if (isset($request->admin_id))
+							<div class="d-none d-xxl-flex col-5 align-items-center">
+								<span class="text-secondary">Исполнитель:
+									{{ App\Models\User::firstWhere('id', $request->admin_id)->name }}</span>
 							</div>
-							@if (isset($request->admin_id))
-								<div class="d-none d-xxl-flex col-5 align-items-center text-white">
-									<span class="text-secondary">Исполнитель:
-										{{ App\Models\User::firstWhere('id', $request->admin_id)->name }}</span>
+						@else
+							@if (($distributed_request = App\Models\AdminQueue::firstWhere('request_id', $request->id)) != null)
+								<div class="d-none d-xxl-flex col-5 align-items-center">
+									<span style="color: #927000">Распределена для:
+										{{ App\Models\User::firstWhere('id', $distributed_request->admin_id)->name }}
+									</span>
 								</div>
 							@endif
-							<div class="col me-3 d-flex flex-column text-end justify-content-center">
-								<div class="text-white fst-italic">
-									{{ $request->name }}
-								</div>
-								<div class="text-white fst-italic">
-									{{ $request->created_at->format('d.m.y H:i') }}
-								</div>
+						@endif
+						<div class="col me-3 d-flex flex-column text-end justify-content-center">
+							<div class="text-white fst-italic">
+								{{ $request->name }}
+							</div>
+							<div class="text-white fst-italic">
+								{{ $request->created_at->format('d.m.y H:i') }}
 							</div>
 						</div>
 					</div>

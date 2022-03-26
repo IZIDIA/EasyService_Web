@@ -6,6 +6,7 @@ use App\Models\AdminQueue;
 use App\Models\Option;
 use App\Models\PcInfo;
 use App\Models\RequestInfo;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,7 +21,7 @@ class AdminController extends Controller
 
 	public function my()
 	{
-		if (Auth::user()->is_admin == 1) {
+		if (Auth::user()->is_admin == true) {
 			$my_requests = RequestInfo::where('admin_id', Auth::user()->id)->where('status', 'В работе')->paginate(20);
 			$distributed_request_id = null;
 			if (($request = AdminQueue::where('admin_id', Auth::user()->id)->first()) !== null) {
@@ -37,16 +38,17 @@ class AdminController extends Controller
 
 	public function requests()
 	{
-		if (Auth::user()->is_admin == 1) {
+		if (Auth::user()->is_admin == true) {
 			$requests = RequestInfo::orderBy('created_at', 'desc')->paginate(20);
 			return view('admin.requests.index', compact('requests'));
 		}
 		abort(404);
 	}
 
+
 	public function show($request_id)
 	{
-		if (Auth::user()->is_admin == 1) {
+		if (Auth::user()->is_admin == true) {
 			$request_info = RequestInfo::findOrFail($request_id);
 			$distributed_request = AdminQueue::where('request_id', $request_id)->first();
 			return view('admin.requests.show', [
@@ -55,6 +57,15 @@ class AdminController extends Controller
 				'pc_info' => PcInfo::where('request_info_id', $request_id)->first(),
 				'distributed_request' => $distributed_request,
 			]);
+		}
+		abort(404);
+	}
+
+	public function users()
+	{
+		if (Auth::user()->is_admin == true) {
+			$users = User::paginate(50);
+			return view('admin.users', compact('users'));
 		}
 		abort(404);
 	}

@@ -73,10 +73,13 @@
 											<div>{{ Auth::user()->name }}</div>
 											<div> {{ Auth::user()->email }}</div>
 										</div>
-										@if (Auth::user()->is_admin == true)
-											<i class="bi bi-cpu d-inline-flex text-warning" style="font-size: 30px;"></i>
-										@else
-											<i class="bi bi-person-fill d-inline-flex" style="font-size: 30px;"></i>
+										{{-- УБРАТЬ ЛИШНИЙ IF, когда можно будет назначать администратора --}}
+										@if (isset(Auth::user()->admin->is_master))
+											@if (Auth::user()->admin->is_master != true)
+												<i class="bi bi-cpu d-inline-flex" style="font-size: 30px; color:#ffd700"></i>
+											@else
+												<i class="bi bi-eye d-inline-flex" style="font-size: 30px; color:#bc13fe"></i>
+											@endif
 										@endif
 									</a>
 									<ul class="shadow me-2 mt-lg-3 mt-2 dropdown-menu dropdown-menu-dark dropdown-menu-end"
@@ -122,13 +125,15 @@
 							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link {{ request()->is('admin/requests') ? 'active' : 'text-white' }} text-nowrap" href="/admin/requests">
+							<a class="nav-link {{ request()->is('admin/requests') ? 'active' : 'text-white' }} text-nowrap"
+								href="/admin/requests">
 								<i class="bi bi-archive-fill feather"></i>
 								Все заявки
 							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link text-white text-nowrap" href="#">
+							<a class="nav-link text-white {{ request()->is('admin/users') ? 'active' : 'text-white' }} text-nowrap"
+								href="/admin/users">
 								<i class="bi bi-people-fill feather"></i>
 								Пользователи
 							</a>

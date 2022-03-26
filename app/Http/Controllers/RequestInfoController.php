@@ -9,6 +9,7 @@ use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
+use RequestService;
 
 class RequestInfoController extends Controller
 {
@@ -93,11 +94,13 @@ class RequestInfoController extends Controller
 			$data['user_id'] = Auth::user()->id;
 			$request_info = RequestInfo::create($data);
 			$this->storeImage($request_info);
+			RequestService::distribute();
 			return redirect('/requests/');
 		}
 		$data['session_id'] = session()->getId();
 		$request_info = RequestInfo::create($data);
 		$this->storeImage($request_info);
+		RequestService::distribute();
 		return redirect('/requests/' . $request_info->id);
 	}
 

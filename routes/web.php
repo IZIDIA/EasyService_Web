@@ -19,10 +19,11 @@ Route::get('/contacts', function () {
 require __DIR__ . '/auth.php';
 
 //Администратор
-Route::get('/admin', [AdminController::class, 'index'])->middleware(['auth'])->name('admin.index');
-Route::get('/admin/my', [AdminController::class, 'my'])->middleware(['auth'])->name('admin.my');
-Route::get('/admin/requests', [AdminController::class, 'requests'])->middleware(['auth'])->name('admin.requests.index');
-Route::get('/admin/requests/{request}', [AdminController::class, 'show'])->middleware(['auth'])->name('admin.requests.show');
+Route::get('/admin', [AdminController::class, 'index'])->middleware(['auth']);
+Route::get('/admin/my', [AdminController::class, 'my'])->middleware(['auth']);
+Route::get('/admin/requests', [AdminController::class, 'requests'])->middleware(['auth']);
+Route::get('/admin/users', [AdminController::class, 'users'])->middleware(['auth']);
+Route::get('/admin/requests/{request}', [AdminController::class, 'show'])->middleware(['auth']);
 Route::patch('/admin/requests/{request}/comment', [AdminController::class, 'comment'])->middleware(['auth']);
 Route::get('/admin/requests/{request}/comment', function () {
 	abort(404);
@@ -65,4 +66,8 @@ Route::get('/requests/{request}/cancel', function () {
 Route::patch('/requests/{request}/comment', [RequestInfoController::class, 'comment']);
 Route::get('/requests/{request}/comment', function () {
 	abort(404);
+});
+
+Route::get('/test', function () {
+	RequestService::distribute();
 });

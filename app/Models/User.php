@@ -42,8 +42,9 @@ class User extends Authenticatable
 		'email_verified_at' => 'datetime',
 	];
 
-	public function admin_queue()
+
+	public function admin()
 	{
-		return $this->belongsTo(AdminQueue::class);
+		return $this->hasOne(Admin::class, 'user_id');
 	}
 }
