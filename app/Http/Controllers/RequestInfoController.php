@@ -94,13 +94,13 @@ class RequestInfoController extends Controller
 			$data['user_id'] = Auth::user()->id;
 			$request_info = RequestInfo::create($data);
 			$this->storeImage($request_info);
-			RequestService::distribute();
+			//RequestService::distribute();
 			return redirect('/requests/');
 		}
 		$data['session_id'] = session()->getId();
 		$request_info = RequestInfo::create($data);
 		$this->storeImage($request_info);
-		RequestService::distribute();
+		//RequestService::distribute();
 		return redirect('/requests/' . $request_info->id);
 	}
 
@@ -155,7 +155,7 @@ class RequestInfoController extends Controller
 	public function show($request_id)
 	{
 		$request_info = RequestInfo::findOrFail($request_id);
-		if ($request_info->session_id == session()->getId() || (Auth::check() && (Auth::user()->id == $request_info->user_id || Auth::user()->is_admin == true))) {
+		if ($request_info->session_id == session()->getId() || (Auth::check() && (Auth::user()->id == $request_info->user_id || Auth::user()->is_admin))) {
 			return view('requests.show', compact('request_info'))->with('comments', json_decode($request_info->comments, true));
 		}
 		abort(404);

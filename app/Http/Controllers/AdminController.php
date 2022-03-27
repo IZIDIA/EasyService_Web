@@ -21,15 +21,14 @@ class AdminController extends Controller
 
 	public function my()
 	{
-		if (Auth::user()->is_admin == true) {
-			$my_requests = RequestInfo::where('admin_id', Auth::user()->id)->where('status', 'В работе')->paginate(20);
+		if (Auth::user()->is_admin) {
 			$distributed_request_id = null;
 			if (($request = AdminQueue::where('admin_id', Auth::user()->id)->first()) !== null) {
 				$distributed_request_id = $request->request_id;
 			}
 			$distributed_request = RequestInfo::where('id', $distributed_request_id)->first();
 			return view('admin.my', [
-				'my_requests' => $my_requests,
+				'my_requests' => RequestInfo::where('admin_id', Auth::user()->id)->where('status', 'В работе')->paginate(20),
 				'distributed_request' => $distributed_request
 			]);
 		}
@@ -38,7 +37,7 @@ class AdminController extends Controller
 
 	public function requests()
 	{
-		if (Auth::user()->is_admin == true) {
+		if (Auth::user()->is_admin) {
 			$requests = RequestInfo::orderBy('created_at', 'desc')->paginate(20);
 			return view('admin.requests.index', compact('requests'));
 		}
@@ -46,16 +45,15 @@ class AdminController extends Controller
 	}
 
 
-	public function show($request_id)
+	public function request_show($request_id)
 	{
-		if (Auth::user()->is_admin == true) {
+		if (Auth::user()->is_admin) {
 			$request_info = RequestInfo::findOrFail($request_id);
-			$distributed_request = AdminQueue::where('request_id', $request_id)->first();
 			return view('admin.requests.show', [
 				'request_info' => $request_info,
 				'comments' => json_decode($request_info->comments, true),
 				'pc_info' => PcInfo::where('request_info_id', $request_id)->first(),
-				'distributed_request' => $distributed_request,
+				'distributed_request' => AdminQueue::where('request_id', $request_id)->first(),
 			]);
 		}
 		abort(404);
@@ -63,16 +61,34 @@ class AdminController extends Controller
 
 	public function users()
 	{
-		if (Auth::user()->is_admin == true) {
+		if (Auth::user()->is_admin) {
 			$users = User::paginate(50);
-			return view('admin.users', compact('users'));
+			return view('admin.users.index', compact('users'));
+		}
+		abort(404);
+	}
+
+	public function user_show($user_id)
+	{
+		if (Auth::user()->is_admin) {
+			if (User::findOrFail($user_id)->is_admin) {
+				return view('admin.users.show', [
+					'user' => User::findOrFail($user_id),
+					'created' => count(RequestInfo::where('user_id', $user_id)->get()),
+					'done' => count(RequestInfo::where('admin_id', $user_id)->where('status', 'Завершено')->get()),
+				]);
+			}
+			return view('admin.users.show', [
+				'user' => User::findOrFail($user_id),
+				'created' => count(RequestInfo::where('user_id', $user_id)->get()),
+			]);
 		}
 		abort(404);
 	}
 
 	public function comment(RequestInfo $request)
 	{
-		if (Auth::user()->is_admin == true) {
+		if (Auth::user()->is_admin) {
 			$data = request()->validate([
 				'comment_text' => 'required|min:1|max:512',
 			]);
@@ -92,7 +108,7 @@ class AdminController extends Controller
 
 	public function cancel(RequestInfo $request)
 	{
-		if (Auth::user()->is_admin == true) {
+		if (Auth::user()->is_admin) {
 			if ($request->status == 'В обработке' || ($request->status == 'В работе' &&  $request->admin_id == Auth::user()->id)) {
 				$request->status = 'Отменено';
 				$request->time_remaining = NULL;
@@ -115,7 +131,7 @@ class AdminController extends Controller
 
 	public function accept(RequestInfo $request)
 	{
-		if (Auth::user()->is_admin == true) {
+		if (Auth::user()->is_admin) {
 			if ($request->status == 'В обработке') {
 				$request->status = 'В работе';
 				$request->time_remaining = Option::find(1)->value('time_to_work');
@@ -137,7 +153,7 @@ class AdminController extends Controller
 
 	public function deny(RequestInfo $request)
 	{
-		if (Auth::user()->is_admin == true) {
+		if (Auth::user()->is_admin) {
 			if ($request->admin_id == Auth::user()->id && $request->status == 'В работе') {
 				$request->status = 'В обработке';
 				$request->time_remaining = NULL;
@@ -159,7 +175,7 @@ class AdminController extends Controller
 
 	public function complete(RequestInfo $request)
 	{
-		if (Auth::user()->is_admin == true) {
+		if (Auth::user()->is_admin) {
 			if ($request->admin_id == Auth::user()->id && $request->status == 'В работе') {
 				$request->status = 'Завершено';
 				$request->time_remaining = NULL;
@@ -181,7 +197,7 @@ class AdminController extends Controller
 
 	public function restore(RequestInfo $request)
 	{
-		if (Auth::user()->is_admin == true) {
+		if (Auth::user()->is_admin) {
 			if ($request->status == 'Отменено' || $request->status == 'Завершено') {
 				$request->status = 'В обработке';
 				$request->time_remaining = NULL;
@@ -204,7 +220,7 @@ class AdminController extends Controller
 
 	public function time(RequestInfo $request)
 	{
-		if (Auth::user()->is_admin == true) {
+		if (Auth::user()->is_admin) {
 			if ($request->admin_id == Auth::user()->id && $request->status == 'В работе') {
 				$request->time_remaining += 24;
 				$request->save();
@@ -217,7 +233,7 @@ class AdminController extends Controller
 
 	public function destroy(RequestInfo $request)
 	{
-		if (Auth::user()->is_admin == true) {
+		if (Auth::user()->is_admin) {
 			if ($request->status != 'В работе' || $request->admin_id == Auth::user()->id) {
 				//ДОБАВИТЬ
 				//Если есть зависимость (подробная информация) -> удаляем зависимую запись

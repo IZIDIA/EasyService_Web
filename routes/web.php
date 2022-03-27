@@ -20,10 +20,11 @@ require __DIR__ . '/auth.php';
 
 //Администратор
 Route::get('/admin', [AdminController::class, 'index'])->middleware(['auth']);
+Route::get('/admin/users', [AdminController::class, 'users'])->middleware(['auth']);
+Route::get('/admin/users/{user}', [AdminController::class, 'user_show'])->middleware(['auth']);
 Route::get('/admin/my', [AdminController::class, 'my'])->middleware(['auth']);
 Route::get('/admin/requests', [AdminController::class, 'requests'])->middleware(['auth']);
-Route::get('/admin/users', [AdminController::class, 'users'])->middleware(['auth']);
-Route::get('/admin/requests/{request}', [AdminController::class, 'show'])->middleware(['auth']);
+Route::get('/admin/requests/{request}', [AdminController::class, 'request_show'])->middleware(['auth']);
 Route::patch('/admin/requests/{request}/comment', [AdminController::class, 'comment'])->middleware(['auth']);
 Route::get('/admin/requests/{request}/comment', function () {
 	abort(404);
