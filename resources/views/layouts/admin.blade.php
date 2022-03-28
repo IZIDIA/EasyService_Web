@@ -11,6 +11,7 @@
 	<link href="{{ asset('css/app.css') }}" rel="stylesheet">
 	<!-- Scripts -->
 	<script src="{{ asset('js/app.js') }}" defer></script>
+	<script src="{{ asset('js/jquery.js') }}" defer></script>
 	<style>
 
 	</style>
@@ -57,7 +58,7 @@
 					</li>
 					<li><a href="/requests" class="d-none d-lg-block nav-link px-2 text-white me-1 rounded headerlink">· Заявки</a></li>
 					<li><a href="/docs" class="d-none d-lg-block nav-link px-2 text-white me-1 rounded headerlink">· Документы</a></li>
-					@if (Auth::check() && Auth::user()->is_admin == true)
+					@if (Auth::check() && Auth::user()->is_admin)
 						<li><a href="/admin" class="d-none d-lg-block nav-link px-2 text-warning rounded headerlink">· Админ-панель</a>
 						</li>
 					@endif
@@ -74,7 +75,7 @@
 											<div> {{ Auth::user()->email }}</div>
 										</div>
 										@if (isset(Auth::user()->admin->is_master))
-											@if (Auth::user()->admin->is_master != true)
+											@if (!Auth::user()->admin->is_master)
 												<i class="bi bi-cpu d-inline-flex" style="font-size: 30px; color:#ffd700"></i>
 											@else
 												<i class="bi bi-eye d-inline-flex" style="font-size: 30px; color:#bc13fe"></i>

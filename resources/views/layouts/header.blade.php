@@ -53,7 +53,7 @@
 					<li><a href="/contacts" class="nav-link px-2 text-white me-1 rounded headerlink">· Контакты</a></li>
 					<li><a href="/requests" class="nav-link px-2 text-white me-1 rounded headerlink">· Заявки</a></li>
 					<li><a href="/docs" class="nav-link px-2 text-white me-1 rounded headerlink">· Документы</a></li>
-					@if (Auth::check() && Auth::user()->is_admin == true)
+					@if (Auth::check() && Auth::user()->is_admin)
 						<li><a href="/admin" class="nav-link px-2 text-warning rounded headerlink">· Админ-панель</a></li>
 					@endif
 				</ul>
@@ -69,7 +69,7 @@
 											<div> {{ Auth::user()->email }}</div>
 										</div>
 										@if (isset(Auth::user()->admin->is_master))
-											@if (Auth::user()->admin->is_master != true)
+											@if (!Auth::user()->admin->is_master)
 												<i class="bi bi-cpu d-inline-flex" style="font-size: 30px; color:#ffd700"></i>
 											@else
 												<i class="bi bi-eye d-inline-flex" style="font-size: 30px; color:#bc13fe"></i>
