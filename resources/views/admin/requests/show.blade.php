@@ -20,7 +20,6 @@
 			</div>
 
 			<div class="container" id="hanging-icons" style="word-break: break-all;">
-
 				<div class="pb-1 px-1 border-bottom row row-cols-1 row-cols-lg-2">
 					<div class="d-flex align-items-center fs-2 gap-2">Статус: @switch($request_info->status)
 							@case('В обработке')
@@ -44,7 +43,7 @@
 						@endswitch
 					</div>
 					<div class="d-flex align-items-center flex-row-reverse gap-2 fs-5" style="color: #96FBFE">
-						@if ($request_info->status == 'В обработке' || ($request_info->status == 'В работе' && $request_info->admin_id == Auth::user()->id))
+						@if ($request_info->status == 'В обработке' || ($request_info->status == 'В работе' && ($request_info->admin_id == Auth::user()->id || Auth::user()->admin->is_master)))
 							<form action="/admin/requests/{{ $request_info->id }}/cancel" method="POST">
 								@method('PATCH')
 								@csrf
@@ -347,7 +346,7 @@
 
 			</div>
 
-			@if ($request_info->status != 'В работе' || $request_info->admin_id == Auth::user()->id)
+			@if (Auth::user()->admin->is_master)
 				<div class="d-flex justify-content-center mt-3">
 					<form action="/admin/requests/{{ $request_info->id }}" method="POST"
 						onSubmit="return confirm('Вы действительно хотите удалить заявку №{{ $request_info->id }}? Восстановить заявку будет невозможно.');">

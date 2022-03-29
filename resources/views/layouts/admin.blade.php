@@ -11,7 +11,6 @@
 	<link href="{{ asset('css/app.css') }}" rel="stylesheet">
 	<!-- Scripts -->
 	<script src="{{ asset('js/app.js') }}" defer></script>
-	<script src="{{ asset('js/jquery.js') }}" defer></script>
 	<style>
 
 	</style>
@@ -121,20 +120,23 @@
 				<div class="position-sticky pt-5">
 					<ul class="nav flex-column fs-5">
 						<li class="nav-item">
-							<a class="nav-link {{ request()->is('admin/my') ? 'active' : 'text-white' }} text-nowrap" href="/admin/my">
+							<a
+								class="nav-link {{ request()->is('admin/my', 'admin/my/completed', 'admin/my/in_work') ? 'active' : 'text-white' }} text-nowrap"
+								href="/admin/my">
 								<i class="bi bi-pen-fill feather"></i>
 								Мои заявки
 							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link {{ request()->is('admin/requests') ? 'active' : 'text-white' }} text-nowrap"
+							<a
+								class="nav-link {{ request()->is('admin/requests','admin/requests/completed','admin/requests/in_work','admin/requests/canceled','admin/requests/in_processing')? 'active': 'text-white' }} text-nowrap"
 								href="/admin/requests">
 								<i class="bi bi-archive-fill feather"></i>
 								Все заявки
 							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link text-white {{ request()->is('admin/users') ? 'active' : 'text-white' }} text-nowrap"
+							<a class="nav-link {{ request()->is('admin/users') ? 'active' : 'text-white' }} text-nowrap"
 								href="/admin/users">
 								<i class="bi bi-people-fill feather"></i>
 								Пользователи
@@ -159,7 +161,8 @@
 							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link text-white text-nowrap" href="#">
+							<a class="nav-link {{ request()->is('admin/options') ? 'active' : 'text-white' }}  text-nowrap"
+								href="/admin/options">
 								<i class="bi bi-gear-fill feather"></i>
 								Настройки
 							</a>

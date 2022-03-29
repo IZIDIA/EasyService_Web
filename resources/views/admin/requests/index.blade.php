@@ -2,9 +2,34 @@
 
 	<div class="container px-5">
 
-		<div class="my-3 p-3 rounded shadow-sm text-white fs-5" style="background-color: #1A202C">
+		<div class="d-flex gap-2 mt-3" style="word-break: break-all;">
+			@if (!request()->is('admin/requests'))
+				<a href="{{ url('admin/requests') }}" class="link-light">Все</a>
+			@endif
+			@if (!request()->is('admin/requests/completed'))
+				<a href="{{ url('admin/requests/completed') }}" class="link-success">Завершённые</a>
+			@endif
+			@if (!request()->is('admin/requests/in_work'))
+				<a href="{{ url('admin/requests/in_work') }}" class="link-warning">В работе</a>
+			@endif
+			@if (!request()->is('admin/requests/in_processing'))
+				<a href="{{ url('admin/requests/in_processing') }}" class="link-info">В обработке</a>
+			@endif
+			@if (!request()->is('admin/requests/canceled'))
+				<a href="{{ url('admin/requests/canceled') }}" class="link-danger">Отменённые</a>
+			@endif
+		</div>
+
+		<div class="mb-3 mt-1 p-3 rounded shadow-sm text-white fs-5" style="background-color: #1A202C">
 			<div class="d-flex justify-content-between mb-2">
-				<span class="border-bottom pb-2 mb-0">Список всех заявок:</span>
+				<span class="border-bottom pb-2 mb-0">Список заявок ({{$type}}):</span>
+				<div class="d-flex">
+					<form class="me-2 ps-2">
+						<input size="30" type="search" class="form-control form-control-dark" placeholder="Содержимое заявки"
+							aria-label="Search">
+					</form>
+					<a type="button" class="btn btn-outline-info fw-bold" href="/">Поиск</a>
+				</div>
 			</div>
 
 			@forelse ($requests as $request)
@@ -12,7 +37,8 @@
 					style="text-decoration: none; ">
 					@switch($request->status)
 						@case('В обработке')
-							<i class="bi bi-clock-history mx-3 d-flex align-items-center" style="font-size: 2rem; color: rgb(0, 255, 255);"></i>
+							<i class="bi bi-clock-history mx-3 d-flex align-items-center"
+								style="font-size: 2rem; color: rgb(0, 255, 255);"></i>
 						@break
 
 						@case('В работе')

@@ -39,33 +39,37 @@
 			@if (1 == 1)
 				<div class="mt-3 d-flex justify-content-between">
 					<div class="d-flex gap-2">
-						@if ($user->is_admin)
-							@if (Auth::user()->admin->is_master && !$user->admin->is_master)
-								<form action="/admin/users/{{ $user->id }}/make_admin" method="POST">
+						@if (Auth::user()->admin->is_master)
+							@if ($user->is_admin)
+								@if (!$user->admin->is_master)
+									<form action="/admin/users/{{ $user->id }}/master" method="POST">
+										@method('PATCH')
+										@csrf
+										<button type="submit" class="shadow btn btn-info">Сделать мастером</button>
+									</form>
+								@endif
+								<form action="/admin/users/{{ $user->id }}/downgrade" method="POST">
 									@method('PATCH')
 									@csrf
-									<button type="submit" class="shadow btn btn-info">Сделать мастером</button>
+									<button type="submit" class="shadow btn btn-secondary">Понизить</button>
+								</form>
+							@else
+								<form action="/admin/users/{{ $user->id }}/admin" method="POST">
+									@method('PATCH')
+									@csrf
+									<button type="submit" class="shadow btn btn-warning">Сделать
+										администратором</button>
 								</form>
 							@endif
-							<form action="/admin/users/{{ $user->id }}/make_admin" method="POST">
-								@method('PATCH')
-								@csrf
-								<button type="submit" class="shadow btn btn-secondary">Понизить</button>
-							</form>
-						@else
-							<form action="/admin/users/{{ $user->id }}/make_admin" method="POST">
-								@method('PATCH')
-								@csrf
-								<button type="submit" class="shadow btn btn-warning">Сделать
-									администратором</button>
-							</form>
 						@endif
 					</div>
-					<form action="/admin/users/{{ $user->id }}/make_admin" method="POST">
-						@method('PATCH')
-						@csrf
-						<button type="submit" class="shadow btn btn-outline-danger">Удалить аккаунт</button>
-					</form>
+					@if (Auth::user()->admin->is_master)
+						<form action="/admin/users/{{ $user->id }}/delete" method="POST">
+							@method('DELETE')
+							@csrf
+							<button type="submit" class="shadow btn btn-outline-danger">Удалить аккаунт</button>
+						</form>
+					@endif
 				</div>
 			@endif
 		</div>

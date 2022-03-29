@@ -32,9 +32,21 @@
 			@endif
 		</div>
 
-		<div class="my-3 p-3 rounded shadow-sm text-white fs-5" style="background-color: #1A202C">
+		<div class="d-flex gap-2 mt-3" style="word-break: break-all;">
+			@if (!request()->is('admin/my'))
+				<a href="{{ url('admin/my') }}" class="link-light">Все</a>
+			@endif
+			@if (!request()->is('admin/my/completed'))
+				<a href="{{ url('admin/my/completed') }}" class="link-success">Завершённые</a>
+			@endif
+			@if (!request()->is('admin/my/in_work'))
+				<a href="{{ url('admin/my/in_work') }}" class="link-warning">В работе</a>
+			@endif
+		</div>
+
+		<div class="mb-3 mt-1 p-3 rounded shadow-sm text-white fs-5" style="background-color: #1A202C">
 			<div class="d-flex justify-content-between mb-2">
-				<span class="border-bottom pb-2 mb-0">Выполняемые вами заявки:</span>
+				<span class="border-bottom pb-2 mb-0">Ваши заявки ({{$type}}):</span>
 			</div>
 			@forelse ($my_requests as $my_request)
 				<a href="/admin/requests/{{ $my_request->id }}" class="requestlink rounded-3 d-flex py-2 shadow-sm"
@@ -63,8 +75,7 @@
 					@endswitch
 					<div class="mb-0 lh-sm w-100 row">
 						<div class="col d-flex flex-column justify-content-center">
-							<strong
-								class="text-warning">{{ '№' . $my_request->id . ' ' . Str::limit($my_request->topic, 25) }}
+							<strong class="text-warning">{{ '№' . $my_request->id . ' ' . Str::limit($my_request->topic, 25) }}
 							</strong>
 							<span class="d-block text-white">{{ Str::limit($my_request->location, 25) }}</span>
 						</div>

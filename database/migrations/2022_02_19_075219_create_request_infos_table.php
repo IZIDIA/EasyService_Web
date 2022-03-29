@@ -39,8 +39,8 @@ return new class extends Migration
 			$table->timestamp('closed_at')->nullable();
 			$table->timestamps();
 
-			$table->foreign('user_id')->references('id')->on('users');
-			$table->foreign('admin_id')->references('id')->on('users');
+			$table->foreign('user_id')->references('id')->on('users')->nullOnDelete();
+			$table->foreign('admin_id')->references('id')->on('users')->nullOnDelete();
 		});
 	}
 

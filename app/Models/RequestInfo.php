@@ -14,7 +14,7 @@ class RequestInfo extends Model
 
 	public function pc_info()
 	{
-		return $this->hasOne(PcInfo::class);
+		return $this->hasOne(PcInfo::class, 'request_info_id');
 	}
 
 	public function admin_queue()
