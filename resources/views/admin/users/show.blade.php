@@ -8,6 +8,7 @@
 				</div>
 				<div style="width: 100%">
 					<h2 class="pt-2 mb-3"> {{ $user->name }}</h2>
+					<p><strong>ID:</strong> {{ $user->id }}</p>
 					<div class="d-flex">
 						<strong class="me-1">Статус:</strong>
 						@if (isset($user->admin->is_master))
@@ -25,6 +26,13 @@
 					<p><strong>Дата регистрации:</strong> {{ $user->created_at->format('d.m.y H:i') }}</p>
 					@if ($user->is_admin)
 						<div class="border-bottom mb-2"></div>
+						<p><strong>Статус:</strong>
+							@if ($user->admin->free)
+								Свободен
+							@else
+								Работает
+							@endif
+						</p>
 						<p><strong>Выполнено заявок:</strong> {{ $done }}</p>
 						<p><strong>Распределённые заявки:</strong>
 							@if ($user->admin->get_recommendation)
@@ -33,6 +41,7 @@
 								Выкл.
 							@endif
 						</p>
+						<p><strong>Рабочее время за текущую неделю:</strong> {{ $user->admin->week_time }} мин.</p>
 					@endif
 				</div>
 			</div>

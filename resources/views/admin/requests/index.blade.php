@@ -22,7 +22,7 @@
 
 		<div class="mb-3 mt-1 p-3 rounded shadow-sm text-white fs-5" style="background-color: #1A202C">
 			<div class="d-flex justify-content-between mb-2">
-				<span class="border-bottom pb-2 mb-0">Список заявок ({{$type}}):</span>
+				<span class="border-bottom pb-2 mb-0">Список заявок ({{ $type }}):</span>
 				<div class="d-flex">
 					<form class="me-2 ps-2">
 						<input size="30" type="search" class="form-control form-control-dark" placeholder="Содержимое заявки"
@@ -69,7 +69,7 @@
 									{{ App\Models\User::firstWhere('id', $request->admin_id)->name }}</span>
 							</div>
 						@else
-							@if (($distributed_request = App\Models\AdminQueue::firstWhere('request_id', $request->id)) != null)
+							@if (App\Models\Option::find(1)->distributed_requests && ($distributed_request = App\Models\AdminQueue::firstWhere('request_id', $request->id)) != null)
 								<div class="d-none d-xxl-flex col-5 align-items-center">
 									<span style="color: #927000">Распределена для:
 										{{ App\Models\User::firstWhere('id', $distributed_request->admin_id)->name }}

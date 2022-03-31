@@ -10,7 +10,7 @@
 	<!-- Styles -->
 	<link href="{{ asset('css/app.css') }}" rel="stylesheet">
 	<!-- Scripts -->
-	<script src="{{ asset('js/app.js') }}" defer></script>
+	<script src="{{ asset('js/app.js') }}"></script>
 	<style>
 
 	</style>
@@ -69,9 +69,9 @@
 								<div class="container-fluid">
 									<a class="nav-link dropdown-toggle text-white fw-bold py-0 rounded headerlink" href="#" id="navbarDropdown"
 										role="button" data-bs-toggle="dropdown" aria-expanded="false">
-										<div class="me-2" style="display: inline-block;">
-											<div>{{ Auth::user()->name }}</div>
-											<div> {{ Auth::user()->email }}</div>
+										<div class="me-2" style="display: inline-block; overflow:hidden">
+											<div style="max-width:180px; overflow:hidden;text-overflow: ellipsis;">{{ Auth::user()->name }}</div>
+											<div style="max-width:180px; overflow:hidden;text-overflow: ellipsis;"> {{ Auth::user()->email }}</div>
 										</div>
 										@if (isset(Auth::user()->admin->is_master))
 											@if (!Auth::user()->admin->is_master)
@@ -182,6 +182,13 @@
 			</main>
 		</div>
 	</div>
+
+	<script>
+	 var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+	 var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+	  return new bootstrap.Tooltip(tooltipTriggerEl)
+	 })
+	</script>
 
 </body>
 

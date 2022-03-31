@@ -19,8 +19,8 @@ return new class extends Migration
 			$table->unsignedBigInteger('request_id')->nullable()->comment('id Заявки');
 			$table->timestamps();
 
-			$table->foreign('admin_id')->references('id')->on('users');
-			$table->foreign('request_id')->references('id')->on('request_infos');
+			$table->foreign('admin_id')->references('id')->on('users')->cascadeOnDelete();
+			$table->foreign('request_id')->references('id')->on('request_infos')->nullOnDelete();
 		});
 	}
 

@@ -1,11 +1,12 @@
 require('./bootstrap');
+import * as bootstrap from 'bootstrap';
+window.bootstrap = bootstrap;
 
-import Alpine from 'alpinejs';
+//import Alpine from 'alpinejs';
+//window.Alpine = Alpine;
+//Alpine.start();
+
 import mediumZoom from 'medium-zoom';
-
-window.Alpine = Alpine;
-
-Alpine.start();
 
 mediumZoom('.zoom-dark', {
 	background: '#0000009b',

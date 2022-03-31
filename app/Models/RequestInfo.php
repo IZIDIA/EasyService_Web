@@ -12,6 +12,11 @@ class RequestInfo extends Model
 	protected $dates = ['date_create', 'closed_at'];
 	use HasFactory;
 
+	public function user_admin()
+	{
+		return $this->belongsTo(User::class, 'admin_id');
+	}
+
 	public function pc_info()
 	{
 		return $this->hasOne(PcInfo::class, 'request_info_id');

@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\RequestInfoController;
+use App\Models\RequestInfo;
+use GuzzleHttp\Psr7\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -92,5 +94,6 @@ Route::get('/requests/{request}/comment', function () {
 });
 
 Route::get('/test', function () {
-	RequestService::distribute();
+	//dd(RequestInfo::find(14)->user_admin->name);
+	//RequestService::distribute();
 });

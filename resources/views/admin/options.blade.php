@@ -13,6 +13,10 @@
 							<input class="form-check-input toggle-class" type="checkbox" id="flexSwitchCheck"
 								{{ $admin->get_recommendation ? 'checked' : '' }}>
 							<label class="form-check-label" for="flexSwitchCheck">Получать распределённые заявки</label>
+							<span data-bs-toggle="tooltip" data-bs-placement="top"
+								title="Вы будете получать распределённые заявки, при условии, что у вас нет исполняемых заявок.">
+								<i class="bi bi-question-circle ms-1"></i>
+							</span>
 						</div>
 						<label class="text-warning" style="font-size: 0.8rem">Если вы не будете принимать распределённые заявки, данная
 							функция автоматически отключится через: {{ $options->time_to_accept_distributed }} ч. после появления
@@ -43,7 +47,6 @@
 				</div>
 			</div>
 		</div>
-
 
 	</div>
 </x-admin-layout>

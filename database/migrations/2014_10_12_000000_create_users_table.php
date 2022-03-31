@@ -30,6 +30,9 @@ return new class extends Migration
 		$admin->email = 'admin@mail.com';
 		$admin->password = '$2y$10$0ZnubMvEkECnQprz3mgzKOJ7PgVELXdrlOlvMf0LLEEJhBvos01iW'; // Xdq59svn
 		$admin->save();
+
+		//ТЕСТ
+		User::factory()->count(60)->create();
 	}
 
 	/**

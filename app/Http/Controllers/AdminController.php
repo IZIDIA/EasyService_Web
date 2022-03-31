@@ -11,6 +11,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use RequestService;
 
 class AdminController extends Controller
 {
@@ -172,9 +173,36 @@ class AdminController extends Controller
 		abort(404);
 	}
 
+	public function user_destroy(User $user)
+	{
+		if (Auth::user()->is_admin && Auth::user()->admin->is_master) {
+			$requests = RequestInfo::where('admin_id', $user->id)->get();
+			foreach ($requests as $request) {
+				$request->status = 'В обработке';
+				$request->time_remaining = NULL;
+				$request->admin_id = NULL;
+				$json_comment = json_decode($request->comments, true);
+				$json_comment[] =
+					array(
+						'Time' => Carbon::now()->format('d.m.y H:i'),
+						'Name' => 'Система',
+						'Message' => 'Администратор ' . '"' . Auth::user()->name . '" перевёл заявку в обработку',
+					);
+				$request->comments = json_encode($json_comment);
+				$request->save();
+			}
+			$user->delete();
+			if (Option::find(1)->distributed_requests) {
+				RequestService::distribute();
+			}
+			return redirect('/admin/users');
+		}
+		abort(404);
+	}
+
 	public function change_status($user_id, $status)
 	{
-		if (Auth::user()->admin->is_master) {
+		if (Auth::user()->is_admin && Auth::user()->admin->is_master) {
 			$user = User::findOrFail($user_id);
 			switch ($status) {
 				case 'admin':
@@ -204,6 +232,29 @@ class AdminController extends Controller
 							$user->save();
 							$admin = $user->admin;
 							$admin->delete();
+							$queue = AdminQueue::where('admin_id', $user->id)->first();
+							if(!is_null($queue))
+							{
+								$queue->delete();
+							}
+							$requests = RequestInfo::where('admin_id', $user->id)->get();
+							foreach ($requests as $request) {
+								$request->status = 'В обработке';
+								$request->time_remaining = NULL;
+								$request->admin_id = NULL;
+								$json_comment = json_decode($request->comments, true);
+								$json_comment[] =
+									array(
+										'Time' => Carbon::now()->format('d.m.y H:i'),
+										'Name' => 'Система',
+										'Message' => 'Администратор ' . '"' . Auth::user()->name . '" перевёл заявку в обработку',
+									);
+								$request->comments = json_encode($json_comment);
+								$request->save();
+							}
+							if (Option::find(1)->distributed_requests) {
+								RequestService::distribute();
+							}
 						}
 					}
 					break;
@@ -212,19 +263,6 @@ class AdminController extends Controller
 					break;
 			}
 			return redirect('/admin/users/' . $user_id);
-		}
-		abort(404);
-	}
-
-	public function user_destroy(User $user)
-	{
-		if (Auth::user()->is_admin && Auth::user()->admin->is_master) {
-			if ($user->is_admin) {
-				$admin = $user->admin;
-				$admin->delete();
-			}
-			$user->delete();
-			return redirect('/admin/users');
 		}
 		abort(404);
 	}
@@ -256,6 +294,7 @@ class AdminController extends Controller
 				$request->status = 'Отменено';
 				$request->time_remaining = NULL;
 				$request->closed_at = Carbon::now();
+				$admin_id = $request->admin_id;
 				$request->admin_id = NULL;
 				$json_comment = json_decode($request->comments, true);
 				$json_comment[] =
@@ -266,6 +305,15 @@ class AdminController extends Controller
 					);
 				$request->comments = json_encode($json_comment);
 				$request->save();
+				if (Option::find(1)->distributed_requests) {
+					RequestService::clear_request_id($request);
+				}
+				if (!is_null($admin_id)) {
+					RequestService::check_free(Admin::where('user_id', $admin_id)->first());
+				}
+				if (Option::find(1)->distributed_requests) {
+					RequestService::distribute();
+				}
 			}
 			return redirect('/admin/requests/' . $request->id);
 		}
@@ -288,6 +336,10 @@ class AdminController extends Controller
 					);
 				$request->comments = json_encode($json_comment);
 				$request->save();
+				RequestService::check_free($request->user_admin->admin);
+				if (Option::find(1)->distributed_requests) {
+					RequestService::clear_request_id($request);
+				}
 			}
 			return redirect('/admin/requests/' . $request->id);
 		}
@@ -297,19 +349,26 @@ class AdminController extends Controller
 	public function deny(RequestInfo $request)
 	{
 		if (Auth::user()->is_admin) {
-			if ($request->admin_id == Auth::user()->id && $request->status == 'В работе') {
+			if (($request->admin_id == Auth::user()->id || Auth::user()->admin->is_master) && $request->status == 'В работе') {
 				$request->status = 'В обработке';
 				$request->time_remaining = NULL;
+				$admin_id = $request->admin_id;
 				$request->admin_id = NULL;
 				$json_comment = json_decode($request->comments, true);
 				$json_comment[] =
 					array(
 						'Time' => Carbon::now()->format('d.m.y H:i'),
 						'Name' => 'Система',
-						'Message' => 'Администратор ' . '"' . Auth::user()->name . '" отказался от заявки',
+						'Message' => 'Администратор ' . '"' . Auth::user()->name . '" перевёл заявку в обработку',
 					);
 				$request->comments = json_encode($json_comment);
 				$request->save();
+				if (!is_null($admin_id)) {
+					RequestService::check_free(Admin::where('user_id', $admin_id)->first());
+				}
+				if (Option::find(1)->distributed_requests) {
+					RequestService::distribute();
+				}
 			}
 			return redirect('/admin/requests/' . $request->id);
 		}
@@ -319,7 +378,7 @@ class AdminController extends Controller
 	public function complete(RequestInfo $request)
 	{
 		if (Auth::user()->is_admin) {
-			if ($request->admin_id == Auth::user()->id && $request->status == 'В работе') {
+			if (($request->admin_id == Auth::user()->id || Auth::user()->admin->is_master) && $request->status == 'В работе') {
 				$request->status = 'Завершено';
 				$request->time_remaining = NULL;
 				$request->closed_at = Carbon::now();
@@ -331,7 +390,16 @@ class AdminController extends Controller
 						'Message' => 'Администратор ' . '"' . Auth::user()->name . '" завершил выполнение заявки',
 					);
 				$request->comments = json_encode($json_comment);
+				if (Option::find(1)->distributed_requests) {
+					$admin = Auth::user()->admin;
+					$admin->week_time += Carbon::parse($request->updated_at)->diffInMinutes(Carbon::now());
+					$admin->save();
+				}
 				$request->save();
+				RequestService::check_free($request->user_admin->admin);
+				if (Option::find(1)->distributed_requests) {
+					RequestService::distribute();
+				}
 			}
 			return redirect('/admin/requests/' . $request->id);
 		}
@@ -355,6 +423,9 @@ class AdminController extends Controller
 					);
 				$request->comments = json_encode($json_comment);
 				$request->save();
+				if (Option::find(1)->distributed_requests) {
+					RequestService::distribute();
+				}
 			}
 			return redirect('/admin/requests/' . $request->id);
 		}
@@ -377,13 +448,18 @@ class AdminController extends Controller
 	public function request_destroy(RequestInfo $request)
 	{
 		if (Auth::user()->is_admin && Auth::user()->admin->is_master) {
-			if ($request->status != 'В работе' || $request->admin_id == Auth::user()->id || Auth::user()->admin->is_master) {
-				//ДОБАВИТЬ
-				//Если есть зависимость (подробная информация) -> удаляем зависимую запись
-				$request->delete();
-				return redirect('/admin/requests');
+
+			//ДОБАВИТЬ
+			//Если есть зависимость (подробная информация) -> удаляем зависимую запись
+			$admin_id = $request->admin_id;
+			$request->delete();
+			if (!is_null($admin_id)) {
+				RequestService::check_free($request->user_admin->admin);
 			}
-			return redirect('/admin/requests/' . $request->id);
+			if (Option::find(1)->distributed_requests) {
+				RequestService::distribute();
+			}
+			return redirect('/admin/requests');
 		}
 		abort(404);
 	}
@@ -407,6 +483,14 @@ class AdminController extends Controller
 			$admin = Auth::user()->admin;
 			$admin->get_recommendation = $request->status;
 			$admin->save();
+			if (Option::find(1)->distributed_requests) {
+				if ($request->status) {
+					RequestService::enqueue(Auth::user()->admin);
+					RequestService::distribute();
+				} else {
+					RequestService::dequeue(Auth::user()->admin);
+				}
+			}
 			return response()->json(['success' => 'Recommendation changed successfully.']);
 		}
 		abort(404);

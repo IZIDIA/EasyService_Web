@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\RequestInfo;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -35,13 +36,16 @@ return new class extends Migration
 			$table->string('status', 128)->comment('[В обработке, В работе, Завершено, Отменено]');
 			$table->string('photo')->nullable()->comment('Фотография');
 			$table->json('comments')->nullable()->comment('Комментарии/События');
-			$table->integer('time_remaining')->nullable()->comment('Время на выполнение заявки');
+			$table->integer('time_remaining')->nullable()->comment('Время на выполнение заявки (Часы)');
 			$table->timestamp('closed_at')->nullable();
 			$table->timestamps();
 
 			$table->foreign('user_id')->references('id')->on('users')->nullOnDelete();
 			$table->foreign('admin_id')->references('id')->on('users')->nullOnDelete();
 		});
+
+		//ТЕСТ
+		RequestInfo::factory()->count(50)->create();
 	}
 
 	/**

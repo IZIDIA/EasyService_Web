@@ -4,7 +4,7 @@
 		<main>
 
 			<div class="mt-4 text-center">
-				@if (!is_null($distributed_request))
+				@if (App\Models\Option::find(1)->distributed_requests && !is_null($distributed_request))
 					<p class="lead text-warning">Распределена для администратора:
 						"{{ App\Models\User::firstWhere('id', $distributed_request->admin_id)->name }}"</p>
 				@endif
@@ -57,14 +57,14 @@
 								<button type="submit" class="shadow btn btn-success">Взять</button>
 							</form>
 						@endif
-						@if ($request_info->status == 'В работе' && $request_info->admin_id == Auth::user()->id)
+						@if ($request_info->status == 'В работе' && ($request_info->admin_id == Auth::user()->id || Auth::user()->admin->is_master))
 							<form action="/admin/requests/{{ $request_info->id }}/deny" method="POST">
 								@method('PATCH')
 								@csrf
 								<button type="submit" class="shadow btn btn-warning">Отказаться</button>
 							</form>
 						@endif
-						@if ($request_info->status == 'В работе' && $request_info->admin_id == Auth::user()->id)
+						@if ($request_info->status == 'В работе' && ($request_info->admin_id == Auth::user()->id || Auth::user()->admin->is_master))
 							<form action="/admin/requests/{{ $request_info->id }}/complete" method="POST">
 								@method('PATCH')
 								@csrf

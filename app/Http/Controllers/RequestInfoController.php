@@ -79,7 +79,7 @@ class RequestInfoController extends Controller
 		}
 		$data['from_pc'] = false;
 		$data['ip_address'] = request()->ip();
-		$data['date_create'] = Carbon::now();
+		//$data['date_create'] = Carbon::now();
 		$data['status'] = 'В обработке';
 		$json_comment = json_encode(array(
 			0 =>
@@ -94,13 +94,13 @@ class RequestInfoController extends Controller
 			$data['user_id'] = Auth::user()->id;
 			$request_info = RequestInfo::create($data);
 			$this->storeImage($request_info);
-			//RequestService::distribute();
+			RequestService::distribute();
 			return redirect('/requests/');
 		}
 		$data['session_id'] = session()->getId();
 		$request_info = RequestInfo::create($data);
 		$this->storeImage($request_info);
-		//RequestService::distribute();
+		RequestService::distribute();
 		return redirect('/requests/' . $request_info->id);
 	}
 
