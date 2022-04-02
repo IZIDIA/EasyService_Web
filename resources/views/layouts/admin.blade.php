@@ -67,9 +67,9 @@
 						@auth
 							<nav class="navbar navbar-expand-lg navbar-dark py-0">
 								<div class="container-fluid">
-									<a class="nav-link dropdown-toggle text-white fw-bold py-0 rounded headerlink" href="#" id="navbarDropdown"
+									<a class="nav-link dropdown-toggle text-white fw-bold py-0 rounded headerlink d-flex align-items-center" href="#" id="navbarDropdown"
 										role="button" data-bs-toggle="dropdown" aria-expanded="false">
-										<div class="me-2" style="display: inline-block; overflow:hidden">
+										<div class="me-2" style="display: inline-block;">
 											<div style="max-width:180px; overflow:hidden;text-overflow: ellipsis;">{{ Auth::user()->name }}</div>
 											<div style="max-width:180px; overflow:hidden;text-overflow: ellipsis;"> {{ Auth::user()->email }}</div>
 										</div>
@@ -83,7 +83,7 @@
 											<i class="bi bi-person-fill d-inline-flex" style="font-size: 30px;"></i>
 										@endif
 									</a>
-									<ul class="shadow me-2 mt-lg-3 mt-2 dropdown-menu dropdown-menu-dark dropdown-menu-end"
+									<ul class="shadow me-2 dropdown-menu dropdown-menu-dark dropdown-menu-end"
 										aria-labelledby="navbarDropdown">
 										<form method="POST" action="{{ route('logout') }}">
 											@csrf

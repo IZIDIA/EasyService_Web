@@ -233,8 +233,7 @@ class AdminController extends Controller
 							$admin = $user->admin;
 							$admin->delete();
 							$queue = AdminQueue::where('admin_id', $user->id)->first();
-							if(!is_null($queue))
-							{
+							if (!is_null($queue)) {
 								$queue->delete();
 							}
 							$requests = RequestInfo::where('admin_id', $user->id)->get();
@@ -438,7 +437,7 @@ class AdminController extends Controller
 			if ($request->admin_id == Auth::user()->id && $request->status == 'В работе') {
 				$request->time_remaining += 24;
 				$request->save();
-				return redirect('/admin/requests/' . $request->id)->with('autofocus', true);;
+				return redirect('/admin/requests/' . $request->id)->with('autofocus', true);
 			}
 			return redirect('/admin/requests/' . $request->id);
 		}
@@ -479,7 +478,7 @@ class AdminController extends Controller
 
 	public function recommendation(Request $request)
 	{
-		if (Auth::user()->is_admin) {
+		if (Option::find(1)->distributed_requests && Auth::user()->is_admin) {
 			$admin = Auth::user()->admin;
 			$admin->get_recommendation = $request->status;
 			$admin->save();
@@ -492,6 +491,26 @@ class AdminController extends Controller
 				}
 			}
 			return response()->json(['success' => 'Recommendation changed successfully.']);
+		}
+		abort(404);
+	}
+
+	public function global(Request $request)
+	{
+		if (Auth::user()->is_admin  && Auth::user()->admin->is_master) {
+			$validateData =  request()->validate([
+				'time_to_work' => 'required|max:3',
+				'time_to_accept_distributed' => 'required|max:3',
+				'welcome_text' => 'required|max:4000',
+			]);
+			if ($request['distributed_requests'] == 'on') {
+				$validateData['distributed_requests'] = true;
+			} else {
+				$validateData['distributed_requests'] = false;
+			}
+			$options = Option::find(1);
+			$options->update($validateData);
+			return redirect('/admin/options')->with('autofocus', true);
 		}
 		abort(404);
 	}

@@ -78,6 +78,10 @@ Route::post('/admin/options/recommendation', [AdminController::class, 'recommend
 Route::get('/admin/options/recommendation', function () {
 	abort(404);
 });
+Route::patch('/admin/options/global', [AdminController::class, 'global'])->middleware(['auth']);
+Route::get('/admin/options/global', function () {
+	abort(404);
+});
 
 //Пользователь
 Route::get('/requests', [RequestInfoController::class, 'index'])->name('requests.index');

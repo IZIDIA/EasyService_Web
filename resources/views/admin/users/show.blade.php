@@ -34,13 +34,15 @@
 							@endif
 						</p>
 						<p><strong>Выполнено заявок:</strong> {{ $done }}</p>
-						<p><strong>Распределённые заявки:</strong>
-							@if ($user->admin->get_recommendation)
-								Вкл.
-							@else
-								Выкл.
-							@endif
-						</p>
+						@if (App\Models\Option::find(1)->distributed_requests)
+							<p><strong>Распределённые заявки:</strong>
+								@if ($user->admin->get_recommendation)
+									Вкл.
+								@else
+									Выкл.
+								@endif
+							</p>
+						@endif
 						<p><strong>Рабочее время за текущую неделю:</strong> {{ $user->admin->week_time }} мин.</p>
 					@endif
 				</div>

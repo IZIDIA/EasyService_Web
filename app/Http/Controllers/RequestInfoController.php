@@ -107,7 +107,7 @@ class RequestInfoController extends Controller
 	protected function validateData()
 	{
 		return tap($validateData =  request()->validate([
-			'first_name' => 'required|max:40',
+			'solution_with_me' => 'required',
 			'last_name' => 'required|max:40',
 			'email' => 'required|max:128',
 			'location' => 'required|max:255',
