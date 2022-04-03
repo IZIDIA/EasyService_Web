@@ -2,9 +2,13 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\RequestInfoController;
+use App\Jobs\RequestServiceJob;
 use App\Models\RequestInfo;
+use Carbon\Carbon;
 use GuzzleHttp\Psr7\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+
 
 Route::get('/', function () {
 	return view('welcome');
@@ -99,5 +103,12 @@ Route::get('/requests/{request}/comment', function () {
 
 Route::get('/test', function () {
 	//dd(RequestInfo::find(14)->user_admin->name);
-	//RequestService::distribute();
+	//	$job = app(\Illuminate\Contracts\Bus\Dispatcher::class)->dispatch(1)->delay(now()->addMinutes(5));
+	//	$job = RequestServiceJob::dispatch(1)->delay(now()->addMinutes(5));
+
+
+	//$job = (new RequestServiceJob(1))->onQueue('distributed_requests')->delay(now()->addMinutes(5));
+	//$id  = app(Dispatcher::class)->dispatch($job);
+	//dd($id);
+	dd(	DB::table('jobs')->where('id', 55)->exists());
 });

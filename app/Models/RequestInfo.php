@@ -17,14 +17,14 @@ class RequestInfo extends Model
 		return $this->belongsTo(User::class, 'admin_id');
 	}
 
-	public function pc_info()
+	/*public function pc_info()
 	{
 		return $this->hasOne(PcInfo::class, 'request_info_id');
-	}
+	}*/
 
 	public function admin_queue()
 	{
-		return $this->belongsTo(AdminQueue::class);
+		return $this->hasOne(AdminQueue::class, 'request_id');
 	}
 
 	public function getUpdatedAtAttribute($date)

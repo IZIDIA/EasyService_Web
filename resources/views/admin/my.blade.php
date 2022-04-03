@@ -4,14 +4,48 @@
 
 		@if (App\Models\Option::find(1)->distributed_requests)
 			<div class="my-3 p-3 rounded shadow-sm text-white fs-5" style="background-color: #1A202C">
-				<div class="d-flex mb-2">
-					@if (Auth::user()->admin->get_recommendation)
-						<i data-bs-toggle="tooltip" data-bs-placement="top" title="Вкл" class="bi bi-bookmark-check-fill me-1"
-							style="color: rgb(0, 170, 0);"></i>
-					@else
-						<i data-bs-toggle="tooltip" data-bs-placement="top" title="Выкл" class="bi bi-bookmark-x-fill me-1" style="color: rgb(170, 0, 0);"></i>
+				<div class="d-flex align-items-center mb-2 justify-content-between">
+					<div class="d-flex">
+						@if (Auth::user()->admin->get_recommendation)
+							<i data-bs-toggle="tooltip" data-bs-placement="top" title="Вкл" class="bi bi-bookmark-check-fill me-1"
+								style="color: rgb(0, 170, 0);"></i>
+						@else
+							<i data-bs-toggle="tooltip" data-bs-placement="top" title="Выкл" class="bi bi-bookmark-x-fill me-1"
+								style="color: rgb(170, 0, 0);"></i>
+						@endif
+						<div class="border-bottom pb-2 mb-0">Распределённая заявка:</div>
+					</div>
+					@if (!is_null($distributed_request))
+						<div class="text-warning me-3" id="countdown">
+							00d 00h 00m 00s
+						</div>
+						<script>
+						 let yourDateToGo = new Date('{{ $distributed_request->admin_queue->updated_at }}');
+						 yourDateToGo.setHours(yourDateToGo.getHours() + {{ $distributed_request->admin_queue->distributed_lifetime }});
+						 let timing =
+						  setInterval(
+						   function() {
+						    let currentDate = new Date().getTime();
+						    let timeLeft = yourDateToGo - currentDate;
+						    let days = Math.floor(timeLeft / (86400000));
+						    if (days < 10) days = "0" +
+						     days;
+						    let hours = Math.floor((timeLeft % (86400000)) / (3600000));
+						    if (hours < 10) hours = "0" + hours;
+						    let minutes = Math.floor((timeLeft % (3600000)) / (60000));
+						    if (minutes < 10) minutes = "0" + minutes;
+						    let seconds = Math.floor((timeLeft % (60000)) / 1000);
+						    if (seconds < 10) seconds = "0" + seconds;
+						    document.getElementById("countdown").innerHTML = days + "d " + hours + "h " + minutes + "m " + seconds +
+						     "s";
+						    if (timeLeft <= 0) {
+						     clearInterval(timing);
+						     document.getElementById("countdown").innerHTML =
+						      "Время истекло...";
+						    }
+						   }, 1000);
+						</script>
 					@endif
-					<span class="border-bottom pb-2 mb-0">Распределённая заявка:</span>
 				</div>
 				@if (is_null($distributed_request))
 					<div class="pt-3 ms-2 text-warning">Пусто</div>

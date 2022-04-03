@@ -15,7 +15,7 @@ mediumZoom('.zoom-dark', {
 
 (function () {
 	'use strict'
-	var forms = document.querySelectorAll('.needs-validation')
+	let forms = document.querySelectorAll('.needs-validation')
 	Array.prototype.slice.call(forms)
 		.forEach(function (form) {
 			form.addEventListener('submit', function (event) {
@@ -30,9 +30,9 @@ mediumZoom('.zoom-dark', {
 
 
 window.showPasswordInputFunction = function () {
-	var checkBox = document.getElementById("zCheck");
-	var divBlock = document.getElementById("zDiv");
-	var password = document.getElementById("user_password");
+	let checkBox = document.getElementById("zCheck");
+	let divBlock = document.getElementById("zDiv");
+	let password = document.getElementById("user_password");
 	if (checkBox.checked == true) {
 		password.value = '';
 		divBlock.style.display = "block";
@@ -43,9 +43,9 @@ window.showPasswordInputFunction = function () {
 }
 
 window.showDataTableFunction = function () {
-	var radioYes = document.getElementById("yes_with");
-	var radioNo = document.getElementById("no_with");
-	var divBlock = document.getElementById("dataDiv");
+	let radioYes = document.getElementById("yes_with");
+	let radioNo = document.getElementById("no_with");
+	let divBlock = document.getElementById("dataDiv");
 	if (radioYes.checked == true || radioNo.checked == true) {
 		divBlock.style.display = "block";
 	} else {
@@ -54,8 +54,8 @@ window.showDataTableFunction = function () {
 }
 
 window.showOrHide = function (hak, cat) {
-	var hak = document.getElementById(hak);
-	var cat = document.getElementById(cat);
+	let hak = document.getElementById(hak);
+	let cat = document.getElementById(cat);
 	if (hak.checked) {
 		cat.style = null;
 	} else {
@@ -64,18 +64,18 @@ window.showOrHide = function (hak, cat) {
 }
 
 window.enableAnonym = function () {
-	var anonym = document.getElementById("anonym");
-	var first_name_div = document.getElementById("first_name_div");
-	var last_name_div = document.getElementById("last_name_div");
-	var email_div = document.getElementById("email_div");
-	var phone_call_number_div = document.getElementById("phone_call_number_div");
-	var work_time_div = document.getElementById("work_time_div");
-	var work_time_hr = document.getElementById("work_time_hr");
-	var dataDiv = document.getElementById("dataDiv");
-	var first_name = document.getElementById("first_name");
-	var last_name = document.getElementById("last_name");
-	var email = document.getElementById("email");
-	var phone_call_number = document.getElementById("phone_call_number");
+	let anonym = document.getElementById("anonym");
+	let first_name_div = document.getElementById("first_name_div");
+	let last_name_div = document.getElementById("last_name_div");
+	let email_div = document.getElementById("email_div");
+	let phone_call_number_div = document.getElementById("phone_call_number_div");
+	let work_time_div = document.getElementById("work_time_div");
+	let work_time_hr = document.getElementById("work_time_hr");
+	let dataDiv = document.getElementById("dataDiv");
+	let first_name = document.getElementById("first_name");
+	let last_name = document.getElementById("last_name");
+	let email = document.getElementById("email");
+	let phone_call_number = document.getElementById("phone_call_number");
 	if (anonym.checked) {
 		first_name.required = false;
 		last_name.required = false;

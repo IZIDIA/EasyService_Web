@@ -43,28 +43,30 @@
 						@endswitch
 					</div>
 					<div class="d-flex align-items-center flex-row-reverse gap-2 fs-5" style="color: #96FBFE">
-						@if ($request_info->status == 'В обработке' || ($request_info->status == 'В работе' && ($request_info->admin_id == Auth::user()->id || Auth::user()->admin->is_master)))
-							<form action="/admin/requests/{{ $request_info->id }}/cancel" method="POST">
-								@method('PATCH')
-								@csrf
-								<button type="submit" class="shadow btn btn-danger">Отменить</button>
-							</form>
+						@if (is_null($distributed_request) || $distributed_request->admin_id == $user->id || $user->admin->is_master )
+							@if ($request_info->status == 'В обработке' || ($request_info->status == 'В работе' && ($request_info->admin_id == $user->id || $user->admin->is_master)))
+								<form action="/admin/requests/{{ $request_info->id }}/cancel" method="POST">
+									@method('PATCH')
+									@csrf
+									<button type="submit" class="shadow btn btn-danger">Отменить</button>
+								</form>
+							@endif
+							@if ($request_info->status == 'В обработке')
+								<form action="/admin/requests/{{ $request_info->id }}/accept" method="POST">
+									@method('PATCH')
+									@csrf
+									<button type="submit" class="shadow btn btn-success">Взять</button>
+								</form>
+							@endif
 						@endif
-						@if ($request_info->status == 'В обработке')
-							<form action="/admin/requests/{{ $request_info->id }}/accept" method="POST">
-								@method('PATCH')
-								@csrf
-								<button type="submit" class="shadow btn btn-success">Взять</button>
-							</form>
-						@endif
-						@if ($request_info->status == 'В работе' && ($request_info->admin_id == Auth::user()->id || Auth::user()->admin->is_master))
+						@if ($request_info->status == 'В работе' && ($request_info->admin_id == $user->id || $user->admin->is_master))
 							<form action="/admin/requests/{{ $request_info->id }}/deny" method="POST">
 								@method('PATCH')
 								@csrf
 								<button type="submit" class="shadow btn btn-warning">Отказаться</button>
 							</form>
 						@endif
-						@if ($request_info->status == 'В работе' && ($request_info->admin_id == Auth::user()->id || Auth::user()->admin->is_master))
+						@if ($request_info->status == 'В работе' && ($request_info->admin_id == $user->id || $user->admin->is_master))
 							<form action="/admin/requests/{{ $request_info->id }}/complete" method="POST">
 								@method('PATCH')
 								@csrf
@@ -98,7 +100,7 @@
 </pre>
 							@endif
 							<script type="text/javascript">
-							 var block = document.getElementById("comments");
+							 let block = document.getElementById("comments");
 							 block.scrollTop = block.scrollHeight;
 							</script>
 						</div>
@@ -116,9 +118,9 @@
 								</div>
 							</form>
 							<script>
-							 var input = document.getElementById('comment_text');
+							 let input = document.getElementById('comment_text');
 							 input.oninput = function() {
-							  var element = document.getElementById('comment_text').value.length;
+							  let element = document.getElementById('comment_text').value.length;
 							  if (element == 0)
 							   document.getElementById('comment_btn').disabled = true;
 							  else
@@ -277,23 +279,21 @@
 				@endif
 
 				<div class="row gx-2">
-
-					@if ($pc_info !== null)
-						<div class="pt-3 col-lg-8 align-items-start">
-							<div class="p-3 shadow-sm" style="border-radius: 10px; background-color:#283141; height: 100%;">
-								<div>
-									<div class="fs-5">
-										Подробная информация об устройстве заявителя:
-									</div>
-									<div>
-										{{ $pc_info->operating_system }}
-									</div>
-								</div>
+					<div class="pt-3 col-lg-8 align-items-start">
+						<div class="p-3 shadow-sm" style="border-radius: 10px; background-color:#283141; height: 100%;">
+							<div class="fs-5">
+								Подробная информация об устройстве заявителя:
 							</div>
+							@if (isset($pc_info))
+								<div>
+									{{ $pc_info->operating_system }}
+								</div>
+							@else
+								<strong class="d-flex justify-content-center text-warning mt-4">Информация отсутствует</strong>
+							@endif
 						</div>
-					@endif
-
-					@if ($request_info->admin_id == Auth::user()->id && $request_info->status == 'В работе')
+					</div>
+					@if ($request_info->admin_id == $user->id && $request_info->status == 'В работе')
 						<div class="pt-3 col-lg-4 align-items-start">
 							<div class="p-3 d-flex flex-column shadow-sm"
 								style="border-radius: 10px; background-color:#283141; height: 100%;">
@@ -314,28 +314,28 @@
 									</div>
 								</div>
 								<script>
-								 var yourDateToGo = new Date('{{ $request_info->updated_at }}');
+								 let yourDateToGo = new Date('{{ $request_info->updated_at }}');
 								 yourDateToGo.setHours(yourDateToGo.getHours() + {{ $request_info->time_remaining }});
-								 var timing =
+								 let timing =
 								  setInterval(
 								   function() {
-								    var currentDate = new Date().getTime();
-								    var timeLeft = yourDateToGo - currentDate;
-								    var days = Math.floor(timeLeft / (86400000));
+								    let currentDate = new Date().getTime();
+								    let timeLeft = yourDateToGo - currentDate;
+								    let days = Math.floor(timeLeft / (86400000));
 								    if (days < 10) days = "0" +
 								     days;
-								    var hours = Math.floor((timeLeft % (86400000)) / (3600000));
+								    let hours = Math.floor((timeLeft % (86400000)) / (3600000));
 								    if (hours < 10) hours = "0" + hours;
-								    var minutes = Math.floor((timeLeft % (3600000)) / (60000));
+								    let minutes = Math.floor((timeLeft % (3600000)) / (60000));
 								    if (minutes < 10) minutes = "0" + minutes;
-								    var seconds = Math.floor((timeLeft % (60000)) / 1000);
+								    let seconds = Math.floor((timeLeft % (60000)) / 1000);
 								    if (seconds < 10) seconds = "0" + seconds;
 								    document.getElementById("countdown").innerHTML = days + "d " + hours + "h " + minutes + "m " + seconds +
 								     "s";
 								    if (timeLeft <= 0) {
 								     clearInterval(timing);
 								     document.getElementById("countdown").innerHTML =
-								      "Время закончилось...";
+								      "Время истекло...";
 								    }
 								   }, 1000);
 								</script>
@@ -346,7 +346,7 @@
 
 			</div>
 
-			@if (Auth::user()->admin->is_master)
+			@if ($user->admin->is_master)
 				<div class="d-flex justify-content-center mt-3">
 					<form action="/admin/requests/{{ $request_info->id }}" method="POST"
 						onSubmit="return confirm('Вы действительно хотите удалить заявку №{{ $request_info->id }}? Восстановить заявку будет невозможно.');">

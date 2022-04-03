@@ -1,10 +1,13 @@
 <?php
 
+use App\Jobs\RequestServiceJob;
 use App\Models\Admin;
 use App\Models\AdminQueue;
+use App\Models\Option;
 use App\Models\RequestInfo;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Contracts\Bus\Dispatcher;
 
 class RequestService
 {
@@ -21,19 +24,18 @@ class RequestService
 		}
 		$admin->save();
 	}
-
 	//При включении опции
 	public static function enqueue(Admin $admin)
 	{
 		AdminQueue::create(['admin_id' => $admin->user_id]);
 	}
-
 	//При отключении опции
 	//Если распределённая заявки не меняет свой статус (updated) в течении (настройки->часов)
 	public static function dequeue(Admin $admin)
 	{
-		if (!is_null(AdminQueue::where('admin_id', $admin->user_id)->first())) {
-			AdminQueue::where('admin_id', $admin->user_id)->delete();
+		$record = AdminQueue::where('admin_id', $admin->user_id);
+		if (!is_null($record->first())) {
+			$record->delete();
 		}
 	}
 	//При принятии любой заявки
@@ -44,9 +46,12 @@ class RequestService
 		if (!is_null($adminQueue = AdminQueue::where('request_id', $request->id)->first())) {
 			$adminQueue->request_id = NULL;
 			$adminQueue->save();
+			$job = DB::table('jobs')->where('id', $adminQueue->job_id);
+			if ($job->exists()) {
+				$job->delete();
+			}
 		}
 	}
-
 	//При включении опции
 	//При создании заявки пользователем
 	//При отмене, отказе, завершении, восстановлении , удалении заявки администратором
@@ -76,9 +81,10 @@ class RequestService
 			}
 			$queue = AdminQueue::where('admin_id', $admins_id_queue->first()->user_id)->first();
 			$queue->request_id = $request_id->id;
+			$queue->distributed_lifetime =  Option::find(1)->value('time_to_accept_distributed');
+			$job = (new RequestServiceJob($admins_id_queue->first()->user_id))->onQueue('distributed_requests')->delay(now()->addHours($queue->distributed_lifetime));
+			$queue->job_id = app(Dispatcher::class)->dispatch($job);
 			$queue->save();
 		}
-
-		//В САМОМ КОНЦЕ СОЗДАЕМ ТАЙМЕР для распределённой заявки, по истечении которого она удалится, и закроется доступ к распределенным заявкам у админа!
 	}
 }

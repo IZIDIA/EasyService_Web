@@ -17,10 +17,13 @@ return new class extends Migration
 			$table->id();
 			$table->unsignedBigInteger('admin_id')->unique()->comment('id Администратора');
 			$table->unsignedBigInteger('request_id')->nullable()->comment('id Заявки');
+			$table->unsignedBigInteger('job_id')->nullable()->comment('id job');
+			$table->integer('distributed_lifetime')->nullable()->comment('Время жизни распределённой заявки (Часы)');
 			$table->timestamps();
 
 			$table->foreign('admin_id')->references('id')->on('users')->cascadeOnDelete();
 			$table->foreign('request_id')->references('id')->on('request_infos')->nullOnDelete();
+			$table->foreign('job_id')->references('id')->on('jobs')->nullOnDelete();
 		});
 	}
 

@@ -11,6 +11,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use RequestService;
 
 class AdminController extends Controller
@@ -140,6 +141,7 @@ class AdminController extends Controller
 				'comments' => json_decode($request_info->comments, true),
 				'pc_info' => PcInfo::where('request_info_id', $request_id)->first(),
 				'distributed_request' => AdminQueue::where('request_id', $request_id)->first(),
+				'user' => Auth::user(),
 			]);
 		}
 		abort(404);
@@ -289,12 +291,15 @@ class AdminController extends Controller
 	public function cancel(RequestInfo $request)
 	{
 		if (Auth::user()->is_admin) {
-			if ($request->status == 'В обработке' || ($request->status == 'В работе' &&  ($request->admin_id == Auth::user()->id || Auth::user()->admin->is_master))) {
+			$distributed_request = AdminQueue::where('request_id', $request->id)->first();
+			if (
+				($request->status == 'В обработке' ||
+					($request->status == 'В работе' &&  ($request->admin_id == Auth::user()->id || Auth::user()->admin->is_master))) &&
+				(is_null($distributed_request) || $distributed_request->admin_id == Auth::user()->id || Auth::user()->admin->is_master)
+			) {
 				$request->status = 'Отменено';
 				$request->time_remaining = NULL;
 				$request->closed_at = Carbon::now();
-				$admin_id = $request->admin_id;
-				$request->admin_id = NULL;
 				$json_comment = json_decode($request->comments, true);
 				$json_comment[] =
 					array(
@@ -304,13 +309,11 @@ class AdminController extends Controller
 					);
 				$request->comments = json_encode($json_comment);
 				$request->save();
+				if (!is_null($request->admin_id)) {
+					RequestService::check_free(Admin::where('user_id', $request->admin_id)->first());
+				}
 				if (Option::find(1)->distributed_requests) {
 					RequestService::clear_request_id($request);
-				}
-				if (!is_null($admin_id)) {
-					RequestService::check_free(Admin::where('user_id', $admin_id)->first());
-				}
-				if (Option::find(1)->distributed_requests) {
 					RequestService::distribute();
 				}
 			}
@@ -322,7 +325,11 @@ class AdminController extends Controller
 	public function accept(RequestInfo $request)
 	{
 		if (Auth::user()->is_admin) {
-			if ($request->status == 'В обработке') {
+			$distributed_request = AdminQueue::where('request_id', $request->id)->first();
+			if (
+				$request->status == 'В обработке' &&
+				(is_null($distributed_request) || $distributed_request->admin_id == Auth::user()->id || Auth::user()->admin->is_master)
+			) {
 				$request->status = 'В работе';
 				$request->time_remaining = Option::find(1)->value('time_to_work');
 				$request->admin_id = Auth::user()->id;
@@ -338,6 +345,7 @@ class AdminController extends Controller
 				RequestService::check_free($request->user_admin->admin);
 				if (Option::find(1)->distributed_requests) {
 					RequestService::clear_request_id($request);
+					RequestService::distribute();
 				}
 			}
 			return redirect('/admin/requests/' . $request->id);
@@ -499,14 +507,28 @@ class AdminController extends Controller
 	{
 		if (Auth::user()->is_admin  && Auth::user()->admin->is_master) {
 			$validateData =  request()->validate([
-				'time_to_work' => 'required|max:3',
-				'time_to_accept_distributed' => 'required|max:3',
+				'time_to_work' => 'required|integer|max:1000',
+				'time_to_accept_distributed' => 'required|integer|max:1000',
 				'welcome_text' => 'required|max:4000',
 			]);
 			if ($request['distributed_requests'] == 'on') {
 				$validateData['distributed_requests'] = true;
 			} else {
 				$validateData['distributed_requests'] = false;
+				//Удаление всей очереди + удаление job-для распределённых
+				//1) отключить у всех функцию
+				$admins = Admin::all();
+				foreach ($admins as $admin) {
+					$admin->get_recommendation = false;
+					$admin->save();
+				}
+				//2) удалить все job-распределённые
+				$queue = AdminQueue::whereNotNull('job_id')->get();
+				foreach ($queue as $record) {
+					DB::table('jobs')->where('id', $record->job_id)->delete();
+				}
+				//3) удалить всю таблицу очередей
+				DB::table('admin_queues')->delete();
 			}
 			$options = Option::find(1);
 			$options->update($validateData);

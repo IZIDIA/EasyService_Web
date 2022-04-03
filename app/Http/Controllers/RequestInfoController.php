@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Admin;
+use App\Models\Option;
 use App\Models\RequestInfo;
 use Carbon\Carbon;
 use Dotenv\Util\Str;
@@ -79,7 +81,6 @@ class RequestInfoController extends Controller
 		}
 		$data['from_pc'] = false;
 		$data['ip_address'] = request()->ip();
-		//$data['date_create'] = Carbon::now();
 		$data['status'] = 'В обработке';
 		$json_comment = json_encode(array(
 			0 =>
@@ -174,6 +175,13 @@ class RequestInfoController extends Controller
 				);
 			$request->comments = json_encode($json_comment);
 			$request->save();
+			if (!is_null(	$request->admin_id)) {
+				RequestService::check_free(Admin::where('user_id', 	$request->admin_id)->first());
+			}
+			if (Option::find(1)->distributed_requests) {
+				RequestService::clear_request_id($request);
+				RequestService::distribute();
+			}
 			return redirect('/requests/' . $request->id);
 		}
 		abort(404);

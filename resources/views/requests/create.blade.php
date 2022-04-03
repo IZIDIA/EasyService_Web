@@ -348,15 +348,15 @@
 							</div>
 
 							<script>
-							 var input = document.getElementById('text');
+							 let input = document.getElementById('text');
 							 input.oninput = function() {
-							  var element = document.getElementById('text').value.length;
+							  let element = document.getElementById('text').value.length;
 							  document.getElementById('textarea_count').innerHTML = element + "/4000";
 							 };
 							</script>
 							<script>
 							 function charCount() {
-							  var element = document.getElementById('text').value.length;
+							  let element = document.getElementById('text').value.length;
 							  document.getElementById('textarea_count').innerHTML = element + "/4000";
 							 }
 							</script>
@@ -372,10 +372,10 @@
 
 							<script>
 							 function fileValidation() {
-							  var fileInput =
+							  let fileInput =
 							   document.getElementById('file');
-							  var filePath = fileInput.value;
-							  var allowedExtensions =
+							  let filePath = fileInput.value;
+							  let allowedExtensions =
 							   /(\.jpg|\.jpeg|\.png|\.gif)$/i;
 							  if (!allowedExtensions.exec(filePath)) {
 							   alert('Неверный тип файла');
