@@ -86,6 +86,10 @@ Route::patch('/admin/options/global', [AdminController::class, 'global'])->middl
 Route::get('/admin/options/global', function () {
 	abort(404);
 });
+Route::post('/admin/check_new_requests', [AdminController::class, 'check_new_requests'])->middleware(['auth']);
+Route::get('/admin/check_new_requests', function () {
+	abort(404);
+});
 
 //Пользователь
 Route::get('/requests', [RequestInfoController::class, 'index'])->name('requests.index');

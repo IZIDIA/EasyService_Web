@@ -21,7 +21,7 @@ return new class extends Migration
 			$table->string('welcome_text', 4096)->comment('Текст на главной странице сайта');
 			$table->integer('time_to_work')->comment('Часы на выполнение заявки');
 			$table->integer('time_to_accept_distributed')->comment('Часы на принятие распределённой заявки');
-
+			$table->integer('check_interval')->comment('Интервал проверки для звуковых уведомлений');
 			$table->timestamps();
 		});
 		//Одна строка на всю таблицу.
@@ -32,6 +32,7 @@ return new class extends Migration
 			. PHP_EOL . 'Для оперативной связи с администратором для помощи, воспользуйтесь контактным справочником на сайте.';
 		$opt->time_to_work = 168; //часы
 		$opt->time_to_accept_distributed = 72; //часы
+		$opt->check_interval = 10000; //миллисекунды
 		$opt->save();
 	}
 

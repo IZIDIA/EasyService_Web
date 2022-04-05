@@ -5,7 +5,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="csrf-token" content="{{ csrf_token() }}">
-	<title>Easy Service</title>
+	<title>{{config('app.name') }}</title>
 	<link rel="shortcut icon" href="{{ url('favicon.ico') }}">
 	<!-- Styles -->
 	<link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -13,7 +13,13 @@
 	<script src="{{ asset('js/app.js') }}" defer></script>
 	<script src="{{ asset('js/mediumZoom.js') }}" defer></script>
 	<script src="{{ asset('js/syncScripts.js') }}"></script>
+	<script src="{{ asset('js/jquery.js') }}"></script>
 	<style>
+		.check-requests:after {
+			content: "new";
+			color: #00f7ff;
+			font-size: 0.7rem;
+		}
 
 	</style>
 
@@ -133,7 +139,7 @@
 								class="nav-link {{ request()->is('admin/requests','admin/requests/completed','admin/requests/in_work','admin/requests/canceled','admin/requests/in_processing')? 'active': 'text-white' }} text-nowrap"
 								href="/admin/requests">
 								<i class="bi bi-archive-fill feather"></i>
-								Все заявки
+								Все заявки<sup id="notification" class="d-none" style="margin-left: 5px; color:#96FBFE">new</sup>
 							</a>
 						</li>
 						<li class="nav-item">
@@ -185,5 +191,36 @@
 	</div>
 
 </body>
+
+@if (Auth::check() && Auth::user()->admin->sound_notification)
+	<script type="text/javascript">
+	 $.ajaxSetup({
+	  headers: {
+	   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+	  }
+	 });
+	 var requestsCount = {{ count(App\Models\RequestInfo::all()) }};
+	 let notification = document.getElementById("notification");
+	 audio = new Audio('/sound_notification.mp3');
+	 function sound_notification() {
+	  $.ajax({
+	   url: "/admin/check_new_requests",
+	   type: "POST",
+	   success: function(response) {
+	    if (response.newCount > requestsCount) {
+	     audio.play();
+	     notification.classList.remove('d-none');
+	     document.title = "{{config('app.name') }} (NEW)";
+	    }
+	    requestsCount = response.newCount;
+	   },
+	   error: function(error) {
+	    console.log('error: failed to check new requests');
+	   },
+	  });
+	 }
+	 setInterval(sound_notification, {{ App\Models\Option::find(1)->value('check_interval') }});
+	</script>
+@endif
 
 </html>

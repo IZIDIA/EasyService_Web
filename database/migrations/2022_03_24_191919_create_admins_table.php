@@ -19,6 +19,7 @@ return new class extends Migration
 			$table->unsignedBigInteger('user_id')->comment('id Пользователя');
 			$table->boolean('is_master')->default(false)->comment('Главный Администратор');
 			$table->boolean('get_recommendation')->default(false)->comment('Получение распределённых заявок');
+			$table->boolean('sound_notification')->default(false)->comment('Получение звуковых уведомлений');
 			$table->boolean('free')->default(true)->comment('Показатель того, есть ли у администратора заявки "В работе"');
 			$table->integer('week_time')->default(0)->comment('Суммарное время выполнения заявок за неделю (Минуты)');
 			$table->timestamps();

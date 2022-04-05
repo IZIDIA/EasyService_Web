@@ -544,4 +544,13 @@ class AdminController extends Controller
 		}
 		abort(404);
 	}
+
+	public function check_new_requests()
+	{
+		$user = Auth::user();
+		if ($user->is_admin && $user->admin->sound_notification) {
+			return response()->json(['newCount' => count(RequestInfo::all())]);
+		}
+		abort(401);
+	}
 }
