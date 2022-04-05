@@ -27,7 +27,10 @@ class RequestService
 	//При включении опции
 	public static function enqueue(Admin $admin)
 	{
-		AdminQueue::create(['admin_id' => $admin->user_id]);
+		$record = AdminQueue::where('admin_id', $admin->user_id);
+		if (is_null($record->first())) {
+			AdminQueue::create(['admin_id' => $admin->user_id]);
+		}
 	}
 	//При отключении опции
 	//Если распределённая заявки не меняет свой статус (updated) в течении (настройки->часов)
@@ -35,12 +38,16 @@ class RequestService
 	{
 		$record = AdminQueue::where('admin_id', $admin->user_id);
 		if (!is_null($record->first())) {
+			$job = DB::table('jobs')->where('id', $record->first()->job_id);
+			if ($job->exists()) {
+				$job->delete();
+			}
 			$record->delete();
 		}
 	}
 	//При принятии любой заявки
 	//При отмене любой заявки
-	//При удалении ->nullOnDelete();
+	//При удалении заявки
 	public static function clear_request_id(RequestInfo $request)
 	{
 		if (!is_null($adminQueue = AdminQueue::where('request_id', $request->id)->first())) {
@@ -82,7 +89,7 @@ class RequestService
 			$queue = AdminQueue::where('admin_id', $admins_id_queue->first()->user_id)->first();
 			$queue->request_id = $request_id->id;
 			$queue->distributed_lifetime =  Option::find(1)->value('time_to_accept_distributed');
-			$job = (new RequestServiceJob($admins_id_queue->first()->user_id))->onQueue('distributed_requests')->delay(now()->addHours($queue->distributed_lifetime));
+			$job = (new RequestServiceJob($admins_id_queue->first()->user_id))->onQueue('q2')->delay(now()->addHours($queue->distributed_lifetime));
 			$queue->job_id = app(Dispatcher::class)->dispatch($job);
 			$queue->save();
 		}

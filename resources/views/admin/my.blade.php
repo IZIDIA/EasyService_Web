@@ -20,30 +20,8 @@
 							00d 00h 00m 00s
 						</div>
 						<script>
-						 let yourDateToGo = new Date('{{ $distributed_request->admin_queue->updated_at }}');
-						 yourDateToGo.setHours(yourDateToGo.getHours() + {{ $distributed_request->admin_queue->distributed_lifetime }});
-						 let timing =
-						  setInterval(
-						   function() {
-						    let currentDate = new Date().getTime();
-						    let timeLeft = yourDateToGo - currentDate;
-						    let days = Math.floor(timeLeft / (86400000));
-						    if (days < 10) days = "0" +
-						     days;
-						    let hours = Math.floor((timeLeft % (86400000)) / (3600000));
-						    if (hours < 10) hours = "0" + hours;
-						    let minutes = Math.floor((timeLeft % (3600000)) / (60000));
-						    if (minutes < 10) minutes = "0" + minutes;
-						    let seconds = Math.floor((timeLeft % (60000)) / 1000);
-						    if (seconds < 10) seconds = "0" + seconds;
-						    document.getElementById("countdown").innerHTML = days + "d " + hours + "h " + minutes + "m " + seconds +
-						     "s";
-						    if (timeLeft <= 0) {
-						     clearInterval(timing);
-						     document.getElementById("countdown").innerHTML =
-						      "Время истекло...";
-						    }
-						   }, 1000);
+						 setTimer('{{ $distributed_request->admin_queue->updated_at }}',
+						  {{ $distributed_request->admin_queue->distributed_lifetime }}, 'countdown');
 						</script>
 					@endif
 				</div>
@@ -117,11 +95,22 @@
 							<i class="bi bi-question-circle mx-3 d-flex align-items-center" style="font-size: 2rem; color: white"></i>
 					@endswitch
 					<div class="mb-0 lh-sm w-100 row">
-						<div class="col d-flex flex-column justify-content-center">
+						<div class="col-xl-4 col d-flex flex-column justify-content-center">
 							<strong class="text-warning">{{ '№' . $my_request->id . ' ' . Str::limit($my_request->topic, 25) }}
 							</strong>
 							<span class="d-block text-white">{{ Str::limit($my_request->location, 25) }}</span>
 						</div>
+						@if ($my_request->status == 'В работе')
+							<div class="d-none d-xxl-flex col-5 justify-content-center align-items-center">
+								<div class="text-warning me-3" id="countdown{{ $my_request->id }}">
+									00d 00h 00m 00s
+								</div>
+							</div>
+							<script>
+							 setTimer('{{ $my_request->accepted_at }}',
+							  {{ $my_request->time_remaining }}, 'countdown{{ $my_request->id }}');
+							</script>
+						@endif
 						<div class="col me-3 d-flex flex-column text-end justify-content-center">
 							<div class="text-white fst-italic">
 								{{ $my_request->name }}

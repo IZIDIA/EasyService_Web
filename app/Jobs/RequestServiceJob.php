@@ -34,7 +34,7 @@ class RequestServiceJob implements ShouldQueue
 	public function handle(AdminQueue $adminQueue)
 	{
 		$record = $adminQueue->where('admin_id', $this->adminId);
-		if (!is_null($record->first())) {
+		if (!is_null($record->first()) && $this->job->getJobId() == $record->first()->job_id) {
 			$admin = User::findOrFail($this->adminId)->admin;
 			$admin->get_recommendation = false;
 			$admin->save();

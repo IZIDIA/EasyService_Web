@@ -1,5 +1,7 @@
 {
     "/js/app.js": "/js/app.js",
     "/js/jquery.js": "/js/jquery.js",
+    "/js/mediumZoom.js": "/js/mediumZoom.js",
+    "/js/syncScripts.js": "/js/syncScripts.js",
     "/css/app.css": "/css/app.css"
 }

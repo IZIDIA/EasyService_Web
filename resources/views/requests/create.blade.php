@@ -30,7 +30,7 @@
 							<hr class="my-0">
 
 							<div class="col-sm-6" id="first_name_div">
-								<label for="first_name" class="form-label">Имя</label>
+								<label for="first_name" class="form-label required-label">Имя</label>
 								@if (Auth::check())
 									<input maxlength="40" type="text" class="form-control" id="first_name" name="first_name"
 										value="{{ old('first_name') ?? Str::before(Auth::user()->name, ' ') }}" required="false">
@@ -42,14 +42,14 @@
 									Требуется действительное имя.
 								</div>
 								@error('first_name')
-									<div class="mt-1" style="color: red">
+									<div class="mt-1" style="color: #d93025">
 										Требуется действительное имя.
 									</div>
 								@enderror
 							</div>
 
 							<div class="col-sm-6" id="last_name_div">
-								<label for="last_name" class="form-label">Фамилия</label>
+								<label for="last_name" class="form-label required-label">Фамилия</label>
 								@if (Auth::check())
 									<input maxlength="40" type="text" class="form-control" id="last_name" name="last_name"
 										value="{{ old('last_name') ?? Str::after(Auth::user()->name, ' ') }}" required>
@@ -61,14 +61,14 @@
 									Требуется действующая фамилия.
 								</div>
 								@error('last_name')
-									<div class="mt-1" style="color: red">
+									<div class="mt-1" style="color: #d93025">
 										Требуется действующая фамилия.
 									</div>
 								@enderror
 							</div>
 
 							<div class="col-12" id="email_div">
-								<label for="email" class="form-label">Email</label>
+								<label for="email" class="form-label required-label">Email</label>
 								@if (Auth::check())
 									<input maxlength="64" type="email" class="form-control" id="email" name="email"
 										value="{{ old('email') ?? Auth::user()->email }}" required>
@@ -80,29 +80,29 @@
 									Пожалуйста, введите действующий адрес электронной почты для обратной связи.
 								</div>
 								@error('email')
-									<div class="mt-1" style="color: red">
+									<div class="mt-1" style="color: #d93025">
 										Пожалуйста, введите действующий адрес электронной почты для обратной связи.
 									</div>
 								@enderror
 							</div>
 
 							<div class="col-12">
-								<label for="location" class="form-label">Местонахождение оборудования</label>
+								<label for="location" class="form-label required-label">Местонахождение оборудования</label>
 								<input maxlength="128" type="text" class="form-control" id="location" name="location"
 									placeholder="Здание, комната (кабинет)..." required value="{{ old('location') }}">
 								<div class="invalid-feedback">
 									Пожалуйста, введите адрес расположения оборудования.
 								</div>
 								@error('location')
-									<div class="mt-1" style="color: red">
+									<div class="mt-1" style="color: #d93025">
 										Пожалуйста, введите адрес расположения оборудования.
 									</div>
 								@enderror
 							</div>
 
 							<div class="col-12" id="phone_call_number_div">
-								<label for="phone_call_number" class="form-label">Контактный номер <span class="text-muted">(Пример:
-										89991234455 или 79991234455)</span></label>
+								<label for="phone_call_number" class="form-label required-label">Контактный номер</label><span class="text-muted"> (Пример:
+									89991234455 или 79991234455)</span>
 								<input maxlength="11" pattern="^\d+" type="tel" class="form-control" id="phone_call_number"
 									name="phone_call_number" placeholder="Мобильный или рабочий..." required
 									value="{{ old('phone_call_number') }}">
@@ -110,7 +110,7 @@
 									Пожалуйста, введите номер телефона состоящий только из цифр.
 								</div>
 								@error('phone_call_number')
-									<div class="mt-1" style="color: red">
+									<div class="mt-1" style="color: #d93025">
 										Пожалуйста, введите номер телефона состоящий только из цифр.
 									</div>
 								@enderror
@@ -123,7 +123,7 @@
 								<input maxlength="64" type="tel" class="form-control" id="inventory_number" name="inventory_number"
 									placeholder="Номер, для ведения учета..." value="{{ old('inventory_number') }}">
 								@error('inventory_number')
-									<div class="mt-1" style="color: red">
+									<div class="mt-1" style="color: #d93025">
 										Максимальная длина номера 64 символа.
 									</div>
 								@enderror
@@ -309,7 +309,7 @@
 										placeholder="Для входа в систему..." value="{{ old('user_password') }}" />
 								</div>
 								@error('user_password')
-									<div class="mt-1" style="color: red">
+									<div class="mt-1" style="color: #d93025">
 										{{ $message }}
 									</div>
 								@enderror
@@ -318,28 +318,28 @@
 							<hr class="my-1" id="problem_with_pc_hr">
 
 							<div class="col-12 mb-3">
-								<h4>Тема</h4>
+								<h4 class="required-label">Тема</h4>
 								<input maxlength="64" type="text" class="form-control" id="topic" name="topic"
 									placeholder="Например: Мерцает монитор..." required value="{{ old('topic') }}">
 								<div class="invalid-feedback">
 									Требуется тема, кратко описывающая вашу проблему.
 								</div>
 								@error('topic')
-									<div class="mt-1" style="color: red">
+									<div class="mt-1" style="color: #d93025">
 										Требуется тема, кратко описывающая вашу проблему.
 									</div>
 								@enderror
 							</div>
 
 							<div class="mb-2">
-								<h4>Сообщение</h4>
+								<h4 class="required-label">Сообщение</h4>
 								<textarea class="form-control mb-1" id="text" name="text" rows="10" maxlength="4000" minlength="1"
          placeholder="Опишите вашу проблему..." required>{{ old('text') }}</textarea>
 								<div class="invalid-feedback">
 									Требуется описание вашей проблемы.
 								</div>
 								@error('text')
-									<div class="mt-1" style="color: red">
+									<div class="mt-1" style="color: #d93025">
 										Требуется описание вашей проблемы.
 									</div>
 								@enderror
@@ -354,36 +354,15 @@
 							  document.getElementById('textarea_count').innerHTML = element + "/4000";
 							 };
 							</script>
-							<script>
-							 function charCount() {
-							  let element = document.getElementById('text').value.length;
-							  document.getElementById('textarea_count').innerHTML = element + "/4000";
-							 }
-							</script>
 
 							<div class="col-md-6 offset-md-3 text-center">
 								<label class="mb-3" for="file">Фотография или скриншот проблемы (1) <span class="text-muted">(По
 										желанию)</span></label>
 								<input @error('photo') autofocus @enderror class="form-control mb-1" type="file" name="photo" id="file"
 									accept=".jpg, .jpeg, .png" onchange="return fileValidation()">
-								<small class="error_message" @error('photo') style="color: red" @enderror>Файл должен быть менее 15 МБ.
+								<small class="error_message" @error('photo') style="color: #d93025" @enderror>Файл должен быть менее 10 МБ.
 									Разрешенные типы файлов: jpg, jpeg, png</small>
 							</div>
-
-							<script>
-							 function fileValidation() {
-							  let fileInput =
-							   document.getElementById('file');
-							  let filePath = fileInput.value;
-							  let allowedExtensions =
-							   /(\.jpg|\.jpeg|\.png|\.gif)$/i;
-							  if (!allowedExtensions.exec(filePath)) {
-							   alert('Неверный тип файла');
-							   fileInput.value = '';
-							   return false;
-							  } else {}
-							 }
-							</script>
 
 							@if ($errors->any())
 								<script>

@@ -2,16 +2,14 @@ require('./bootstrap');
 import * as bootstrap from 'bootstrap';
 window.bootstrap = bootstrap;
 
+var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+	return new bootstrap.Tooltip(tooltipTriggerEl)
+});
+
 //import Alpine from 'alpinejs';
 //window.Alpine = Alpine;
 //Alpine.start();
-
-import mediumZoom from 'medium-zoom';
-
-mediumZoom('.zoom-dark', {
-	background: '#0000009b',
-	margin: 90,
-});
 
 (function () {
 	'use strict'
@@ -54,51 +52,11 @@ window.showDataTableFunction = function () {
 }
 
 window.showOrHide = function (hak, cat) {
-	let hak = document.getElementById(hak);
-	let cat = document.getElementById(cat);
+	var hak = document.getElementById(hak);
+	var cat = document.getElementById(cat);
 	if (hak.checked) {
 		cat.style = null;
 	} else {
 		cat.style.visibility = "hidden";
-	}
-}
-
-window.enableAnonym = function () {
-	let anonym = document.getElementById("anonym");
-	let first_name_div = document.getElementById("first_name_div");
-	let last_name_div = document.getElementById("last_name_div");
-	let email_div = document.getElementById("email_div");
-	let phone_call_number_div = document.getElementById("phone_call_number_div");
-	let work_time_div = document.getElementById("work_time_div");
-	let work_time_hr = document.getElementById("work_time_hr");
-	let dataDiv = document.getElementById("dataDiv");
-	let first_name = document.getElementById("first_name");
-	let last_name = document.getElementById("last_name");
-	let email = document.getElementById("email");
-	let phone_call_number = document.getElementById("phone_call_number");
-	if (anonym.checked) {
-		first_name.required = false;
-		last_name.required = false;
-		email.required = false;
-		phone_call_number.required = false;
-		first_name_div.style.display = "none";
-		last_name_div.style.display = "none";
-		email_div.style.display = "none";
-		phone_call_number_div.style.display = "none";
-		work_time_div.style.display = "none";
-		work_time_hr.style.display = "none";
-		dataDiv.style.display = "none";
-	} else {
-		first_name.required = true;
-		last_name.required = true;
-		email.required = true;
-		phone_call_number.required = true;
-		first_name_div.style.display = "block";
-		last_name_div.style.display = "block";
-		email_div.style.display = "block";
-		phone_call_number_div.style.display = "block";
-		work_time_div.style.display = "block";
-		work_time_hr.style.display = "block";
-		showDataTableFunction();
 	}
 }

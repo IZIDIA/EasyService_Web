@@ -10,8 +10,15 @@
 	<!-- Styles -->
 	<link href="{{ asset('css/app.css') }}" rel="stylesheet">
 	<!-- Scripts -->
-	<script src="{{ asset('js/app.js') }}"></script>
+	<script src="{{ asset('js/app.js') }}" defer></script>
+	<script src="{{ asset('js/mediumZoom.js') }}" defer></script>
+	<script src="{{ asset('js/syncScripts.js') }}"></script>
 	<style>
+		.required-label:after {
+			content: "*";
+			color: #d93025;
+			margin-left: 5px;
+		}
 
 	</style>
 
@@ -62,8 +69,8 @@
 						@auth
 							<nav class="navbar navbar-expand-lg navbar-dark py-0">
 								<div class="container-fluid">
-									<a class="nav-link dropdown-toggle text-white fw-bold py-0 rounded headerlink d-flex align-items-center" href="#" id="navbarDropdown"
-										role="button" data-bs-toggle="dropdown" aria-expanded="false">
+									<a class="nav-link dropdown-toggle text-white fw-bold py-0 rounded headerlink d-flex align-items-center"
+										href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 										<div class="me-2" style="display: inline-block;">
 											<div style="max-width:180px; overflow:hidden;text-overflow: ellipsis;">{{ Auth::user()->name }}</div>
 											<div style="max-width:180px; overflow:hidden;text-overflow: ellipsis;"> {{ Auth::user()->email }}</div>
@@ -78,8 +85,7 @@
 											<i class="bi bi-person-fill d-inline-flex" style="font-size: 30px;"></i>
 										@endif
 									</a>
-									<ul class="shadow me-2 dropdown-menu dropdown-menu-dark dropdown-menu-end"
-										aria-labelledby="navbarDropdown">
+									<ul class="shadow me-2 dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="navbarDropdown">
 										<form method="POST" action="{{ route('logout') }}">
 											@csrf
 											<a class="dropdown-item text-white" href="route('logout')"

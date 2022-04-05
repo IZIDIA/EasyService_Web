@@ -120,7 +120,7 @@ class RequestInfoController extends Controller
 		]), function () {
 			if (request()->hasFile('photo')) {
 				request()->validate([
-					'photo' => 'file|image|max:15000'
+					'photo' => 'file|image|max:10000'
 				]);
 			}
 		});
@@ -137,7 +137,7 @@ class RequestInfoController extends Controller
 		]), function () {
 			if (request()->hasFile('photo')) {
 				request()->validate([
-					'photo' => 'file|image|max:15000'
+					'photo' => 'file|image|max:10000'
 				]);
 			}
 		});

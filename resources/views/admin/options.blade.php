@@ -39,7 +39,9 @@
 					 });
 					 $('.toggle-class').change(function(e) {
 					  e.preventDefault();
-					  var status = $(this).prop('checked') == true ? 1 : 0;
+					  let status = $(this).prop('checked') == true ? 1 : 0;
+					  let _this = $(this);
+					  _this.prop('disabled', true);
 					  $.ajax({
 					   url: "/admin/options/recommendation",
 					   type: "POST",
@@ -48,13 +50,14 @@
 					   },
 					   success: function(response) {
 					    console.log(response);
-					    var error_switch = document.getElementById("error_switch");
-							error_switch.classList.add('d-none');
+					    let error_switch = document.getElementById("error_switch");
+					    error_switch.classList.add('d-none');
+					    _this.prop('disabled', false);
 					   },
 					   error: function(error) {
-					  
-					    var error_switch = document.getElementById("error_switch");
-							error_switch.classList.remove('d-none');
+					    let error_switch = document.getElementById("error_switch");
+					    error_switch.classList.remove('d-none');
+					    _this.prop('disabled', false);
 					   },
 					  });
 					 });

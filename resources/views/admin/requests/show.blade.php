@@ -43,7 +43,7 @@
 						@endswitch
 					</div>
 					<div class="d-flex align-items-center flex-row-reverse gap-2 fs-5" style="color: #96FBFE">
-						@if (is_null($distributed_request) || $distributed_request->admin_id == $user->id || $user->admin->is_master )
+						@if (is_null($distributed_request) || $distributed_request->admin_id == $user->id || $user->admin->is_master)
 							@if ($request_info->status == 'В обработке' || ($request_info->status == 'В работе' && ($request_info->admin_id == $user->id || $user->admin->is_master)))
 								<form action="/admin/requests/{{ $request_info->id }}/cancel" method="POST">
 									@method('PATCH')
@@ -293,7 +293,7 @@
 							@endif
 						</div>
 					</div>
-					@if ($request_info->admin_id == $user->id && $request_info->status == 'В работе')
+					@if (($request_info->admin_id == $user->id || Auth::user()->admin->is_master) && $request_info->status == 'В работе')
 						<div class="pt-3 col-lg-4 align-items-start">
 							<div class="p-3 d-flex flex-column shadow-sm"
 								style="border-radius: 10px; background-color:#283141; height: 100%;">
@@ -314,30 +314,8 @@
 									</div>
 								</div>
 								<script>
-								 let yourDateToGo = new Date('{{ $request_info->updated_at }}');
-								 yourDateToGo.setHours(yourDateToGo.getHours() + {{ $request_info->time_remaining }});
-								 let timing =
-								  setInterval(
-								   function() {
-								    let currentDate = new Date().getTime();
-								    let timeLeft = yourDateToGo - currentDate;
-								    let days = Math.floor(timeLeft / (86400000));
-								    if (days < 10) days = "0" +
-								     days;
-								    let hours = Math.floor((timeLeft % (86400000)) / (3600000));
-								    if (hours < 10) hours = "0" + hours;
-								    let minutes = Math.floor((timeLeft % (3600000)) / (60000));
-								    if (minutes < 10) minutes = "0" + minutes;
-								    let seconds = Math.floor((timeLeft % (60000)) / 1000);
-								    if (seconds < 10) seconds = "0" + seconds;
-								    document.getElementById("countdown").innerHTML = days + "d " + hours + "h " + minutes + "m " + seconds +
-								     "s";
-								    if (timeLeft <= 0) {
-								     clearInterval(timing);
-								     document.getElementById("countdown").innerHTML =
-								      "Время истекло...";
-								    }
-								   }, 1000);
+								 setTimer('{{ $request_info->accepted_at }}',
+								  {{ $request_info->time_remaining }}, 'countdown');
 								</script>
 							</div>
 						</div>

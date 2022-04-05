@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use RequestService;
+use TimerService;
 
 class AdminController extends Controller
 {
@@ -69,7 +70,6 @@ class AdminController extends Controller
 		}
 		abort(404);
 	}
-
 
 	public function requests()
 	{
@@ -300,6 +300,7 @@ class AdminController extends Controller
 				$request->status = 'Отменено';
 				$request->time_remaining = NULL;
 				$request->closed_at = Carbon::now();
+				$request->accepted_at = NULL;
 				$json_comment = json_decode($request->comments, true);
 				$json_comment[] =
 					array(
@@ -309,6 +310,7 @@ class AdminController extends Controller
 					);
 				$request->comments = json_encode($json_comment);
 				$request->save();
+				TimerService::delete($request);
 				if (!is_null($request->admin_id)) {
 					RequestService::check_free(Admin::where('user_id', $request->admin_id)->first());
 				}
@@ -333,6 +335,7 @@ class AdminController extends Controller
 				$request->status = 'В работе';
 				$request->time_remaining = Option::find(1)->value('time_to_work');
 				$request->admin_id = Auth::user()->id;
+				$request->accepted_at = Carbon::now();
 				$json_comment = json_decode($request->comments, true);
 				$json_comment[] =
 					array(
@@ -342,6 +345,7 @@ class AdminController extends Controller
 					);
 				$request->comments = json_encode($json_comment);
 				$request->save();
+				TimerService::create($request);
 				RequestService::check_free($request->user_admin->admin);
 				if (Option::find(1)->distributed_requests) {
 					RequestService::clear_request_id($request);
@@ -361,6 +365,7 @@ class AdminController extends Controller
 				$request->time_remaining = NULL;
 				$admin_id = $request->admin_id;
 				$request->admin_id = NULL;
+				$request->accepted_at = NULL;
 				$json_comment = json_decode($request->comments, true);
 				$json_comment[] =
 					array(
@@ -370,6 +375,7 @@ class AdminController extends Controller
 					);
 				$request->comments = json_encode($json_comment);
 				$request->save();
+				TimerService::delete($request);
 				if (!is_null($admin_id)) {
 					RequestService::check_free(Admin::where('user_id', $admin_id)->first());
 				}
@@ -398,11 +404,12 @@ class AdminController extends Controller
 					);
 				$request->comments = json_encode($json_comment);
 				if (Option::find(1)->distributed_requests) {
-					$admin = Auth::user()->admin;
+					$admin = $request->user_admin->admin;
 					$admin->week_time += Carbon::parse($request->updated_at)->diffInMinutes(Carbon::now());
 					$admin->save();
 				}
 				$request->save();
+				TimerService::delete($request);
 				RequestService::check_free($request->user_admin->admin);
 				if (Option::find(1)->distributed_requests) {
 					RequestService::distribute();
@@ -420,6 +427,7 @@ class AdminController extends Controller
 				$request->status = 'В обработке';
 				$request->time_remaining = NULL;
 				$request->closed_at = NULL;
+				$request->accepted_at = NULL;
 				$request->admin_id = NULL;
 				$json_comment = json_decode($request->comments, true);
 				$json_comment[] =
@@ -442,7 +450,8 @@ class AdminController extends Controller
 	public function time(RequestInfo $request)
 	{
 		if (Auth::user()->is_admin) {
-			if ($request->admin_id == Auth::user()->id && $request->status == 'В работе') {
+			if (($request->admin_id == Auth::user()->id || Auth::user()->admin->is_master) && $request->status == 'В работе') {
+				TimerService::addTime($request->job_id, 24);
 				$request->time_remaining += 24;
 				$request->save();
 				return redirect('/admin/requests/' . $request->id)->with('autofocus', true);
@@ -455,10 +464,11 @@ class AdminController extends Controller
 	public function request_destroy(RequestInfo $request)
 	{
 		if (Auth::user()->is_admin && Auth::user()->admin->is_master) {
-
-			//ДОБАВИТЬ
-			//Если есть зависимость (подробная информация) -> удаляем зависимую запись
 			$admin_id = $request->admin_id;
+			if (Option::find(1)->distributed_requests) {
+				RequestService::clear_request_id($request);
+			}
+			TimerService::delete($request);
 			$request->delete();
 			if (!is_null($admin_id)) {
 				RequestService::check_free($request->user_admin->admin);
@@ -488,15 +498,16 @@ class AdminController extends Controller
 	{
 		if (Option::find(1)->distributed_requests && Auth::user()->is_admin) {
 			$admin = Auth::user()->admin;
+			if ($admin->get_recommendation == $request->status) {
+				return response()->json(['bad' => 'The set status is the same as the current one.']);
+			}
 			$admin->get_recommendation = $request->status;
 			$admin->save();
-			if (Option::find(1)->distributed_requests) {
-				if ($request->status) {
-					RequestService::enqueue(Auth::user()->admin);
-					RequestService::distribute();
-				} else {
-					RequestService::dequeue(Auth::user()->admin);
-				}
+			if ($admin->get_recommendation) {
+				RequestService::enqueue(Auth::user()->admin);
+				RequestService::distribute();
+			} else {
+				RequestService::dequeue(Auth::user()->admin);
 			}
 			return response()->json(['success' => 'Recommendation changed successfully.']);
 		}
@@ -523,10 +534,7 @@ class AdminController extends Controller
 					$admin->save();
 				}
 				//2) удалить все job-распределённые
-				$queue = AdminQueue::whereNotNull('job_id')->get();
-				foreach ($queue as $record) {
-					DB::table('jobs')->where('id', $record->job_id)->delete();
-				}
+				DB::table('jobs')->where('queue', 'q2')->delete();
 				//3) удалить всю таблицу очередей
 				DB::table('admin_queues')->delete();
 			}

@@ -38,6 +38,7 @@ return new class extends Migration
 			$table->json('comments')->nullable()->comment('Комментарии/События');
 			$table->unsignedBigInteger('job_id')->nullable()->comment('id job');
 			$table->integer('time_remaining')->nullable()->comment('Время на выполнение заявки (Часы)');
+			$table->timestamp('accepted_at')->nullable();
 			$table->timestamp('closed_at')->nullable();
 			$table->timestamps();
 

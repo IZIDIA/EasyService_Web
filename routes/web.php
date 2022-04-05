@@ -103,12 +103,6 @@ Route::get('/requests/{request}/comment', function () {
 
 Route::get('/test', function () {
 	//dd(RequestInfo::find(14)->user_admin->name);
-	//	$job = app(\Illuminate\Contracts\Bus\Dispatcher::class)->dispatch(1)->delay(now()->addMinutes(5));
-	//	$job = RequestServiceJob::dispatch(1)->delay(now()->addMinutes(5));
-
-
-	//$job = (new RequestServiceJob(1))->onQueue('distributed_requests')->delay(now()->addMinutes(5));
-	//$id  = app(Dispatcher::class)->dispatch($job);
-	//dd($id);
-	dd(	DB::table('jobs')->where('id', 55)->exists());
+	//$record = RequestInfo::find(45);
+	//dd(is_null($record));
 });
