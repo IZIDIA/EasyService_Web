@@ -82,12 +82,20 @@ Route::post('/admin/options/recommendation', [AdminController::class, 'recommend
 Route::get('/admin/options/recommendation', function () {
 	abort(404);
 });
+Route::post('/admin/options/notification', [AdminController::class, 'notification'])->middleware(['auth']);
+Route::get('/admin/options/notification', function () {
+	abort(404);
+});
 Route::patch('/admin/options/global', [AdminController::class, 'global'])->middleware(['auth']);
 Route::get('/admin/options/global', function () {
 	abort(404);
 });
 Route::post('/admin/check_new_requests', [AdminController::class, 'check_new_requests'])->middleware(['auth']);
 Route::get('/admin/check_new_requests', function () {
+	abort(404);
+});
+Route::post('/admin/requests/bulk_remove', [AdminController::class, 'bulk_remove'])->middleware(['auth']);
+Route::get('/admin/requests/bulk_remove', function () {
 	abort(404);
 });
 

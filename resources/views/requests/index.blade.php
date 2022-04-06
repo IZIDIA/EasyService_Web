@@ -1,6 +1,6 @@
 <x-header-layout>
 
-	<main class="container ">
+	<main class="container">
 
 		<a type="button" class="shadow d-flex justify-content-center mt-3 btn btn-primary btn-lg fw-bold fs-4"
 			href="/requests/create">Создать заявку</a>
@@ -8,7 +8,7 @@
 		<div class="my-3 p-3 rounded shadow-sm text-white fs-5" style="background-color: #1A202C">
 			<div class="d-flex justify-content-between mb-2">
 				<span class="border-bottom pb-2 mb-0">Ваши заявки:</span>
-				<div class="d-flex">
+				<div class="d-flex align-items-center">
 					<form class="me-2 ">
 						<input size="10" type="search" class="form-control form-control-dark" placeholder="№ заявки" aria-label="Search">
 					</form>

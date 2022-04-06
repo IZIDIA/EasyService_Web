@@ -74,7 +74,7 @@ class AdminController extends Controller
 	public function requests()
 	{
 		if (Auth::user()->is_admin) {
-			$requests = RequestInfo::orderBy('created_at', 'desc')->paginate(20);
+			$requests = RequestInfo::orderBy('created_at', 'desc')->paginate(30);
 			return view('admin.requests.index', [
 				'requests' => $requests,
 				'type' => 'Все',
@@ -514,19 +514,34 @@ class AdminController extends Controller
 		abort(404);
 	}
 
+	public function notification(Request $request)
+	{
+		if (Auth::user()->is_admin) {
+			$admin = Auth::user()->admin;
+			if ($admin->sound_notification == $request->status) {
+				return response()->json(['bad' => 'The set status is the same as the current one.']);
+			}
+			$admin->sound_notification = $request->status;
+			$admin->save();
+			return response()->json(['success' => 'Notification changed successfully.']);
+		}
+		abort(404);
+	}
+
 	public function global(Request $request)
 	{
 		if (Auth::user()->is_admin  && Auth::user()->admin->is_master) {
 			$validateData =  request()->validate([
 				'time_to_work' => 'required|integer|max:1000',
 				'time_to_accept_distributed' => 'required|integer|max:1000',
+				'check_interval' => 'required|integer|min:1000|max:3600000',
 				'welcome_text' => 'required|max:4000',
+
 			]);
 			if ($request['distributed_requests'] == 'on') {
 				$validateData['distributed_requests'] = true;
 			} else {
 				$validateData['distributed_requests'] = false;
-				//Удаление всей очереди + удаление job-для распределённых
 				//1) отключить у всех функцию
 				$admins = Admin::all();
 				foreach ($admins as $admin) {
@@ -552,5 +567,37 @@ class AdminController extends Controller
 			return response()->json(['newCount' => count(RequestInfo::all())]);
 		}
 		abort(401);
+	}
+
+	public function bulk_remove(Request $request)
+	{
+		if (Auth::user()->is_admin && Auth::user()->admin->is_master) {
+			$checked_requests = array();
+			foreach ($request->all() as $item => $value) {
+				if (str_contains($item, 'check_')) {
+					$checked_requests[] = $value;
+				}
+			}
+			switch ($request->input('action')) {
+				case 'delete':
+					foreach ($checked_requests as $id) {
+						$record = RequestInfo::find($id);
+						if (!is_null($record)) {
+							$this->request_destroy($record);
+						}
+					}
+					break;
+				case 'cancel':
+					foreach ($checked_requests as $id) {
+						$record = RequestInfo::find($id);
+						if (!is_null($record)) {
+							$this->cancel($record);
+						}
+					}
+					break;
+			}
+			return redirect('/admin/requests');
+		}
+		abort(404);
 	}
 }
