@@ -102,7 +102,9 @@ Route::get('/admin/requests/bulk_remove', function () {
 //Пользователь
 Route::get('/requests', [RequestInfoController::class, 'index'])->name('requests.index');
 Route::get('/requests/create', [RequestInfoController::class, 'create'])->name('requests.create');
-Route::post('/requests', [RequestInfoController::class, 'store'])->name('requests.store');
+Route::middleware(['throttle:uploads'])->group(function () {
+	Route::post('/requests', [RequestInfoController::class, 'store'])->name('requests.store');
+});
 Route::get('/requests/{request}', [RequestInfoController::class, 'show'])->name('requests.show');
 Route::patch('/requests/{request}/cancel', [RequestInfoController::class, 'cancel']);
 Route::get('/requests/{request}/cancel', function () {

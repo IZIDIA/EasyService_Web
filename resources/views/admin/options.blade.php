@@ -119,7 +119,7 @@
 										<i class="bi bi-question-circle ms-1"></i>
 									</span>
 								</div>
-								<p style="color: red">
+								<p style="color: #ff0000">
 									@error('distributed_requests')
 										{{ $message }}
 									@enderror

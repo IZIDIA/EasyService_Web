@@ -8,10 +8,10 @@
 					<div class="d-flex">
 						@if (Auth::user()->admin->get_recommendation)
 							<i data-bs-toggle="tooltip" data-bs-placement="top" title="Вкл" class="bi bi-bookmark-check-fill me-1"
-								style="color: rgb(0, 170, 0);"></i>
+								style="color: #00aa00;"></i>
 						@else
 							<i data-bs-toggle="tooltip" data-bs-placement="top" title="Выкл" class="bi bi-bookmark-x-fill me-1"
-								style="color: rgb(170, 0, 0);"></i>
+								style="color: #aa0000;"></i>
 						@endif
 						<div class="border-bottom pb-2 mb-0">Распределённая заявка:</div>
 					</div>
@@ -31,7 +31,7 @@
 					<a href="/admin/requests/{{ $distributed_request->id }}" class="requestlink rounded-3 d-flex py-2 shadow-sm"
 						style="text-decoration: none;">
 						<i class="bi bi-clock-history mx-3 d-flex align-items-center"
-							style="font-size: 2rem; color: rgb(0, 255, 255);"></i>
+							style="font-size: 2rem; color: #00ffff;"></i>
 						<div class="mb-0 lh-sm w-100 row">
 							<div class="col d-flex flex-column justify-content-center">
 								<strong
@@ -75,24 +75,24 @@
 					@switch($my_request->status)
 						@case('В обработке')
 							<i class="bi bi-clock-history mx-3 d-flex align-items-center"
-								style="font-size: 2rem; color: rgb(0, 255, 255);"></i>
+								style="font-size: 2rem; color: #00ffff;"></i>
 						@break
 
 						@case('В работе')
 							<i class="bi bi-wrench-adjustable-circle mx-3 d-flex align-items-center"
-								style="font-size: 2rem; color: rgb(255, 157, 0);"></i>
+								style="font-size: 2rem; color: #ff9d00;"></i>
 						@break
 
 						@case('Завершено')
-							<i class="bi bi-check-circle mx-3 d-flex align-items-center" style="font-size: 2rem; color: rgb(0, 255, 0);"></i>
+							<i class="bi bi-check-circle mx-3 d-flex align-items-center" style="font-size: 2rem; color: #00ff00;"></i>
 						@break
 
 						@case('Отменено')
-							<i class="bi bi-x-circle mx-3 d-flex align-items-center" style="font-size: 2rem; color: rgb(173, 0, 0);"></i>
+							<i class="bi bi-x-circle mx-3 d-flex align-items-center" style="font-size: 2rem; color: #ad0000;"></i>
 						@break
 
 						@default
-							<i class="bi bi-question-circle mx-3 d-flex align-items-center" style="font-size: 2rem; color: white"></i>
+							<i class="bi bi-question-circle mx-3 d-flex align-items-center" style="font-size: 2rem; color: #ffffff"></i>
 					@endswitch
 					<div class="mb-0 lh-sm w-100 row">
 						<div class="col-xl-4 col d-flex flex-column justify-content-center">

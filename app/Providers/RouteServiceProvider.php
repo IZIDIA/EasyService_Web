@@ -10,45 +10,58 @@ use Illuminate\Support\Facades\Route;
 
 class RouteServiceProvider extends ServiceProvider
 {
-    /**
-     * The path to the "home" route for your application.
-     *
-     * This is used by Laravel authentication to redirect users after login.
-     *
-     * @var string
-     */
-    public const HOME = '/';
+	/**
+	 * The path to the "home" route for your application.
+	 *
+	 * This is used by Laravel authentication to redirect users after login.
+	 *
+	 * @var string
+	 */
+	public const HOME = '/';
 
-    /**
-     * Define your route model bindings, pattern filters, etc.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        $this->configureRateLimiting();
+	/**
+	 * Define your route model bindings, pattern filters, etc.
+	 *
+	 * @return void
+	 */
+	public function boot()
+	{
+		$this->configureRateLimiting();
 
-        $this->routes(function () {
-            Route::prefix('api')
-                ->middleware('api')
-                ->namespace($this->namespace)
-                ->group(base_path('routes/api.php'));
+		$this->routes(function () {
+			Route::prefix('api')
+				->middleware('api')
+				->namespace($this->namespace)
+				->group(base_path('routes/api.php'));
 
-            Route::middleware('web')
-                ->namespace($this->namespace)
-                ->group(base_path('routes/web.php'));
-        });
-    }
+			Route::middleware('web')
+				->namespace($this->namespace)
+				->group(base_path('routes/web.php'));
+		});
+	}
 
-    /**
-     * Configure the rate limiters for the application.
-     *
-     * @return void
-     */
-    protected function configureRateLimiting()
-    {
-        RateLimiter::for('api', function (Request $request) {
-            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
-        });
-    }
+	/**
+	 * Configure the rate limiters for the application.
+	 *
+	 * @return void
+	 */
+	protected function configureRateLimiting()
+	{
+		RateLimiter::for('api', function (Request $request) {
+			return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+		});
+		RateLimiter::for('uploads', function (Request $request) {
+			return $request->user()
+				? Limit::perDay(20)->by($request->user()->id)->response(function () {
+					return response()->view('limit', [
+						'login' => 1,
+					]);
+				})
+				: Limit::perDay(10)->by($request->ip())->response(function () {
+					return response()->view('limit', [
+						'login' => 0,
+					]);
+				});
+		});
+	}
 }

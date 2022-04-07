@@ -1,7 +1,5 @@
 <x-header-layout>
-
 	<main class="container">
-		
 		<div class="text-white py-5 text-center">
 			<div class="py-5">
 				<h1 class="display-5 fw-bold text-white">Cервис обработки заявок</h1>
@@ -15,7 +13,5 @@
 				</div>
 			</div>
 		</div>
-	
-	
 	</main>
 </x-header-layout>

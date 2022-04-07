@@ -44,24 +44,24 @@
 							@switch($request->status)
 								@case('В обработке')
 									<i class="bi bi-clock-history mx-3 d-flex align-items-center"
-										style="font-size: 2rem; color: rgb(0, 255, 255);"></i>
+										style="font-size: 2rem; color: #00ffff;"></i>
 								@break
 
 								@case('В работе')
 									<i class="bi bi-wrench-adjustable-circle mx-3 d-flex align-items-center"
-										style="font-size: 2rem; color: rgb(255, 157, 0);"></i>
+										style="font-size: 2rem; color: #ff9d00;"></i>
 								@break
 
 								@case('Завершено')
-									<i class="bi bi-check-circle mx-3 d-flex align-items-center" style="font-size: 2rem; color: rgb(0, 255, 0);"></i>
+									<i class="bi bi-check-circle mx-3 d-flex align-items-center" style="font-size: 2rem; color: #00ff00;"></i>
 								@break
 
 								@case('Отменено')
-									<i class="bi bi-x-circle mx-3 d-flex align-items-center" style="font-size: 2rem; color: rgb(173, 0, 0);"></i>
+									<i class="bi bi-x-circle mx-3 d-flex align-items-center" style="font-size: 2rem; color: #ad0000;"></i>
 								@break
 
 								@default
-									<i class="bi bi-question-circle mx-3 d-flex align-items-center" style="font-size: 2rem; color: white"></i>
+									<i class="bi bi-question-circle mx-3 d-flex align-items-center" style="font-size: 2rem; color: #ffffff"></i>
 							@endswitch
 							<div class="mb-0 lh-sm w-100 row">
 								<div class="col-xl-4 col d-flex flex-column justify-content-center">
