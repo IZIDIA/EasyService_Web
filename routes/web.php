@@ -31,6 +31,7 @@ Route::get('/admin/my/completed', [AdminController::class, 'my_completed'])->mid
 Route::get('/admin/my/in_work', [AdminController::class, 'my_in_work'])->middleware(['auth']);
 //-Requests:
 Route::get('/admin/requests', [AdminController::class, 'requests'])->middleware(['auth']);
+Route::get('/admin/requests/search/', [AdminController::class, 'requests_search'])->middleware(['auth']);
 Route::get('/admin/requests/completed', [AdminController::class, 'requests_completed'])->middleware(['auth']);
 Route::get('/admin/requests/in_work', [AdminController::class, 'requests_in_work'])->middleware(['auth']);
 Route::get('/admin/requests/in_processing', [AdminController::class, 'requests_in_processing'])->middleware(['auth']);
@@ -67,6 +68,7 @@ Route::get('/admin/requests/{request}/time', function () {
 Route::delete('/admin/requests/{request}', [AdminController::class, 'request_destroy'])->middleware('auth');
 //-Users:
 Route::get('/admin/users', [AdminController::class, 'users'])->middleware(['auth']);
+Route::get('/admin/users/search', [AdminController::class, 'users_search'])->middleware(['auth']);
 Route::get('/admin/users/{user}', [AdminController::class, 'user_show'])->middleware(['auth']);
 Route::patch('/admin/users/{user}/{status}', [AdminController::class, 'change_status'])->middleware(['auth']);
 Route::get('/admin/users/{user}/{status}', function () {
@@ -101,6 +103,7 @@ Route::get('/admin/requests/bulk_remove', function () {
 
 //Пользователь
 Route::get('/requests', [RequestInfoController::class, 'index'])->name('requests.index');
+Route::get('/requests/search', [RequestInfoController::class, 'search']);
 Route::get('/requests/create', [RequestInfoController::class, 'create'])->name('requests.create');
 Route::middleware(['throttle:uploads'])->group(function () {
 	Route::post('/requests', [RequestInfoController::class, 'store'])->name('requests.store');

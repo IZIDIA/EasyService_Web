@@ -83,6 +83,32 @@ class AdminController extends Controller
 		abort(404);
 	}
 
+	public function requests_search(Request $request)
+	{
+		if (Auth::user()->is_admin) {
+			$search = $request->input('query');
+			if (strlen($search) > 100) {
+				return redirect('/admin/requests');
+			}
+			$requests = RequestInfo::where('mac', 'like', '%' . $search . '%')
+				->orWhere('name', 'like', '%' . $search . '%')
+				->orWhere('email', 'like', '%' . $search . '%')
+				->orWhere('ip_address', 'like', '%' . $search . '%')
+				->orWhere('topic', 'like', '%' . $search . '%')
+				->orWhere('inventory_number', 'like', '%' . $search . '%')
+				->orWhere('location', 'like', '%' . $search . '%')
+				->orWhere('phone_call_number', 'like', '%' . $search . '%')
+				->orWhere('text', 'like', '%' . $search . '%')
+				->orWhere('created_at', 'like', '%' . $search . '%')
+				->orderBy('created_at', 'desc')->get();
+			return view('admin.requests.search', [
+				'requests' => $requests,
+				'search' => $search,
+			]);
+		}
+		abort(404);
+	}
+
 	public function requests_completed()
 	{
 		if (Auth::user()->is_admin) {
@@ -152,6 +178,23 @@ class AdminController extends Controller
 		if (Auth::user()->is_admin) {
 			$users = User::paginate(50);
 			return view('admin.users.index', compact('users'));
+		}
+		abort(404);
+	}
+
+	public function users_search(Request $request)
+	{
+		if (Auth::user()->is_admin) {
+			$search = $request->input('query');
+			if (strlen($search) > 100) {
+				return redirect('/admin/users');
+			}
+			$users = User::where('name', 'like', '%' . $search . '%')
+				->orWhere('email', 'like', '%' . $search . '%')->get();
+			return view('admin.users.search', [
+				'users' => $users,
+				'search' => $search,
+			]);
 		}
 		abort(404);
 	}

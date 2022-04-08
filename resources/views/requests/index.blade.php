@@ -1,21 +1,16 @@
 <x-header-layout>
-
 	<main class="container">
-
 		<a type="button" class="shadow d-flex justify-content-center mt-3 btn btn-primary btn-lg fw-bold fs-4"
 			href="/requests/create">Создать заявку</a>
-
 		<div class="my-3 p-3 rounded shadow-sm text-white fs-5" style="background-color: #1A202C">
 			<div class="d-flex justify-content-between mb-2">
 				<span class="border-bottom pb-2 mb-0">Ваши заявки:</span>
-				<div class="d-flex align-items-center">
-					<form class="me-2 ">
-						<input size="10" type="search" class="form-control form-control-dark" placeholder="№ заявки" aria-label="Search">
-					</form>
-					<a type="button" class="btn btn-outline-info fw-bold" href="/">Узнать статус</a>
-				</div>
+				<form class="d-flex align-items-center" action="/requests/search" method="GET">
+					<input maxlength="10" size="10" type="search" name="query" class="form-control form-control-dark me-2"
+						placeholder="№ заявки" aria-label="Search" required>
+					<button type="submit" type="button" class="btn btn-outline-info fw-bold">Поиск</button>
+				</form>
 			</div>
-
 			@if (Auth::check())
 				@forelse ($request_infos as $request_info)
 					<a href="/requests/{{ $request_info->id }}" class="requestlink rounded-3 d-flex py-2 shadow-sm"
@@ -44,8 +39,7 @@
 						@endswitch
 						<div class="mb-0 lh-sm w-100 row">
 							<div class="col-xl-4 col d-flex flex-column justify-content-center">
-								<strong
-									class="text-warning">{{ '№' . $request_info->id . ' ' . Str::limit($request_info->topic, 25) }}
+								<strong class="text-warning">{{ '№' . $request_info->id . ' ' . Str::limit($request_info->topic, 25) }}
 								</strong>
 								<span class="d-block text-white fst-italic">{{ $request_info->created_at->format('d.m.y H:i') }}</span>
 							</div>
@@ -86,11 +80,8 @@
 					<div class="pt-3 ms-2 text-warning">Зарегистрируйтесь для удобного просмотра статуса заявок</div>
 				@endif
 			</div>
-
 			@if (Auth::check())
 				{{ $request_infos->links() }}
 			@endif
-
 		</main>
-
 	</x-header-layout>

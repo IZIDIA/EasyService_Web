@@ -1,27 +1,10 @@
 <x-admin-layout>
 	<div class="container px-5">
-		<div class="d-flex gap-2 mt-3" style="word-break: break-all;">
-			@if (!request()->is('admin/requests'))
-				<a href="{{ url('admin/requests') }}" class="link-light">Все</a>
-			@endif
-			@if (!request()->is('admin/requests/completed'))
-				<a href="{{ url('admin/requests/completed') }}" class="link-success">Завершённые</a>
-			@endif
-			@if (!request()->is('admin/requests/in_work'))
-				<a href="{{ url('admin/requests/in_work') }}" class="link-warning">В работе</a>
-			@endif
-			@if (!request()->is('admin/requests/in_processing'))
-				<a href="{{ url('admin/requests/in_processing') }}" class="link-info">В обработке</a>
-			@endif
-			@if (!request()->is('admin/requests/canceled'))
-				<a href="{{ url('admin/requests/canceled') }}" class="link-danger">Отменённые</a>
-			@endif
-		</div>
-		<div class="mb-3 mt-1 p-3 rounded shadow-sm text-white fs-5" style="background-color: #1A202C">
+		<div class="mb-3 mt-5 p-3 rounded shadow-sm text-white fs-5" style="background-color: #1A202C">
 			<div class="d-flex justify-content-between mb-2">
-				<span class="border-bottom pb-2 mb-0">Список заявок ({{ $type }}):</span>
+				<span class="border-bottom pb-2 mb-0">Результаты поиска:</span>
 				<form class="d-flex align-items-center ms-2" action="/admin/requests/search" method="GET">
-					<input maxlength="100" size="40" type="search" name="query" class="form-control form-control-dark me-2"
+					<input maxlength="100" value="{{ $search }}" size="40" type="search" name="query" class="form-control form-control-dark me-2"
 						placeholder="Содержимое заявки" aria-label="Search" required>
 					<button type="submit" type="button" class="btn btn-outline-info fw-bold">Поиск</button>
 				</form>
@@ -94,7 +77,6 @@
 						<div class="pt-3 ms-2 text-warning">Пусто</div>
 					@endforelse
 			</div>
-			{{ $requests->links() }}
 			@if (Auth::user()->admin->is_master)
 				<div class="d-flex">
 					@csrf

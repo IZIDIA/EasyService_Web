@@ -2,9 +2,9 @@
 	<div class="container px-5">
 		<div class="my-3 p-3 rounded shadow-sm text-white fs-5 col-lg-8 mx-auto" style="background-color: #1A202C">
 			<div class="d-flex justify-content-between mb-2">
-				<span class="border-bottom pb-2 mb-0">Пользователи:</span>
+				<span class="border-bottom pb-2 mb-0">Результаты поиска:</span>
 				<form class="d-flex align-items-center ms-2" action="/admin/users/search" method="GET">
-					<input maxlength="100" size="40" type="search" name="query" class="form-control form-control-dark me-2"
+					<input value="{{$search}}" maxlength="100" size="40" type="search" name="query" class="form-control form-control-dark me-2"
 						placeholder="Имя или Email" aria-label="Search" required>
 					<button type="submit" type="button" class="btn btn-outline-info fw-bold">Поиск</button>
 				</form>
@@ -42,7 +42,6 @@
 			@endforelse
 		</div>
 		<div class="col-lg-8 mx-auto">
-			{{ $users->links() }}
 		</div>
 	</div>
 </x-admin-layout>

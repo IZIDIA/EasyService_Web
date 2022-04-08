@@ -175,7 +175,7 @@ class RequestInfoController extends Controller
 				);
 			$request->comments = json_encode($json_comment);
 			$request->save();
-			if (!is_null(	$request->admin_id)) {
+			if (!is_null($request->admin_id)) {
 				RequestService::check_free(Admin::where('user_id', 	$request->admin_id)->first());
 			}
 			if (Option::find(1)->distributed_requests) {
@@ -186,6 +186,7 @@ class RequestInfoController extends Controller
 		}
 		abort(404);
 	}
+
 	public function comment(RequestInfo $request)
 	{
 		if ($request->session_id == session()->getId() || (Auth::check() && Auth::user()->id == $request->user_id)) {
@@ -204,5 +205,18 @@ class RequestInfoController extends Controller
 			return redirect('/requests/' . $request->id);
 		}
 		abort(404);
+	}
+
+	public function search(Request $request)
+	{
+		$search = $request->input('query');
+		if (strlen($search) > 10) {
+			return redirect('/requests');
+		}
+		$request_infos = RequestInfo::where('id', $search)->get();
+		return view('requests.search', [
+			'request_infos' => $request_infos,
+			'search' => $search,
+		]);
 	}
 }
