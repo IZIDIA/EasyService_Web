@@ -47,6 +47,18 @@ window.fileValidation = function () {
   } else {}
 };
 
+window.showDataTableFunction = function () {
+  var radioYes = document.getElementById("yes_with");
+  var radioNo = document.getElementById("no_with");
+  var divBlock = document.getElementById("dataDiv");
+
+  if (radioYes.checked == true || radioNo.checked == true) {
+    divBlock.style.display = "block";
+  } else {
+    divBlock.style.display = "none";
+  }
+};
+
 window.enableAnonym = function () {
   var anonym = document.getElementById("anonym");
   var first_name_div = document.getElementById("first_name_div");

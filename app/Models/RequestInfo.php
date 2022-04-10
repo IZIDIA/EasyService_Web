@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class RequestInfo extends Model
 {
 	protected $guarded = ['id'];
-	protected $dates = ['date_create', 'closed_at'];
+	protected $dates = ['accepted_at', 'closed_at'];
 	use HasFactory;
 
 	public function user_admin()
@@ -27,8 +27,4 @@ class RequestInfo extends Model
 		return $this->hasOne(AdminQueue::class, 'request_id');
 	}
 
-	public function getUpdatedAtAttribute($date)
-	{
-		return Carbon::createFromFormat('Y-m-d H:i:s', $date)->format('M d, Y H:i:s');
-	}
 }

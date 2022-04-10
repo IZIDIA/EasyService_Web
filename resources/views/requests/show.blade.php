@@ -115,6 +115,9 @@
 								<h2 class="pt-2 mb-3">Локация:</h2>
 								<p><strong>Местонахождение:</strong> {{ $request_info->location }}</p>
 								<p><strong>IP-адрес:</strong> {{ $request_info->ip_address }}</p>
+								@if (!is_null($request_info->mac))
+									<p><strong>MAC-адрес:</strong> {{ $request_info->mac }}</p>
+								@endif
 								<p><strong>Инвентарный номер:</strong> {{ $request_info->inventory_number }}</p>
 								<p><strong>Отправлено из приложения:</strong> @switch($request_info->from_pc)
 										@case(1)

@@ -1,5 +1,4 @@
 <x-header-layout>
-
 	<div class="container">
 		<main class="noCopy">
 			<div class="my-4 text-center">
@@ -9,26 +8,19 @@
 				@endif
 				<h2>Форма для отправки заявки</h2>
 			</div>
-
-
-
 			<div class="row g-5">
-
 				<div class="col-md-8 offset-md-2">
 					<form class="needs-validation" novalidate action="/requests" method="POST" enctype="multipart/form-data">
 						<div class="row g-3">
-
 							<div class="my-3">
 								<div class="form-check">
-									<input type="checkbox" class="form-check-input" id="anonym" name="anonym"
+									<input type="checkbox" class="form-check-input" id="anonym" name="anonym" @checked(false)
 										@if (old('anonym') == 'on') checked @endif onclick="enableAnonym()">
 									<label class="form-check-label" for="anonym">Анонимная заявка <span class="text-muted">(Администратор
 											не сможет связаться с вами, в случае необходимости)</span></label>
 								</div>
 							</div>
-
 							<hr class="my-0">
-
 							<div class="col-sm-6" id="first_name_div">
 								<label for="first_name" class="form-label required-label">Имя</label>
 								@if (Auth::check())
@@ -47,7 +39,6 @@
 									</div>
 								@enderror
 							</div>
-
 							<div class="col-sm-6" id="last_name_div">
 								<label for="last_name" class="form-label required-label">Фамилия</label>
 								@if (Auth::check())
@@ -66,7 +57,6 @@
 									</div>
 								@enderror
 							</div>
-
 							<div class="col-12" id="email_div">
 								<label for="email" class="form-label required-label">Email</label>
 								@if (Auth::check())
@@ -85,7 +75,6 @@
 									</div>
 								@enderror
 							</div>
-
 							<div class="col-12">
 								<label for="location" class="form-label required-label">Местонахождение оборудования</label>
 								<input maxlength="128" type="text" class="form-control" id="location" name="location"
@@ -99,9 +88,9 @@
 									</div>
 								@enderror
 							</div>
-
 							<div class="col-12" id="phone_call_number_div">
-								<label for="phone_call_number" class="form-label required-label">Контактный номер</label><span class="text-muted"> (Пример:
+								<label for="phone_call_number" class="form-label required-label">Контактный номер</label><span
+									class="text-muted"> (Пример:
 									89991234455 или 79991234455)</span>
 								<input maxlength="11" pattern="^\d+" type="tel" class="form-control" id="phone_call_number"
 									name="phone_call_number" placeholder="Мобильный или рабочий..." required
@@ -115,7 +104,6 @@
 									</div>
 								@enderror
 							</div>
-
 							<div class="col-12">
 								<label for="inventory_number" class="form-label">Инвентарный номер оборудования <span
 										class="text-muted">(Если
@@ -128,9 +116,7 @@
 									</div>
 								@enderror
 							</div>
-
 							<hr class="mt-4">
-
 							<div class="my-2" id="work_time_div">
 								<h4 class="mb-2">Решить проблему в вашем присутствии?</h4>
 								<div class="form-check">
@@ -149,11 +135,9 @@
 									<label class="form-check-label" for="no_with">Нет, решить проблему в моё отсутствие</label>
 								</div>
 							</div>
-
 							<div id="dataDiv" style="display: @if (old('solution_with_me') == '2' || old('solution_with_me') == '3') block @else none @endif ">
 								<h4 class="mb-2">График вашей работы: <span class="text-muted fs-5">(Если
 										график не получается задать по шаблону, сообщите о нём в тексте заявки)</span></h4>
-
 								<div class="form-check ">
 									<span style="display: inline-block;  width: 1px;">
 										<input type="checkbox" class="form-check-input" name="monday" id="monday"
@@ -174,7 +158,6 @@
 											value="{{ old('to_monday') ?? '18:00' }}">
 									</span>
 								</div>
-
 								<div class="form-check ">
 									<span style="display: inline-block;  width: 1px;">
 										<input type="checkbox" class="form-check-input" name="tuesday" id="tuesday"
@@ -195,7 +178,6 @@
 											value="{{ old('to_tuesday') ?? '18:00' }}">
 									</span>
 								</div>
-
 								<div class="form-check">
 									<span style="display: inline-block;  width: 1px;">
 										<input type="checkbox" class="form-check-input" name="wednesday" id="wednesday"
@@ -216,7 +198,6 @@
 											value="{{ old('to_wednesday') ?? '18:00' }}">
 									</span>
 								</div>
-
 								<div class="form-check">
 									<span style="display: inline-block;  width: 1px;">
 										<input type="checkbox" class="form-check-input" name="thursday" id="thursday"
@@ -237,7 +218,6 @@
 											value="{{ old('to_thursday') ?? '18:00' }}">
 									</span>
 								</div>
-
 								<div class="form-check">
 									<span style="display: inline-block;  width: 1px;">
 										<input type="checkbox" class="form-check-input" name="friday" id="friday"
@@ -258,7 +238,6 @@
 											value="{{ old('to_friday') ?? '18:00' }}">
 									</span>
 								</div>
-
 								<div class="form-check">
 									<span style="display: inline-block;  width: 1px;">
 										<input type="checkbox" class="form-check-input" name="saturday" id="saturday"
@@ -274,7 +253,6 @@
 											value="{{ old('to_saturday') ?? '18:00' }}">
 									</span>
 								</div>
-
 								<div class="form-check">
 									<span style="display: inline-block;  width: 1px;">
 										<input type="checkbox" class="form-check-input" name="sunday" id="sunday"
@@ -291,9 +269,7 @@
 									</span>
 								</div>
 							</div>
-
 							<hr class="my-1" id="work_time_hr">
-
 							<div class="my-3" id="problem_with_pc_div">
 								<h4 class="mb-2">Проблема с текущим рабочим ПК?</h4>
 								<div class="form-check mb-3">
@@ -314,9 +290,7 @@
 									</div>
 								@enderror
 							</div>
-
 							<hr class="my-1" id="problem_with_pc_hr">
-
 							<div class="col-12 mb-3">
 								<h4 class="required-label">Тема</h4>
 								<input maxlength="64" type="text" class="form-control" id="topic" name="topic"
@@ -330,7 +304,6 @@
 									</div>
 								@enderror
 							</div>
-
 							<div class="mb-2">
 								<h4 class="required-label">Сообщение</h4>
 								<textarea class="form-control mb-1" id="text" name="text" rows="10" maxlength="4000" minlength="1"
@@ -346,7 +319,6 @@
 								<div class="text-end me-1" id="textarea_count" name="textarea_count">
 									{{ old('textarea_count') ?? '0/4000' }}</div>
 							</div>
-
 							<script>
 							 let input = document.getElementById('text');
 							 input.oninput = function() {
@@ -354,7 +326,6 @@
 							  document.getElementById('textarea_count').innerHTML = element + "/4000";
 							 };
 							</script>
-
 							<div class="col-md-6 offset-md-3 text-center">
 								<label class="mb-3" for="file">Фотография или скриншот проблемы (1) <span class="text-muted">(По
 										желанию)</span></label>
@@ -363,22 +334,28 @@
 								<small class="error_message" @error('photo') style="color: #d93025" @enderror>Файл должен быть менее 10 МБ.
 									Разрешенные типы файлов: jpg, jpeg, png</small>
 							</div>
-
 							@if ($errors->any())
 								<script>
 								 charCount();
 								 enableAnonym();
 								</script>
 							@endif
-
 							<hr class="my-4">
-
 							@csrf
 							<button class="w-100 btn btn-primary btn-lg" type="submit">Отправить заявку</button>
-
 					</form>
 				</div>
 			</div>
+			<script>
+			 window.addEventListener("pageshow", function(event) {
+			  var historyTraversal = event.persisted ||
+			   (typeof window.performance != "undefined" &&
+			    window.performance.navigation.type === 2);
+			  if (historyTraversal) {
+			   // Handle page restore.
+			   window.location.reload();
+			  }
+			 });
+			</script>
 		</main>
-
 </x-header-layout>

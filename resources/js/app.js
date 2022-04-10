@@ -40,17 +40,6 @@ window.showPasswordInputFunction = function () {
 	}
 }
 
-window.showDataTableFunction = function () {
-	let radioYes = document.getElementById("yes_with");
-	let radioNo = document.getElementById("no_with");
-	let divBlock = document.getElementById("dataDiv");
-	if (radioYes.checked == true || radioNo.checked == true) {
-		divBlock.style.display = "block";
-	} else {
-		divBlock.style.display = "none";
-	}
-}
-
 window.showOrHide = function (hak, cat) {
 	var hak = document.getElementById(hak);
 	var cat = document.getElementById(cat);

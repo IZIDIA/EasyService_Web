@@ -5403,18 +5403,6 @@ window.showPasswordInputFunction = function () {
   }
 };
 
-window.showDataTableFunction = function () {
-  var radioYes = document.getElementById("yes_with");
-  var radioNo = document.getElementById("no_with");
-  var divBlock = document.getElementById("dataDiv");
-
-  if (radioYes.checked == true || radioNo.checked == true) {
-    divBlock.style.display = "block";
-  } else {
-    divBlock.style.display = "none";
-  }
-};
-
 window.showOrHide = function (hak, cat) {
   var hak = document.getElementById(hak);
   var cat = document.getElementById(cat);

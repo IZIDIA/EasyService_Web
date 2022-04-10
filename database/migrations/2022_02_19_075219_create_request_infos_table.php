@@ -18,7 +18,7 @@ return new class extends Migration
 			$table->id();
 			$table->unsignedBigInteger('admin_id')->nullable()->comment('id Исполнителя');
 			$table->boolean('from_pc');
-			$table->string('mac', 12)->nullable()->comment('MAC Address');
+			$table->string('mac', 17)->nullable()->comment('MAC Address');
 			$table->string('name', 128)->comment('Имя заявителя');
 			$table->string('email', 128)->nullable()->comment('Почта заявителя');
 			$table->unsignedBigInteger('user_id')->nullable()->comment('id Пользователя');

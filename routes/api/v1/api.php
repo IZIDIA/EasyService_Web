@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\api\v1\ApiRequestInfoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +15,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware(['api'])->group(function () {
+	Route::get('/{mac}/requests', [ApiRequestInfoController::class, 'index']);
 });

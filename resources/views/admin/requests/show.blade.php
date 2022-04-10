@@ -140,8 +140,12 @@
 							<div>
 								<h2 class="pt-2 mb-3">Личные данные:</h2>
 								<p><strong> Заявитель:</strong> {{ $request_info->name }}</p>
-								<p><strong>Email:</strong> {{ $request_info->email }}</p>
-								<p><strong>Номер:</strong> {{ $request_info->phone_call_number }}</p>
+								@if (!is_null($request_info->email))
+									<p><strong>Email:</strong> {{ $request_info->email }}</p>
+								@endif
+								@if (!is_null($request_info->phone_call_number))
+									<p><strong>Номер:</strong> {{ $request_info->phone_call_number }}</p>
+								@endif
 								<p><strong>Дата создания:</strong> {{ $request_info->created_at->format('d.m.y H:i') }}</p>
 								@if ($request_info->closed_at !== null)
 									<p><strong>Дата завершения:</strong> {{ $request_info->closed_at->format('d.m.y H:i') }}</p>
@@ -158,7 +162,12 @@
 								<h2 class="pt-2 mb-3">Локация:</h2>
 								<p><strong>Местонахождение:</strong> {{ $request_info->location }}</p>
 								<p><strong>IP-адрес:</strong> {{ $request_info->ip_address }}</p>
-								<p><strong>Инвентарный номер:</strong> {{ $request_info->inventory_number }}</p>
+								@if (!is_null($request_info->mac))
+									<p><strong>MAC-адрес:</strong> {{ $request_info->mac }}</p>
+								@endif
+								@if (!is_null($request_info->inventory_number))
+									<p><strong>Инвентарный номер:</strong> {{ $request_info->inventory_number }}</p>
+								@endif
 								<p><strong>Отправлено из приложения:</strong> @switch($request_info->from_pc)
 										@case(1)
 											Да

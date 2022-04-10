@@ -43,6 +43,17 @@ window.fileValidation = function () {
 	} else { }
 }
 
+window.showDataTableFunction = function () {
+	let radioYes = document.getElementById("yes_with");
+	let radioNo = document.getElementById("no_with");
+	let divBlock = document.getElementById("dataDiv");
+	if (radioYes.checked == true || radioNo.checked == true) {
+		divBlock.style.display = "block";
+	} else {
+		divBlock.style.display = "none";
+	}
+}
+
 window.enableAnonym = function () {
 	let anonym = document.getElementById("anonym");
 	let first_name_div = document.getElementById("first_name_div");
