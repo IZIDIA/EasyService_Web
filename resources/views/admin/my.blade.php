@@ -1,7 +1,5 @@
 <x-admin-layout>
-
 	<div class="container px-5">
-
 		@if (App\Models\Option::find(1)->distributed_requests)
 			<div class="my-3 p-3 rounded shadow-sm text-white fs-5" style="background-color: #1A202C">
 				<div class="d-flex align-items-center mb-2 justify-content-between">
@@ -30,8 +28,7 @@
 				@else
 					<a href="/admin/requests/{{ $distributed_request->id }}" class="requestlink rounded-3 d-flex py-2 shadow-sm"
 						style="text-decoration: none;">
-						<i class="bi bi-clock-history mx-3 d-flex align-items-center"
-							style="font-size: 2rem; color: #00ffff;"></i>
+						<i class="bi bi-clock-history mx-3 d-flex align-items-center" style="font-size: 2rem; color: #00ffff;"></i>
 						<div class="mb-0 lh-sm w-100 row">
 							<div class="col d-flex flex-column justify-content-center">
 								<strong
@@ -52,7 +49,6 @@
 				@endif
 			</div>
 		@endif
-
 		<div class="d-flex gap-2 mt-3" style="word-break: break-all;">
 			@if (!request()->is('admin/my'))
 				<a href="{{ url('admin/my') }}" class="link-light">Все</a>
@@ -64,7 +60,6 @@
 				<a href="{{ url('admin/my/in_work') }}" class="link-warning">В работе</a>
 			@endif
 		</div>
-
 		<div class="mb-3 mt-1 p-3 rounded shadow-sm text-white fs-5" style="background-color: #1A202C">
 			<div class="d-flex justify-content-between mb-2">
 				<span class="border-bottom pb-2 mb-0">Ваши заявки ({{ $type }}):</span>
@@ -74,8 +69,7 @@
 					style="text-decoration: none;">
 					@switch($my_request->status)
 						@case('В обработке')
-							<i class="bi bi-clock-history mx-3 d-flex align-items-center"
-								style="font-size: 2rem; color: #00ffff;"></i>
+							<i class="bi bi-clock-history mx-3 d-flex align-items-center" style="font-size: 2rem; color: #00ffff;"></i>
 						@break
 
 						@case('В работе')
@@ -125,9 +119,6 @@
 					<div class="pt-3 ms-2 text-warning">Пусто</div>
 				@endforelse
 			</div>
-
 			{{ $my_requests->links() }}
-
 		</div>
-
 	</x-admin-layout>

@@ -1,6 +1,5 @@
 <x-admin-layout>
 	<div class="container px-5">
-
 		<div class="col-xl-6 mx-auto">
 			<div class="mt-5 p-3 d-flex shadow-sm"
 				style="overflow:hidden; border-radius: 10px; background-color:#283141; height: 100%;">
@@ -42,7 +41,7 @@
 						    let error_switch = document.getElementById("error_switch1");
 						    error_switch.classList.add('d-none');
 						    _this.prop('disabled', false);
-								location.reload();
+						    location.reload();
 						   },
 						   error: function(error) {
 						    let error_switch = document.getElementById("error_switch1");
@@ -99,7 +98,6 @@
 					</div>
 				</div>
 			</div>
-
 			@if (Auth::User()->admin->is_master)
 				<div class="mt-4 p-3 d-flex shadow-sm"
 					style="overflow:hidden; border-radius: 10px; background-color:#283141; height: 100%;">
@@ -160,11 +158,21 @@
 								</p>
 								<div class="input-group mb-3">
 									<textarea id="welcome_text" name="welcome_text" style="min-height: 250px" class="form-control" rows="10"
-          maxlength="4000">{{ $options->welcome_text }}</textarea>
+          maxlength="2000">{{ $options->welcome_text }}</textarea>
 									<span class="input-group-text w-25 text-wrap">Текст на главной странице сайта</span>
 								</div>
 								<p style="color: red">
 									@error('welcome_text')
+										{{ $message }}
+									@enderror
+								</p>
+								<div class="input-group mb-3">
+									<textarea id="welcome_text_app" name="welcome_text_app" style="min-height: 250px" class="form-control" rows="10"
+          maxlength="1000">{{ $options->welcome_text_app }}</textarea>
+									<span class="input-group-text w-25 text-wrap">Текст на странице приложения</span>
+								</div>
+								<p style="color: red">
+									@error('welcome_text_app')
 										{{ $message }}
 									@enderror
 								</p>
@@ -177,8 +185,6 @@
 							</form>
 						</div>
 			@endif
-
 		</div>
-
 	</div>
 </x-admin-layout>

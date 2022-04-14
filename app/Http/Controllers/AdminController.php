@@ -578,8 +578,8 @@ class AdminController extends Controller
 				'time_to_work' => 'required|integer|max:1000',
 				'time_to_accept_distributed' => 'required|integer|max:1000',
 				'check_interval' => 'required|integer|min:1000|max:3600000',
-				'welcome_text' => 'required|max:4000',
-
+				'welcome_text' => 'required|max:2001',
+				'welcome_text_app' => 'required|max:1001',
 			]);
 			if ($request['distributed_requests'] == 'on') {
 				$validateData['distributed_requests'] = true;

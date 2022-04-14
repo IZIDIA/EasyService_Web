@@ -74,15 +74,15 @@ class RequestService
 		if ($requests_id_queue->isEmpty()) {
 			return;
 		}
+		$admins_id_queue = DB::table('admins')
+			->join('admin_queues', 'admins.user_id', '=', 'admin_queues.admin_id')
+			->select('admins.user_id')
+			->where('get_recommendation', true)
+			->where('free', true)
+			->whereNull('admin_queues.request_id')
+			->orderBy('week_time')
+			->get();
 		foreach ($requests_id_queue as $request_id) {
-			$admins_id_queue = DB::table('admins')
-				->join('admin_queues', 'admins.user_id', '=', 'admin_queues.admin_id')
-				->select('admins.user_id')
-				->where('get_recommendation', true)
-				->where('free', true)
-				->whereNull('admin_queues.request_id')
-				->orderBy('week_time')
-				->get();
 			if ($admins_id_queue->isEmpty()) {
 				return;
 			}
@@ -92,6 +92,7 @@ class RequestService
 			$job = (new RequestServiceJob($admins_id_queue->first()->user_id))->onQueue('q2')->delay(now()->addHours($queue->distributed_lifetime));
 			$queue->job_id = app(Dispatcher::class)->dispatch($job);
 			$queue->save();
+			$admins_id_queue->forget($admins_id_queue->keys()->first());
 		}
 	}
 }
