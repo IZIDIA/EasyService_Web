@@ -32,7 +32,7 @@ class RequestInfoController extends Controller
 	}
 
 	public function store(Request $request)
-	{
+	{	return response(['Message' => $request->header()]);
 		if ($request['anonym'] == 0) {
 			$data = $this->validateData();
 			$data['name'] = $request->first_name . ' ' . $request->last_name;
@@ -109,6 +109,7 @@ class RequestInfoController extends Controller
 	{
 		return tap($validateData =  request()->validate([
 			'solution_with_me' => 'required',
+			'first_name' => 'required|max:40',
 			'last_name' => 'required|max:40',
 			'email' => 'required|max:128',
 			'location' => 'required|max:255',

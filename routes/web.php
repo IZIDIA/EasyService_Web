@@ -119,20 +119,4 @@ Route::get('/requests/{request}/comment', function () {
 });
 
 Route::get('/test', function () {
-	//dd(RequestInfo::find(14)->user_admin->name);
-	//$record = RequestInfo::find(45);
-	//dd(is_null($record));
-/*	$admins_id_queue = DB::table('admins')
-		->select('admins.user_id')
-		->get();
-	
-		$admins_id_queue->forget($admins_id_queue->keys()->first());
-		$admins_id_queue->forget($admins_id_queue->keys()->first());
-	
-		//$key = $admins_id_queue->first()->user_id;
-	//	$admins_id_queue =	$admins_id_queue->forget($key);
-
-		//$admins_id_queue =	$admins_id_queue->forget($admins_id_queue->first()->user_id);
-	dd($admins_id_queue);*/
-
 });

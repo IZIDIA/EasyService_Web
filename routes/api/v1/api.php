@@ -18,4 +18,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['api'])->group(function () {
 	Route::get('/{mac}/requests', [ApiRequestInfoController::class, 'index']);
 	Route::get('/info', [ApiRequestInfoController::class, 'info']);
+	//Route::middleware(['throttle:uploads'])->group(function () {
+	Route::post('/requests', [ApiRequestInfoController::class, 'store']);
+	//	});
 });
