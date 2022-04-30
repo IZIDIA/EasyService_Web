@@ -291,12 +291,310 @@
 					<div class="pt-3 col-lg-8 align-items-start">
 						<div class="p-3 shadow-sm" style="border-radius: 10px; background-color:#283141; height: 100%;">
 							<div class="fs-5">
-								Подробная информация об устройстве заявителя:
+								Подробная информация об устройстве заявителя: <span class="text-muted" style="font-size: 14px">(На момент
+									создания заявки)</span>
 							</div>
-							@if (isset($pc_info))
-								<div>
-									{{ $pc_info->operating_system }}
+							@if ($pc_info_show)
+								<div class="mt-2">
+									<p>
+										<button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOC"
+											aria-expanded="false" aria-controls="collapseOC">
+											Операционная система
+										</button>
+									</p>
+									<div class="collapse" id="collapseOC">
+										<div class="card card-body text-white bg-dark">
+											<div class="consolas-text">
+												<strong>Тип:</strong>
+												<span> {{ $operating_system['NameOc'] }}</span>
+											</div>
+											<div class="consolas-text">
+												<strong>Версия:</strong>
+												<span> {{ $operating_system['VersionOc'] }}</span>
+											</div>
+											<div class="consolas-text">
+												<strong>Архитектура:</strong>
+												<span> {{ $operating_system['Architecture'] }}</span>
+											</div>
+											<div class="consolas-text">
+												<strong>Имя компьютера:</strong>
+												<span> {{ $operating_system['SystemName'] }}</span>
+											</div>
+											<div class="consolas-text">
+												<strong>Имя пользователя:</strong>
+												<span> {{ $operating_system['UserName'] }}</span>
+											</div>
+											<div class="consolas-text">
+												<strong>Ключ активации:</strong>
+												<span> {{ $operating_system['SerialNumber'] }}</span>
+											</div>
+											<div class="consolas-text">
+												<strong>UEFI:</strong>
+												<span> {{ $operating_system['UEFI'] ? 'Да' : 'Нет' }}</span>
+											</div>
+										</div>
+									</div>
 								</div>
+								<div class="mt-2">
+									<p>
+										<button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSpecs"
+											aria-expanded="false" aria-controls="collapseSpecs">
+											Комплектующие
+										</button>
+									</p>
+									<div class="collapse" id="collapseSpecs">
+										<div class="card card-body text-white bg-dark">
+											<div class="mb-3">
+												<strong class="fs-5">Процессор:</strong>
+												@foreach ($specs['CPU'] as $item)
+													<div class="m-2 p-2 border border-primary rounded">
+														<div class="consolas-text">
+															<strong>Модель:</strong>
+															<span> {{ $item['CPUName'] }}</span>
+														</div>
+														<div class="consolas-text">
+															<strong>Количество физических ядер:</strong>
+															<span> {{ $item['CPUCores'] }}</span>
+														</div>
+														<div class="consolas-text">
+															<strong>Количество логических процессоров:</strong>
+															<span> {{ $item['CPULogicalCores'] }}</span>
+														</div>
+													</div>
+												@endforeach
+											</div>
+											<div class="mb-3">
+												<strong class="fs-5">Видеокарта:</strong>
+												@foreach ($specs['GPU'] as $item)
+													<div class="m-2 p-2 border border-primary rounded">
+														<div class="consolas-text">
+															<strong>Модель:</strong>
+															<span> {{ $item['GPUName'] }}</span>
+														</div>
+														<div class="consolas-text">
+															<strong>Версия драйверов:</strong>
+															<span> {{ $item['GPUDriverVersion'] }}</span>
+														</div>
+													</div>
+												@endforeach
+											</div>
+											<div class="mb-3">
+												<strong class="fs-5">Оперативная память:</strong>
+												@foreach ($specs['RAM'] as $item)
+													<div class="m-2 p-2 border border-primary rounded">
+														<div class="consolas-text">
+															<strong>Модель:</strong>
+															<span> {{ $item['MemoryName'] }}</span>
+														</div>
+														<div class="consolas-text">
+															<strong>Объём (ГБ):</strong>
+															<span> {{ $item['MemorySize'] }}</span>
+														</div>
+														<div class="consolas-text">
+															<strong>Частота (МГц):</strong>
+															<span> {{ $item['MemorySpeed'] }}</span>
+														</div>
+													</div>
+												@endforeach
+											</div>
+											<div>
+												<strong class="fs-5">Материнская плата:</strong>
+												@foreach ($specs['Motherboard'] as $item)
+													<div class="m-2 p-2 border border-primary rounded">
+														<div class="consolas-text">
+															<strong>Производитель:</strong>
+															<span> {{ $item['MotherboardCompanyName'] }}</span>
+														</div>
+														<div class="consolas-text">
+															<strong>Модель:</strong>
+															<span> {{ $item['MotherboardModel'] }}</span>
+														</div>
+													</div>
+												@endforeach
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="mt-2">
+									<p>
+										<button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTemps"
+											aria-expanded="false" aria-controls="collapseTemps">
+											Датчики температуры
+										</button>
+									</p>
+									<div class="collapse" id="collapseTemps">
+										<div class="card card-body text-white bg-dark">
+											<div class="mb-3">
+												<strong class="fs-5">Процессор:</strong>
+												@foreach ($temps['CPUTemp'] as $item)
+													<div class="m-2 p-2 border border-primary rounded">
+														<div class="consolas-text">
+															<strong>Модель:</strong>
+															<span> {{ $item['Key'] }}</span>
+														</div>
+														<div class="consolas-text">
+															<strong>Температура (°C):</strong>
+															<span> {{ $item['Value'] }}</span>
+														</div>
+													</div>
+												@endforeach
+											</div>
+											<div class="mb-3">
+												<strong class="fs-5">Видеокарта:</strong>
+												@foreach ($temps['GPUTemp'] as $item)
+													<div class="m-2 p-2 border border-primary rounded">
+														<div class="consolas-text">
+															<strong>Модель:</strong>
+															<span> {{ $item['Key'] }}</span>
+														</div>
+														<div class="consolas-text">
+															<strong>Температура (°C):</strong>
+															<span> {{ $item['Value'] }}</span>
+														</div>
+													</div>
+												@endforeach
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="mt-2">
+									<p>
+										<button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseActive"
+											aria-expanded="false" aria-controls="collapseActive">
+											Запущенные процессы
+										</button>
+									</p>
+									<div class="collapse" id="collapseActive">
+										<div class="card card-body text-white bg-dark">
+											<div class="mb-3">
+												@foreach ($active_processes['ActiveProcessesList'] as $item)
+													<div class="consolas-text">
+														<span> {{ $item }}</span>
+													</div>
+												@endforeach
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="mt-2">
+									<p>
+										<button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNetwork"
+											aria-expanded="false" aria-controls="collapseNetwork">
+											Сетевая информация
+										</button>
+									</p>
+									<div class="collapse" id="collapseNetwork">
+										<div class="card card-body text-white bg-dark">
+											<div class="mb-3">
+												<div class="consolas-text">
+													<strong>Пинг Yandex:</strong>
+													<span> {{ $network['PingGoogle'] ? 'Есть' : 'Отсутствует' }}</span>
+												</div>
+												<div class="consolas-text">
+													<strong>Пинг Google:</strong>
+													<span> {{ $network['PingGoogle'] ? 'Есть' : 'Отсутствует' }}</span>
+												</div>
+												<strong class="fs-5">Адаптеры:</strong>
+												@foreach ($network['adapterInfo']['listAdapter'] as $item)
+													<div class="m-2 p-2 border border-primary rounded">
+														<div class="consolas-text">
+															<strong>Тип:</strong>
+															<span> {{ $item['Name'] }}</span>
+														</div>
+														<div class="consolas-text">
+															<strong>Модель:</strong>
+															<span> {{ $item['Description'] }}</span>
+														</div>
+														<div class="consolas-text">
+															<strong>Скорость (Мбит/с):</strong>
+															<span> {{ $item['Speed'] }}</span>
+														</div>
+														<div class="consolas-text">
+															<strong>IP Адрес:</strong>
+															<span> {{ $item['IpAddress'] }}</span>
+														</div>
+														<div class="consolas-text">
+															<strong>Маска подсети:</strong>
+															<span> {{ $item['SubnetMask'] }}</span>
+														</div>
+														<div class="consolas-text">
+															<strong>MAC Адрес:</strong>
+															<span> {{ $item['PhysicalAddress'] }}</span>
+														</div>
+														<div class="consolas-text">
+															<strong>Шлюз по умолчанию:</strong>
+															@foreach ($item['Gateway'] as $second_level_item)
+																<span> {{ $second_level_item }}</span>
+															@endforeach
+														</div>
+														<div class="consolas-text">
+															<strong>DHCP:</strong>
+															<span> {{ $item['IsDHCPEnabled'] ? 'Вкл.' : 'Выкл.' }}</span>
+														</div>
+														<div class="consolas-text">
+															<strong>DHCP Сервер:</strong>
+															@foreach ($item['DHCPServer'] as $second_level_item)
+																<span> {{ $second_level_item }}</span>
+															@endforeach
+														</div>
+														<div class="consolas-text">
+															<strong>DNS Суффикс:</strong>
+															<span> {{ $item['DnsSuffix'] }}</span>
+														</div>
+														<div class="consolas-text">
+															<strong>Динамический DNS:</strong>
+															<span> {{ $item['IsDynamicDnsEnabled'] ? 'Вкл.' : 'Выкл.' }}</span>
+														</div>
+														<div class="consolas-text">
+															<strong>DNS Сервер:</strong>
+															@foreach ($item['DNSServer'] as $second_level_item)
+																<span> {{ $second_level_item }}</span>
+															@endforeach
+														</div>
+													</div>
+												@endforeach
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="mt-2">
+									<p>
+										<button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDevices"
+											aria-expanded="false" aria-controls="collapseDevices">
+											Подключенные устройства
+										</button>
+									</p>
+									<div class="collapse" id="collapseDevices">
+										<div class="card card-body text-white bg-dark">
+											<div class="mb-3">
+												<strong class="fs-5">Принтеры и сканеры:</strong>
+												@foreach ($devices['Printers'] as $item)
+													<div class="m-2 p-2 border border-primary rounded">
+														<div class="consolas-text">
+															<strong>Модель:</strong>
+															<span> {{ $item['Name'] }}</span>
+														</div>
+														<div class="consolas-text">
+															<strong>Статус:</strong>
+															<span> {{ $item['Status'] }}</span>
+														</div>
+														<div class="consolas-text">
+															<strong>По умолчанию:</strong>
+															<span> {{ $item['Default'] ? 'Да' : 'Нет' }}</span>
+														</div>
+														<div class="consolas-text">
+															<strong>Сетевой принтер:</strong>
+															<span> {{ $item['Network'] ? 'Да' : 'Нет' }}</span>
+														</div>
+													</div>
+												@endforeach
+											</div>
+										</div>
+									</div>
+								</div>
+
+								{{-- ***************** --}}
 							@else
 								<strong class="d-flex justify-content-center text-warning mt-4">Информация отсутствует</strong>
 							@endif

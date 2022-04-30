@@ -16,16 +16,16 @@ return new class extends Migration
 		Schema::create('pc_infos', function (Blueprint $table) {
 			$table->id();
 			$table->unsignedBigInteger('request_info_id')->comment('id Заявки');
-			$table->text('operating_system')->comment('Информация об операционной системе и её настройках');
-			$table->text('specs')->comment('Характеристики комплектующих');
-			$table->text('temps')->comment('Температуры');
-			$table->text('active_processes')->comment('Активный процессы Windows');
-			$table->text('network')->comment('Информация о сети');
-			$table->text('devices')->comment('Список подключенной периферии');
-			$table->text('disks')->comment('Состояние дисков');
-			$table->text('performance')->comment('Оценка производительности');
-			$table->text('autoload')->comment('Программы в автозагрузке');
-			$table->text('installed_programs')->comment('Список установленных программ');
+			$table->json('operating_system')->comment('Информация об операционной системе и её настройках');
+			$table->json('specs')->comment('Характеристики комплектующих компьютера');
+			$table->json('temps')->comment('Датчики температуры');
+			$table->json('active_processes')->comment('Действующие процессы WINDOWS');
+			$table->json('network')->comment('Сетевая информация');
+			$table->json('devices')->comment('Список подключённых устройств');
+			$table->json('disks')->comment('Состояние твердотельных накопителей');
+			$table->json('installed_programs')->comment('Список установленных программ');
+			$table->json('autoload_programs')->comment('Программы в автозагрузке');
+			$table->json('performance')->comment('Данные загруженности системы ');
 			$table->timestamps();
 
 			$table->foreign('request_info_id')->references('id')->on('request_infos')->cascadeOnDelete();

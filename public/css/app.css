@@ -18127,3 +18127,8 @@ textarea.form-control-lg {
   font-size: 0.75rem;
   text-transform: uppercase;
 }
+
+.consolas-text {
+  font-family: Consolas, Roboto;
+  font-size: 14px;
+}

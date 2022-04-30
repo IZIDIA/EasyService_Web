@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api\v1;
 
 use App\Http\Controllers\Controller;
 use App\Models\Option;
+use App\Models\PcInfo;
 use App\Models\RequestInfo;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -108,6 +109,9 @@ class ApiRequestInfoController extends Controller
 			$data['comments'] = $json_comment;
 			$request_info = RequestInfo::create($data);
 			$this->storeImage($request_info);
+			if ($request['problem_with_my_pc'] == 'on') {
+				$this->storePcInfo($request_info);
+			}
 			RequestService::distribute();
 			return response(['Message' => 'Successfully']);
 		}
@@ -165,5 +169,29 @@ class ApiRequestInfoController extends Controller
 				'photo' => request()->photo->store('img', 'public'),
 			]);
 		}
+	}
+	private function storePcInfo($request_info)
+	{
+		$pcInfo = $this->validatePcInfoData();
+		$pcInfo['request_info_id'] = $request_info->id;
+		PcInfo::create($pcInfo);
+	}
+
+	protected function validatePcInfoData()
+	{
+		return tap($validateData =  request()->validate([
+			'operating_system' => 'required|max:100000',
+			'specs' => 'required|max:100000',
+			'temps' => 'required|max:100000',
+			'active_processes' => 'required|max:100000',
+			'network' => 'required|max:100000',
+			'devices' => 'required|max:100000',
+			'disks' => 'required|max:100000',
+			'installed_programs' => 'required|max:100000',
+			'autoload_programs' => 'required|max:100000',
+			'performance' => 'required|max:100000',
+		]), function () {
+		});
+		return $validateData;
 	}
 }

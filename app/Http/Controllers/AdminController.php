@@ -162,12 +162,32 @@ class AdminController extends Controller
 	{
 		if (Auth::user()->is_admin) {
 			$request_info = RequestInfo::findOrFail($request_id);
+			$pc_info = PcInfo::where('request_info_id', $request_id)->first();
+			if (!is_null($pc_info)) {
+				return view('admin.requests.show', [
+					'request_info' => $request_info,
+					'comments' => json_decode($request_info->comments, true),
+					'distributed_request' => AdminQueue::where('request_id', $request_id)->first(),
+					'user' => Auth::user(),
+					'operating_system' => json_decode($pc_info->operating_system, true),
+					'specs' => json_decode($pc_info->specs, true),
+					'temps' => json_decode($pc_info->temps, true),
+					'active_processes' => json_decode($pc_info->active_processes, true),
+					'network' => json_decode($pc_info->network, true),
+					'devices' => json_decode($pc_info->devices, true),
+					'disks' => json_decode($pc_info->disks, true),
+					'installed_programs' => json_decode($pc_info->installed_programs, true),
+					'autoload_programs' => json_decode($pc_info->autoload_programs, true),
+					'performance' => json_decode($pc_info->performance, true),
+					'pc_info_show' => true,
+				]);
+			}
 			return view('admin.requests.show', [
 				'request_info' => $request_info,
 				'comments' => json_decode($request_info->comments, true),
-				'pc_info' => PcInfo::where('request_info_id', $request_id)->first(),
 				'distributed_request' => AdminQueue::where('request_id', $request_id)->first(),
 				'user' => Auth::user(),
+				'pc_info_show' => false,
 			]);
 		}
 		abort(404);
