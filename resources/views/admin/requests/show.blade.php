@@ -290,15 +290,18 @@
 				<div class="row gx-2">
 					<div class="pt-3 col-lg-8 align-items-start">
 						<div class="p-3 shadow-sm" style="border-radius: 10px; background-color:#283141; height: 100%;">
-							<div class="fs-5">
-								Подробная информация об устройстве заявителя: <span class="text-muted" style="font-size: 14px">(На момент
-									создания заявки)</span>
+							<div>
+								<i class="bi bi-pc-display fs-3"></i>
+								<span class="ms-2 fs-5">Подробная информация об устройстве заявителя:</span>
+								<span class="text-muted" style="font-size: 14px">(На момент создания заявки)</span>
 							</div>
 							@if ($pc_info_show)
+
 								<div class="mt-2">
 									<p>
-										<button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOC"
+										<button class="btn btn-primary w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOC"
 											aria-expanded="false" aria-controls="collapseOC">
+											<i class="bi bi-windows me-1"></i>
 											Операционная система
 										</button>
 									</p>
@@ -335,10 +338,12 @@
 										</div>
 									</div>
 								</div>
+
 								<div class="mt-2">
 									<p>
-										<button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSpecs"
+										<button class="btn btn-primary w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSpecs"
 											aria-expanded="false" aria-controls="collapseSpecs">
+											<i class="bi bi-motherboard me-1"></i>
 											Комплектующие
 										</button>
 									</p>
@@ -415,10 +420,56 @@
 										</div>
 									</div>
 								</div>
+
 								<div class="mt-2">
 									<p>
-										<button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTemps"
+										<button class="btn btn-primary w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDisks"
+											aria-expanded="false" aria-controls="collapseDisks">
+											<i class="bi bi-hdd me-1"></i>
+											SSD/HDD
+										</button>
+									</p>
+									<div class="collapse" id="collapseDisks">
+										<div class="card card-body text-white bg-dark">
+											<div class="mb-3">
+												@foreach ($disks['Disk'] as $item)
+													<div class="m-2 p-2 border border-primary rounded">
+														<div class="consolas-text">
+															<strong>Модель:</strong>
+															<span> {{ $item['DiskModel'] }}</span>
+														</div>
+														<div class="consolas-text">
+															<strong>Имя:</strong>
+															<span> {{ $item['VolumeName'] }} ({{ $item['DriveName'] }})</span>
+														</div>
+														<div class="consolas-text">
+															<strong>Свободно (ГБ):</strong>
+															<span> {{ $item['FreeSpace'] }}</span>
+														</div>
+														<div class="consolas-text">
+															<strong>Емкость (ГБ):</strong>
+															<span> {{ $item['TotalSpace'] }}</span>
+														</div>
+														<div class="consolas-text">
+															<strong>Файловая система:</strong>
+															<span> {{ $item['FileSystem'] }}</span>
+														</div>
+														<div class="consolas-text">
+															<strong>Статус:</strong>
+															<span> {{ $item['MediaStatus'] }}</span>
+														</div>
+													</div>
+												@endforeach
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="mt-2">
+									<p>
+										<button class="btn btn-primary w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTemps"
 											aria-expanded="false" aria-controls="collapseTemps">
+											<i class="bi bi-thermometer-half me-1"></i>
 											Датчики температуры
 										</button>
 									</p>
@@ -457,29 +508,67 @@
 										</div>
 									</div>
 								</div>
+
 								<div class="mt-2">
 									<p>
-										<button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseActive"
-											aria-expanded="false" aria-controls="collapseActive">
-											Запущенные процессы
+										<button class="btn btn-primary w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLoad"
+											aria-expanded="false" aria-controls="collapseLoad">
+											<i class="bi bi-speedometer2 me-1"></i>
+											Нагрузка
 										</button>
 									</p>
-									<div class="collapse" id="collapseActive">
+									<div class="collapse" id="collapseLoad">
 										<div class="card card-body text-white bg-dark">
 											<div class="mb-3">
-												@foreach ($active_processes['ActiveProcessesList'] as $item)
-													<div class="consolas-text">
-														<span> {{ $item }}</span>
+												<strong class="fs-5">Процессор:</strong>
+												@foreach ($performance['CPULoad'] as $item)
+													<div class="m-2 p-2 border border-primary rounded">
+														<div class="consolas-text">
+															<strong>Модель:</strong>
+															<span> {{ $item['Key'] }}</span>
+														</div>
+														<div class="consolas-text">
+															<strong>Использование (%):</strong>
+															<span> {{ $item['Value'] }}</span>
+														</div>
+													</div>
+												@endforeach
+											</div>
+											<div class="mb-3">
+												<strong class="fs-5">Видеокарта:</strong>
+												@foreach ($performance['GPULoad'] as $item)
+													<div class="m-2 p-2 border border-primary rounded">
+														<div class="consolas-text">
+															<strong>Модель:</strong>
+															<span> {{ $item['Key'] }}</span>
+														</div>
+														<div class="consolas-text">
+															<strong>Использование (%):</strong>
+															<span> {{ $item['Value'] }}</span>
+														</div>
+													</div>
+												@endforeach
+											</div>
+											<div class="mb-3">
+												<strong class="fs-5">Оперативная память:</strong>
+												@foreach ($performance['RAMLoad'] as $item)
+													<div class="m-2 p-2 border border-primary rounded">
+														<div class="consolas-text">
+															<strong>Использование (%):</strong>
+															<span> {{ $item['Value'] }}</span>
+														</div>
 													</div>
 												@endforeach
 											</div>
 										</div>
 									</div>
 								</div>
+
 								<div class="mt-2">
 									<p>
-										<button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNetwork"
+										<button class="btn btn-primary w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNetwork"
 											aria-expanded="false" aria-controls="collapseNetwork">
+											<i class="bi bi-wifi me-1"></i>
 											Сетевая информация
 										</button>
 									</p>
@@ -560,8 +649,9 @@
 
 								<div class="mt-2">
 									<p>
-										<button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDevices"
+										<button class="btn btn-primary w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDevices"
 											aria-expanded="false" aria-controls="collapseDevices">
+											<i class="bi bi-usb-plug me-1"></i>
 											Подключенные устройства
 										</button>
 									</p>
@@ -594,7 +684,70 @@
 									</div>
 								</div>
 
-								{{-- ***************** --}}
+								<div class="mt-2">
+									<p>
+										<button class="btn btn-primary w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseActive"
+											aria-expanded="false" aria-controls="collapseActive">
+											<i class="bi bi-activity me-1"></i>
+											Запущенные процессы
+										</button>
+									</p>
+									<div class="collapse" id="collapseActive">
+										<div class="card card-body text-white bg-dark">
+											<div class="mb-3">
+												@foreach ($active_processes['ActiveProcessesList'] as $item)
+													<div class="consolas-text">
+														<span> {{ $item }}</span>
+													</div>
+												@endforeach
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="mt-2">
+									<p>
+										<button class="btn btn-primary w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseInstalled"
+											aria-expanded="false" aria-controls="collapseInstalled">
+											<i class="bi bi-archive me-1"></i>
+											Установленные программы
+										</button>
+									</p>
+									<div class="collapse" id="collapseInstalled">
+										<div class="card card-body text-white bg-dark">
+											<div class="mb-3">
+												@foreach ($installed_programs['InstalledProgramsList'] as $item)
+													<div class="consolas-text">
+														<span> {{ $item }}</span>
+													</div>
+												@endforeach
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="mt-2">
+									<p>
+										<button class="btn btn-primary w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAutorun"
+											aria-expanded="false" aria-controls="collapseAutorun">
+											<i class="bi bi-upload me-1"></i>
+											Программы в автозапуске
+										</button>
+									</p>
+									<div class="collapse" id="collapseAutorun">
+										<div class="card card-body text-white bg-dark">
+											<div class="mb-3">
+												@foreach ($autoload_programs['AutoloadProgramsList'] as $item)
+													<div class="consolas-text">
+														<span> {{ $item }}</span>
+													</div>
+												@endforeach
+											</div>
+										</div>
+									</div>
+								</div>
+
+								{{-- *** --}}
 							@else
 								<strong class="d-flex justify-content-center text-warning mt-4">Информация отсутствует</strong>
 							@endif
@@ -602,8 +755,7 @@
 					</div>
 					@if (($request_info->admin_id == $user->id || Auth::user()->admin->is_master) && $request_info->status == 'В работе')
 						<div class="pt-3 col-lg-4 align-items-start">
-							<div class="p-3 d-flex flex-column shadow-sm"
-								style="border-radius: 10px; background-color:#283141; height: 100%;">
+							<div class="p-3 d-flex flex-column shadow-sm" style="border-radius: 10px; background-color:#283141;">
 								<div>
 									<div style="font-size: 1rem">
 										Время на выполнение:
