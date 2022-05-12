@@ -16,13 +16,14 @@ return new class extends Migration
 	{
 		Schema::create('criteria', function (Blueprint $table) {
 			$table->id();
-			$table->boolean('windows_key');
 			$table->boolean('ethernet');
 			$table->boolean('gpu_install');
+			$table->boolean('disk_status');
 			$table->integer('max_temp_cpu');
 			$table->integer('max_temp_gpu');
 			$table->integer('max_load_cpu');
 			$table->integer('max_load_gpu');
+			$table->integer('max_load_ram');
 			$table->integer('min_cores_count');
 			$table->integer('min_ram_size');
 			$table->json('required_active_processes')->nullable();
@@ -30,15 +31,15 @@ return new class extends Migration
 			$table->json('required_autoload_programs')->nullable();
 			$table->timestamps();
 		});
-		//Одна строка на всю таблицу.
 		$criterion = new Criterion();
-		$criterion->windows_key = true;
 		$criterion->ethernet = true;
 		$criterion->gpu_install = true;
+		$criterion->disk_status = true;
 		$criterion->max_temp_cpu = 60;
 		$criterion->max_temp_gpu = 60;
 		$criterion->max_load_cpu = 80;
 		$criterion->max_load_gpu = 80;
+		$criterion->max_load_ram = 80;
 		$criterion->min_cores_count = 4; //Logical
 		$criterion->min_ram_size = 4; //GB
 		$criterion->required_active_processes = json_encode(['GoogleUpdate']);

@@ -89,7 +89,7 @@
 							@if ($comments !== null)
 								<pre id="comments" class="rounded" style="
 								width: 100%;
-								height:100%; 
+								height:100%;
 								white-space: pre-wrap;
 								font-family: Consolas, Roboto;
 								font-size: 14px;
@@ -296,7 +296,13 @@
 								<span class="text-muted" style="font-size: 14px">(На момент создания заявки)</span>
 							</div>
 							@if ($pc_info_show)
-
+								@if (count($warningMessage) > 0)
+									<div class="m-3 p-2 text-warning border border-warning rounded">
+										@foreach ($warningMessage as $item)
+											<div>{{ $item }}</div>
+										@endforeach
+									</div>
+								@endif
 								<div class="mt-2">
 									<p>
 										<button class="btn btn-primary w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOC"
@@ -368,21 +374,23 @@
 													</div>
 												@endforeach
 											</div>
-											<div class="mb-3">
-												<strong class="fs-5">Видеокарта:</strong>
-												@foreach ($specs['GPU'] as $item)
-													<div class="m-2 p-2 border border-primary rounded">
-														<div class="consolas-text">
-															<strong>Модель:</strong>
-															<span> {{ $item['GPUName'] }}</span>
+											@if (!empty($specs['GPU']))
+												<div class="mb-3">
+													<strong class="fs-5">Видеокарта:</strong>
+													@foreach ($specs['GPU'] as $item)
+														<div class="m-2 p-2 border border-primary rounded">
+															<div class="consolas-text">
+																<strong>Модель:</strong>
+																<span> {{ $item['GPUName'] }}</span>
+															</div>
+															<div class="consolas-text">
+																<strong>Версия драйверов:</strong>
+																<span> {{ $item['GPUDriverVersion'] }}</span>
+															</div>
 														</div>
-														<div class="consolas-text">
-															<strong>Версия драйверов:</strong>
-															<span> {{ $item['GPUDriverVersion'] }}</span>
-														</div>
-													</div>
-												@endforeach
-											</div>
+													@endforeach
+												</div>
+											@endif
 											<div class="mb-3">
 												<strong class="fs-5">Оперативная память:</strong>
 												@foreach ($specs['RAM'] as $item)
@@ -490,21 +498,23 @@
 													</div>
 												@endforeach
 											</div>
-											<div class="mb-3">
-												<strong class="fs-5">Видеокарта:</strong>
-												@foreach ($temps['GPUTemp'] as $item)
-													<div class="m-2 p-2 border border-primary rounded">
-														<div class="consolas-text">
-															<strong>Модель:</strong>
-															<span> {{ $item['Key'] }}</span>
+											@if (!empty($temps['GPUTemp']))
+												<div class="mb-3">
+													<strong class="fs-5">Видеокарта:</strong>
+													@foreach ($temps['GPUTemp'] as $item)
+														<div class="m-2 p-2 border border-primary rounded">
+															<div class="consolas-text">
+																<strong>Модель:</strong>
+																<span> {{ $item['Key'] }}</span>
+															</div>
+															<div class="consolas-text">
+																<strong>Температура (°C):</strong>
+																<span> {{ $item['Value'] }}</span>
+															</div>
 														</div>
-														<div class="consolas-text">
-															<strong>Температура (°C):</strong>
-															<span> {{ $item['Value'] }}</span>
-														</div>
-													</div>
-												@endforeach
-											</div>
+													@endforeach
+												</div>
+											@endif
 										</div>
 									</div>
 								</div>
@@ -534,21 +544,23 @@
 													</div>
 												@endforeach
 											</div>
-											<div class="mb-3">
-												<strong class="fs-5">Видеокарта:</strong>
-												@foreach ($performance['GPULoad'] as $item)
-													<div class="m-2 p-2 border border-primary rounded">
-														<div class="consolas-text">
-															<strong>Модель:</strong>
-															<span> {{ $item['Key'] }}</span>
+											@if (!empty($performance['GPULoad']))
+												<div class="mb-3">
+													<strong class="fs-5">Видеокарта:</strong>
+													@foreach ($performance['GPULoad'] as $item)
+														<div class="m-2 p-2 border border-primary rounded">
+															<div class="consolas-text">
+																<strong>Модель:</strong>
+																<span> {{ $item['Key'] }}</span>
+															</div>
+															<div class="consolas-text">
+																<strong>Использование (%):</strong>
+																<span> {{ $item['Value'] }}</span>
+															</div>
 														</div>
-														<div class="consolas-text">
-															<strong>Использование (%):</strong>
-															<span> {{ $item['Value'] }}</span>
-														</div>
-													</div>
-												@endforeach
-											</div>
+													@endforeach
+												</div>
+											@endif
 											<div class="mb-3">
 												<strong class="fs-5">Оперативная память:</strong>
 												@foreach ($performance['RAMLoad'] as $item)
@@ -566,8 +578,8 @@
 
 								<div class="mt-2">
 									<p>
-										<button class="btn btn-primary w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNetwork"
-											aria-expanded="false" aria-controls="collapseNetwork">
+										<button class="btn btn-primary w-100" type="button" data-bs-toggle="collapse"
+											data-bs-target="#collapseNetwork" aria-expanded="false" aria-controls="collapseNetwork">
 											<i class="bi bi-wifi me-1"></i>
 											Сетевая информация
 										</button>
@@ -577,7 +589,7 @@
 											<div class="mb-3">
 												<div class="consolas-text">
 													<strong>Пинг Yandex:</strong>
-													<span> {{ $network['PingGoogle'] ? 'Есть' : 'Отсутствует' }}</span>
+													<span> {{ $network['PingYandex'] ? 'Есть' : 'Отсутствует' }}</span>
 												</div>
 												<div class="consolas-text">
 													<strong>Пинг Google:</strong>
@@ -649,8 +661,8 @@
 
 								<div class="mt-2">
 									<p>
-										<button class="btn btn-primary w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDevices"
-											aria-expanded="false" aria-controls="collapseDevices">
+										<button class="btn btn-primary w-100" type="button" data-bs-toggle="collapse"
+											data-bs-target="#collapseDevices" aria-expanded="false" aria-controls="collapseDevices">
 											<i class="bi bi-usb-plug me-1"></i>
 											Подключенные устройства
 										</button>
@@ -686,8 +698,8 @@
 
 								<div class="mt-2">
 									<p>
-										<button class="btn btn-primary w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseActive"
-											aria-expanded="false" aria-controls="collapseActive">
+										<button class="btn btn-primary w-100" type="button" data-bs-toggle="collapse"
+											data-bs-target="#collapseActive" aria-expanded="false" aria-controls="collapseActive">
 											<i class="bi bi-activity me-1"></i>
 											Запущенные процессы
 										</button>
@@ -707,8 +719,8 @@
 
 								<div class="mt-2">
 									<p>
-										<button class="btn btn-primary w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseInstalled"
-											aria-expanded="false" aria-controls="collapseInstalled">
+										<button class="btn btn-primary w-100" type="button" data-bs-toggle="collapse"
+											data-bs-target="#collapseInstalled" aria-expanded="false" aria-controls="collapseInstalled">
 											<i class="bi bi-archive me-1"></i>
 											Установленные программы
 										</button>
@@ -728,8 +740,8 @@
 
 								<div class="mt-2">
 									<p>
-										<button class="btn btn-primary w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAutorun"
-											aria-expanded="false" aria-controls="collapseAutorun">
+										<button class="btn btn-primary w-100" type="button" data-bs-toggle="collapse"
+											data-bs-target="#collapseAutorun" aria-expanded="false" aria-controls="collapseAutorun">
 											<i class="bi bi-upload me-1"></i>
 											Программы в автозапуске
 										</button>

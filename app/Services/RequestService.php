@@ -3,7 +3,9 @@
 use App\Jobs\RequestServiceJob;
 use App\Models\Admin;
 use App\Models\AdminQueue;
+use App\Models\Criterion;
 use App\Models\Option;
+use App\Models\PcInfo;
 use App\Models\RequestInfo;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -94,5 +96,133 @@ class RequestService
 			$queue->save();
 			$admins_id_queue->forget($admins_id_queue->keys()->first());
 		}
+	}
+	//Проверка на соответствие критериев
+	public static function check_criterion($request_id)
+	{
+		$warning_message = [];
+		$pc_info = PcInfo::where('request_info_id', $request_id)->first();
+		$criterions = Criterion::find(1);
+		$specs = json_decode($pc_info->specs, true);
+		$disks = json_decode($pc_info->disks, true);
+		$network = json_decode($pc_info->network, true);
+		$temps = json_decode($pc_info->temps, true);
+		$performance = json_decode($pc_info->performance, true);
+		$active_processes = json_decode($pc_info->active_processes, true);
+		$installed_programs = json_decode($pc_info->installed_programs, true);
+		$autoload_programs = json_decode($pc_info->autoload_programs, true);
+		$required_active_processes = json_decode($criterions->required_active_processes, true);
+		$required_installed_programs = json_decode($criterions->required_installed_programs, true);
+		$required_autoload_programs = json_decode($criterions->required_autoload_programs, true);
+		if ($criterions->ethernet && $network['PingGoogle'] === false && $network['PingYandex'] === false) {
+			$warning_message[] = 'Отсутствует доступ в интернет';
+		}
+		if ($criterions->gpu_install && empty($temps['GPUTemp']) && empty($performance['GPULoad'])) {
+			$warning_message[] = 'Отсутствует дискретная видеокарта';
+		}
+
+		if ($criterions->disk_status && !empty($disks['Disk'])) {
+			foreach ($disks['Disk'] as $item) {
+				if ($item['MediaStatus'] !== 'OK') {
+					$warning_message[] = $item['VolumeName'] . ' (' . $item['DriveName'] . ') имеет статус: ' .  $item['MediaStatus'];
+				}
+			}
+		}
+
+		if (!empty($temps['CPUTemp'])) {
+			foreach ($temps['CPUTemp'] as $item) {
+				if ($item['Value'] >= $criterions->max_temp_cpu) {
+					$warning_message[] = 'Температура ' . $item['Key'] . ' превышает ' . $criterions->max_temp_cpu . ' °C';
+				}
+			}
+		}
+		if (!empty($temps['GPUTemp'])) {
+			foreach ($temps['GPUTemp'] as $item) {
+				if ($item['Value'] >= $criterions->max_temp_gpu) {
+					$warning_message[] = 'Температура ' . $item['Key'] . ' превышает ' . $criterions->max_temp_gpu . ' °C';
+				}
+			}
+		}
+		if (!empty($performance['CPULoad'])) {
+			foreach ($performance['CPULoad'] as $item) {
+				if ($item['Value'] >= $criterions->max_load_cpu) {
+					$warning_message[] = 'Использование ' . $item['Key'] . ' превышает ' . $criterions->max_load_cpu . ' %';
+				}
+			}
+		}
+		if (!empty($performance['GPULoad'])) {
+			foreach ($performance['GPULoad'] as $item) {
+				if ($item['Value'] >= $criterions->max_load_gpu) {
+					$warning_message[] = 'Использование ' . $item['Key'] . ' превышает ' . $criterions->max_load_gpu . ' %';
+				}
+			}
+		}
+		if (!empty($performance['RAMLoad'])) {
+			foreach ($performance['RAMLoad'] as $item) {
+				if ($item['Value'] >= $criterions->max_load_ram) {
+					$warning_message[] = 'Использование ОЗУ превышает ' . $criterions->max_load_ram . ' %';
+				}
+			}
+		}
+		if (!empty($specs['CPU'])) {
+			foreach ($specs['CPU'] as $item) {
+				if ($item['CPULogicalCores'] < $criterions->min_cores_count) {
+					$warning_message[] = 'Количество логических ядер ' . $item['CPUName'] . ' менее ' . $criterions->min_cores_count;
+				}
+			}
+		}
+		if (!empty($specs['RAM'])) {
+			$ram_size = 0;
+			foreach ($specs['RAM'] as $item) {
+				$ram_size += $item['MemorySize'];
+			}
+			if ($ram_size < $criterions->min_ram_size) {
+				$warning_message[] = 'Объём ОЗУ менее ' . $criterions->min_ram_size . ' ГБ';
+			}
+		}
+		if (!empty($required_active_processes)) {
+			$missing_active_processes = [];
+			$programs_string = strtolower(implode(' ', $active_processes['ActiveProcessesList']));
+			foreach ($required_active_processes as $item) {
+				if (!str_contains($programs_string, strtolower($item))) {
+					$missing_active_processes[] = $item;
+				}
+			}
+			if (!empty($missing_active_processes)) {
+				$warning_message[] = 'Отсутствуют активные процессы: ' . implode(', ', array_map(function ($item) {
+					return $item;
+				}, $missing_active_processes));
+			}
+		}
+		if (!empty($required_installed_programs)) {
+			$missing_installed_programs = [];
+			$programs_string = strtolower(implode(' ', $installed_programs['InstalledProgramsList']));
+			foreach ($required_installed_programs as $item) {
+				if (!str_contains($programs_string, strtolower($item))) {
+					$missing_installed_programs[] = $item;
+				}
+			}
+			if (!empty($missing_installed_programs)) {
+				$warning_message[] = 'Отсутствуют установленные программы: ' . implode(', ', array_map(function ($item) {
+					return $item;
+				}, $missing_installed_programs));
+			}
+		}
+		if (!empty($required_autoload_programs)) {
+			$missing_autoload_programs = [];
+			$programs_string = strtolower(implode(' ', $autoload_programs['AutoloadProgramsList']));
+			foreach ($required_autoload_programs as $item) {
+				if (!str_contains($programs_string, strtolower($item))) {
+					$missing_autoload_programs[] = $item;
+				}
+			}
+			if (!empty($missing_autoload_programs)) {
+				$warning_message[] = 'Отсутствуют программы в автозапуске: ' . implode(', ', array_map(function ($item) {
+					return $item;
+				}, $missing_autoload_programs));
+			}
+		}
+
+		return $warning_message;
 	}
 }

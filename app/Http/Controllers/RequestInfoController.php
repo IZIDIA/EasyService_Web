@@ -33,7 +33,6 @@ class RequestInfoController extends Controller
 
 	public function store(Request $request)
 	{
-		return response(['Message' => $request->header()]);
 		if ($request['anonym'] == 0) {
 			$data = $this->validateData();
 			$data['name'] = $request->first_name . ' ' . $request->last_name;

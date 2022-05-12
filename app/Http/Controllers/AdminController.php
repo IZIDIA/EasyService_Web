@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Admin;
 use App\Models\AdminQueue;
+use App\Models\Criterion;
 use App\Models\Option;
 use App\Models\PcInfo;
 use App\Models\RequestInfo;
@@ -164,6 +165,7 @@ class AdminController extends Controller
 			$request_info = RequestInfo::findOrFail($request_id);
 			$pc_info = PcInfo::where('request_info_id', $request_id)->first();
 			if (!is_null($pc_info)) {
+				$warningMessage = RequestService::check_criterion($request_id);
 				return view('admin.requests.show', [
 					'request_info' => $request_info,
 					'comments' => json_decode($request_info->comments, true),
@@ -180,6 +182,7 @@ class AdminController extends Controller
 					'autoload_programs' => json_decode($pc_info->autoload_programs, true),
 					'performance' => json_decode($pc_info->performance, true),
 					'pc_info_show' => true,
+					'warningMessage' => $warningMessage,
 				]);
 			}
 			return view('admin.requests.show', [
