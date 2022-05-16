@@ -102,7 +102,7 @@ class RequestService
 	{
 		$warning_message = [];
 		$pc_info = PcInfo::where('request_info_id', $request_id)->first();
-		$criterions = Criterion::find(1);
+		$criterions = Criterion::first();
 		$specs = json_decode($pc_info->specs, true);
 		$disks = json_decode($pc_info->disks, true);
 		$network = json_decode($pc_info->network, true);
@@ -129,49 +129,49 @@ class RequestService
 			}
 		}
 
-		if (!empty($temps['CPUTemp'])) {
+		if ($criterions->check_max_temp_cpu && !empty($temps['CPUTemp'])) {
 			foreach ($temps['CPUTemp'] as $item) {
 				if ($item['Value'] >= $criterions->max_temp_cpu) {
 					$warning_message[] = 'Температура ' . $item['Key'] . ' превышает ' . $criterions->max_temp_cpu . ' °C';
 				}
 			}
 		}
-		if (!empty($temps['GPUTemp'])) {
+		if ($criterions->check_max_temp_gpu && !empty($temps['GPUTemp'])) {
 			foreach ($temps['GPUTemp'] as $item) {
 				if ($item['Value'] >= $criterions->max_temp_gpu) {
 					$warning_message[] = 'Температура ' . $item['Key'] . ' превышает ' . $criterions->max_temp_gpu . ' °C';
 				}
 			}
 		}
-		if (!empty($performance['CPULoad'])) {
+		if ($criterions->check_max_load_cpu && !empty($performance['CPULoad'])) {
 			foreach ($performance['CPULoad'] as $item) {
 				if ($item['Value'] >= $criterions->max_load_cpu) {
 					$warning_message[] = 'Использование ' . $item['Key'] . ' превышает ' . $criterions->max_load_cpu . ' %';
 				}
 			}
 		}
-		if (!empty($performance['GPULoad'])) {
+		if ($criterions->check_max_load_gpu && !empty($performance['GPULoad'])) {
 			foreach ($performance['GPULoad'] as $item) {
 				if ($item['Value'] >= $criterions->max_load_gpu) {
 					$warning_message[] = 'Использование ' . $item['Key'] . ' превышает ' . $criterions->max_load_gpu . ' %';
 				}
 			}
 		}
-		if (!empty($performance['RAMLoad'])) {
+		if ($criterions->check_max_load_ram && !empty($performance['RAMLoad'])) {
 			foreach ($performance['RAMLoad'] as $item) {
 				if ($item['Value'] >= $criterions->max_load_ram) {
 					$warning_message[] = 'Использование ОЗУ превышает ' . $criterions->max_load_ram . ' %';
 				}
 			}
 		}
-		if (!empty($specs['CPU'])) {
+		if ($criterions->check_min_cores_count && !empty($specs['CPU'])) {
 			foreach ($specs['CPU'] as $item) {
 				if ($item['CPULogicalCores'] < $criterions->min_cores_count) {
 					$warning_message[] = 'Количество логических ядер ' . $item['CPUName'] . ' менее ' . $criterions->min_cores_count;
 				}
 			}
 		}
-		if (!empty($specs['RAM'])) {
+		if ($criterions->check_min_ram_size && !empty($specs['RAM'])) {
 			$ram_size = 0;
 			foreach ($specs['RAM'] as $item) {
 				$ram_size += $item['MemorySize'];
@@ -180,7 +180,7 @@ class RequestService
 				$warning_message[] = 'Объём ОЗУ менее ' . $criterions->min_ram_size . ' ГБ';
 			}
 		}
-		if (!empty($required_active_processes)) {
+		if ($criterions->check_active_processes && !empty($required_active_processes)) {
 			$missing_active_processes = [];
 			$programs_string = strtolower(implode(' ', $active_processes['ActiveProcessesList']));
 			foreach ($required_active_processes as $item) {
@@ -194,7 +194,7 @@ class RequestService
 				}, $missing_active_processes));
 			}
 		}
-		if (!empty($required_installed_programs)) {
+		if ($criterions->check_installed_programs && !empty($required_installed_programs)) {
 			$missing_installed_programs = [];
 			$programs_string = strtolower(implode(' ', $installed_programs['InstalledProgramsList']));
 			foreach ($required_installed_programs as $item) {
@@ -208,7 +208,7 @@ class RequestService
 				}, $missing_installed_programs));
 			}
 		}
-		if (!empty($required_autoload_programs)) {
+		if ($criterions->check_autoload_programs && !empty($required_autoload_programs)) {
 			$missing_autoload_programs = [];
 			$programs_string = strtolower(implode(' ', $autoload_programs['AutoloadProgramsList']));
 			foreach ($required_autoload_programs as $item) {
@@ -222,7 +222,6 @@ class RequestService
 				}, $missing_autoload_programs));
 			}
 		}
-
 		return $warning_message;
 	}
 }

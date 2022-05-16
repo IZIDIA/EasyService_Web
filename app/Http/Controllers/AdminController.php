@@ -552,9 +552,11 @@ class AdminController extends Controller
 		if (Auth::user()->is_admin) {
 			$admin = Auth::user()->admin;
 			$options = Option::first();
+			$criterions = Criterion::first();
 			return view('admin.options', [
 				'admin' => $admin,
 				'options' => $options,
+				'criterions' => $criterions,
 			]);
 		}
 		abort(404);
@@ -619,9 +621,44 @@ class AdminController extends Controller
 				//3) удалить всю таблицу очередей
 				DB::table('admin_queues')->delete();
 			}
-			$options = Option::find(1);
+			$options = Option::first();
 			$options->update($validateData);
-			return redirect('/admin/options')->with('autofocus', true);
+			return redirect('/admin/options')->with('autofocus1', true);
+		}
+		abort(404);
+	}
+
+	public function criterions(Request $request)
+	{
+		if (Auth::user()->is_admin  && Auth::user()->admin->is_master) {
+			$validateData =  request()->validate([
+				'max_temp_cpu' => 'required|integer|min:0|max:999',
+				'max_temp_gpu' => 'required|integer|min:0|max:999',
+				'max_load_cpu' => 'required|integer|min:0|max:100',
+				'max_load_gpu' => 'required|integer|min:0|max:100',
+				'max_load_ram' => 'required|integer|min:0|max:100',
+				'min_cores_count' => 'required|integer|min:1|max:999',
+				'min_ram_size' => 'required|integer|min:1|max:999',
+			]);
+			$validateData['ethernet'] = ($request['ethernet'] == 'on') ? true : false;
+			$validateData['gpu_install'] = ($request['gpu_install'] == 'on') ? true : false;
+			$validateData['disk_status'] = ($request['disk_status'] == 'on') ? true : false;
+			$validateData['check_active_processes'] = ($request['check_active_processes'] == 'on') ? true : false;
+			$validateData['check_installed_programs'] = ($request['check_installed_programs'] == 'on') ? true : false;
+			$validateData['check_autoload_programs'] = ($request['check_autoload_programs'] == 'on') ? true : false;
+			$validateData['check_max_temp_cpu'] = ($request['check_max_temp_cpu'] == 'on') ? true : false;
+			$validateData['check_max_temp_gpu'] = ($request['check_max_temp_gpu'] == 'on') ? true : false;
+			$validateData['check_max_load_cpu'] = ($request['check_max_load_cpu'] == 'on') ? true : false;
+			$validateData['check_max_load_gpu'] = ($request['check_max_load_gpu'] == 'on') ? true : false;
+			$validateData['check_max_load_ram'] = ($request['check_max_load_ram'] == 'on') ? true : false;
+			$validateData['check_min_cores_count'] = ($request['check_min_cores_count'] == 'on') ? true : false;
+			$validateData['check_min_ram_size'] = ($request['check_min_ram_size'] == 'on') ? true : false;
+			$validateData['required_active_processes'] = json_encode(explode(',', $request->required_active_processes));
+			$validateData['required_installed_programs'] = json_encode(explode(',', $request->required_installed_programs));
+			$validateData['required_autoload_programs'] = json_encode(explode(',', $request->required_autoload_programs));
+			$criterions = Criterion::first();
+			$criterions->update($validateData);
+			return redirect('/admin/options')->with('autofocus2', true);
 		}
 		abort(404);
 	}
