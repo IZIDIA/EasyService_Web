@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use RequestService;
 use TimerService;
 
@@ -535,6 +536,12 @@ class AdminController extends Controller
 				RequestService::clear_request_id($request);
 			}
 			TimerService::delete($request);
+			if (!empty($request->photo)) {
+				$image_path = $request->photo;
+				if (File::exists('storage/' . $image_path)) {
+					File::delete('storage/' . $image_path);
+				}
+			}
 			$request->delete();
 			if (!is_null($admin_id)) {
 				RequestService::check_free($request->user_admin->admin);

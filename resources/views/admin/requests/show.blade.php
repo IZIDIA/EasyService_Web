@@ -187,10 +187,10 @@
 					<div class="pt-3 col align-items-start">
 						<div class="p-3 d-flex shadow-sm" style="border-radius: 10px; background-color:#283141; height: 100%;">
 							<div class="icon-square bg-dark text-light flex-shrink-0 me-3">
-								<i class="bi bi-toggles"></i>
+								<i class="bi bi-three-dots"></i>
 							</div>
 							<div>
-								<h2 class="pt-2 mb-3">Опциально:</h2>
+								<h2 class="pt-2 mb-3">Опционально:</h2>
 								<p><strong>Работа в присутствии заявителя:</strong>
 									@if ($request_info->solution_with_me !== null)
 										@switch($request_info->solution_with_me)

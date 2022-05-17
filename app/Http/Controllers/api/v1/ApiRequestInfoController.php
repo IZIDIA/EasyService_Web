@@ -20,11 +20,11 @@ class ApiRequestInfoController extends Controller
 	public function index($mac, Request $request)
 	{
 		if ($request->header('Checker') == self::$checker) {
-			$json =  RequestInfo::select('id', 'status', 'created_at')
+			$json =  RequestInfo::select('id', 'status', 'topic')
 				->where('mac', $mac)
 				->where('created_at', '>=', DB::raw('DATE_SUB(CURRENT_DATE, INTERVAL 90 DAY)'))
 				->orderBy('created_at', 'desc')->get();
-			foreach ($json as $item) {
+		/*	foreach ($json as $item) {
 				// if (!is_null($item->user_admin)) {
 				// 	$item['admin'] = $item->user_admin->name;
 				// }
@@ -32,7 +32,7 @@ class ApiRequestInfoController extends Controller
 				// if (!is_null($item->closed_at)) {
 				// 	$item['beauty_closed_at'] = $item->closed_at->format('d.m.y H:i');
 				// }
-			}
+			}*/
 			return $json;
 		}
 		return abort(404);
