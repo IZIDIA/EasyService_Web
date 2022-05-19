@@ -24,15 +24,23 @@ class ApiRequestInfoController extends Controller
 				->where('mac', $mac)
 				->where('created_at', '>=', DB::raw('DATE_SUB(CURRENT_DATE, INTERVAL 90 DAY)'))
 				->orderBy('created_at', 'desc')->get();
-		/*	foreach ($json as $item) {
-				// if (!is_null($item->user_admin)) {
-				// 	$item['admin'] = $item->user_admin->name;
-				// }
-				$item['beauty_created_at'] = $item->created_at->format('d.m.y H:i');
-				// if (!is_null($item->closed_at)) {
-				// 	$item['beauty_closed_at'] = $item->closed_at->format('d.m.y H:i');
-				// }
-			}*/
+			return $json;
+		}
+		return abort(404);
+	}
+
+	public function show($mac, $id, Request $request)
+	{
+		if ($request->header('Checker') == self::$checker) {
+			$json =  RequestInfo::where('mac', $mac)
+				->find($id);
+			if (!is_null($json->user_admin)) {
+				$json['admin'] = $json->user_admin->name;
+			}
+			$json['beauty_created_at'] = $json->created_at->format('d.m.y H:i');
+			if (!is_null($json->closed_at)) {
+				$json['beauty_closed_at'] = $json->closed_at->format('d.m.y H:i');
+			}
 			return $json;
 		}
 		return abort(404);
