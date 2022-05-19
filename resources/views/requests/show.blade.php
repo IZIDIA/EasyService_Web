@@ -158,7 +158,7 @@
 										@endswitch
 								</p>
 								<strong>График работы:</strong>
-								<pre>{{ $request_info->work_time }}</pre>
+								<pre>{{ $work_time }}</pre>
 							@else
 								Неважно
 								@endif

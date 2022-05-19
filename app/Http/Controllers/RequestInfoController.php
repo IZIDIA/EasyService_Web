@@ -44,28 +44,71 @@ class RequestInfoController extends Controller
 				} else {
 					$data['solution_with_me'] = false;
 				}
-				$data['work_time'] = '';
+				$data['work_time'] = [];
 				if ($request['monday'] == 'on') {
-					$data['work_time'] .= 'ПН ' . 'С: ' . $request['from_monday'] . ' До: ' . $request['to_monday'] . PHP_EOL;
+					$data['work_time'][] = array(
+						'monday' =>
+						array(
+							'from' => $request['from_monday'],
+							'to' => $request['to_monday'],
+						),
+					);
 				}
 				if ($request['tuesday'] == 'on') {
-					$data['work_time'] .= 'ВТ ' . 'С: ' . $request['from_tuesday'] . ' До: ' . $request['to_tuesday'] . PHP_EOL;
+					$data['work_time'][] = array(
+						'tuesday' =>
+						array(
+							'from' => $request['from_tuesday'],
+							'to' => $request['to_tuesday'],
+						),
+					);
 				}
 				if ($request['wednesday'] == 'on') {
-					$data['work_time'] .= 'СР ' . 'С: ' . $request['from_wednesday'] . ' До: ' . $request['to_wednesday'] . PHP_EOL;
+					$data['work_time'][] = array(
+						'wednesday' =>
+						array(
+							'from' => $request['from_wednesday'],
+							'to' => $request['to_wednesday'],
+						),
+					);
 				}
 				if ($request['thursday'] == 'on') {
-					$data['work_time'] .= 'ЧТ ' . 'С: ' . $request['from_thursday'] . ' До: ' . $request['to_thursday'] . PHP_EOL;
+					$data['work_time'][] = array(
+						'thursday' =>
+						array(
+							'from' => $request['from_thursday'],
+							'to' => $request['to_thursday'],
+						),
+					);
 				}
 				if ($request['friday'] == 'on') {
-					$data['work_time'] .= 'ПТ ' . 'С: ' . $request['from_friday'] . ' До: ' . $request['to_friday'] . PHP_EOL;
+					$data['work_time'][] = array(
+						'friday' =>
+						array(
+							'from' => $request['from_friday'],
+							'to' => $request['to_friday'],
+						),
+					);
 				}
 				if ($request['saturday'] == 'on') {
-					$data['work_time'] .= 'СБ ' . 'С: ' . $request['from_saturday'] . ' До: ' . $request['to_saturday'] . PHP_EOL;
+					$data['work_time'][] = array(
+						'saturday' =>
+						array(
+							'from' => $request['from_saturday'],
+							'to' => $request['to_saturday'],
+						),
+					);
 				}
 				if ($request['sunday'] == 'on') {
-					$data['work_time'] .= 'ВС ' . 'С: ' . $request['from_sunday'] . ' До: ' . $request['to_sunday'] . PHP_EOL;
+					$data['work_time'][] = array(
+						'sunday' =>
+						array(
+							'from' => $request['from_sunday'],
+							'to' => $request['to_sunday'],
+						),
+					);
 				}
+				$data['work_time'] = json_encode($data['work_time']);
 			}
 		} else {
 			$data = $this->anonymValidateData();
@@ -158,7 +201,37 @@ class RequestInfoController extends Controller
 	{
 		$request_info = RequestInfo::findOrFail($request_id);
 		if ($request_info->session_id == session()->getId() || (Auth::check() && (Auth::user()->id == $request_info->user_id || Auth::user()->is_admin))) {
-			return view('requests.show', compact('request_info'))->with('comments', json_decode($request_info->comments, true));
+			$work_time = '';
+			if (!empty($request_info->work_time)) {
+				foreach (json_decode($request_info->work_time) as $first_key => $first_val) {
+					foreach ($first_val as $second_key => $second_val) {
+						if ($second_key === 'monday') {
+							$work_time .= 'ПН ' . 'С: ' . $second_val->from .  ' До: ' . $second_val->to . PHP_EOL;
+						}
+						if ($second_key === 'tuesday') {
+							$work_time .= 'ВТ ' . 'С: ' . $second_val->from .  ' До: ' . $second_val->to . PHP_EOL;
+						}
+						if ($second_key === 'wednesday') {
+							$work_time .= 'СР ' . 'С: ' . $second_val->from .  ' До: ' . $second_val->to . PHP_EOL;
+						}
+						if ($second_key === 'thursday') {
+							$work_time .= 'ЧТ ' . 'С: ' . $second_val->from .  ' До: ' . $second_val->to . PHP_EOL;
+						}
+						if ($second_key === 'friday') {
+							$work_time .= 'ПТ ' . 'С: ' . $second_val->from .  ' До: ' . $second_val->to . PHP_EOL;
+						}
+						if ($second_key === 'saturday') {
+							$work_time .= 'СБ ' . 'С: ' . $second_val->from .  ' До: ' . $second_val->to . PHP_EOL;
+						}
+						if ($second_key === 'sunday') {
+							$work_time .= 'ВС ' . 'С: ' . $second_val->from .  ' До: ' . $second_val->to . PHP_EOL;
+						}
+					}
+				}
+			}
+			return view('requests.show', compact('request_info'))
+				->with('comments', json_decode($request_info->comments, true))
+				->with('work_time', $work_time, true);
 		}
 		abort(404);
 	}

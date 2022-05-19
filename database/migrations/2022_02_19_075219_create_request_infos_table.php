@@ -30,7 +30,7 @@ return new class extends Migration
 			$table->string('phone_call_number', 32)->nullable()->comment('Телефонный номер');
 			$table->boolean('solution_with_me')->nullable()->comment('Присутствие заявителя во время выполнения');
 			$table->boolean('problem_with_my_pc')->comment('Проблема с ПК заявителя');
-			$table->string('work_time', 255)->nullable()->comment('Рабочее время');
+			$table->json('work_time')->nullable()->comment('Рабочее время');
 			$table->string('user_password', 128)->nullable()->comment('Пароль ПК заявителя');
 			$table->string('text', 4096)->comment('Текст заявки');
 			$table->string('status', 128)->comment('[В обработке, В работе, Завершено, Отменено]');
