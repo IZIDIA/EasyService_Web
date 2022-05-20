@@ -14,23 +14,23 @@
 				<div class="pb-1 px-1 border-bottom row row-cols-1 row-cols-lg-2">
 					<div class="d-flex align-items-center fs-2 gap-2">Статус: @switch($request_info->status)
 							@case('В обработке')
-								<span class="fw-bold" style="color: rgb(0, 255, 255)">{{ $request_info->status }}</span>
+								<span class="fw-bold" style="color: #00ffff">{{ $request_info->status }}</span>
 							@break
 
 							@case('В работе')
-								<span class="fw-bold" style="color: rgb(255, 157, 0)">{{ $request_info->status }}</span>
+								<span class="fw-bold" style="color: #ff9d00">{{ $request_info->status }}</span>
 							@break
 
 							@case('Завершено')
-								<span class="fw-bold" style="color: rgb(0, 255, 0)">{{ $request_info->status }}</span>
+								<span class="fw-bold" style="color: #00ff00">{{ $request_info->status }}</span>
 							@break
 
 							@case('Отменено')
-								<span class="fw-bold" style="color: rgb(173, 0, 0)">{{ $request_info->status }}</span>
+								<span class="fw-bold" style="color: #ad0000">{{ $request_info->status }}</span>
 							@break
 
 							@default
-								<span class="fw-bold" style="color: white">{{ $request_info->status }}</span>
+								<span class="fw-bold" style="color: #ffffff">{{ $request_info->status }}</span>
 						@endswitch
 					</div>
 					<div class="d-flex align-items-center flex-lg-row-reverse fs-5" style="color: #96FBFE">
@@ -158,7 +158,7 @@
 										@endswitch
 								</p>
 								<strong>График работы:</strong>
-								<pre>{{ $work_time }}</pre>
+								<pre>{{ $work_time_string }}</pre>
 							@else
 								Неважно
 								@endif

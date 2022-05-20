@@ -44,71 +44,59 @@ class RequestInfoController extends Controller
 				} else {
 					$data['solution_with_me'] = false;
 				}
-				$data['work_time'] = [];
+				$work_time = array();
 				if ($request['monday'] == 'on') {
-					$data['work_time'][] = array(
-						'monday' =>
-						array(
-							'from' => $request['from_monday'],
-							'to' => $request['to_monday'],
-						),
-					);
+					$work_time += ['monday' =>
+					array(
+						'from' => $request['from_monday'],
+						'to' => $request['to_monday'],
+					)];
 				}
 				if ($request['tuesday'] == 'on') {
-					$data['work_time'][] = array(
-						'tuesday' =>
-						array(
-							'from' => $request['from_tuesday'],
-							'to' => $request['to_tuesday'],
-						),
-					);
+					$work_time += ['tuesday' =>
+					array(
+						'from' => $request['from_tuesday'],
+						'to' => $request['to_tuesday'],
+					)];
 				}
 				if ($request['wednesday'] == 'on') {
-					$data['work_time'][] = array(
-						'wednesday' =>
-						array(
-							'from' => $request['from_wednesday'],
-							'to' => $request['to_wednesday'],
-						),
-					);
+					$work_time += ['wednesday' =>
+					array(
+						'from' => $request['from_wednesday'],
+						'to' => $request['to_wednesday'],
+					)];
 				}
 				if ($request['thursday'] == 'on') {
-					$data['work_time'][] = array(
-						'thursday' =>
-						array(
-							'from' => $request['from_thursday'],
-							'to' => $request['to_thursday'],
-						),
-					);
+					$work_time += ['thursday' =>
+					array(
+						'from' => $request['from_thursday'],
+						'to' => $request['to_thursday'],
+					)];
 				}
 				if ($request['friday'] == 'on') {
-					$data['work_time'][] = array(
-						'friday' =>
-						array(
-							'from' => $request['from_friday'],
-							'to' => $request['to_friday'],
-						),
-					);
+					$work_time += ['friday' =>
+					array(
+						'from' => $request['from_friday'],
+						'to' => $request['to_friday'],
+					)];
 				}
 				if ($request['saturday'] == 'on') {
-					$data['work_time'][] = array(
-						'saturday' =>
-						array(
-							'from' => $request['from_saturday'],
-							'to' => $request['to_saturday'],
-						),
-					);
+					$work_time += ['saturday' =>
+					array(
+						'from' => $request['from_saturday'],
+						'to' => $request['to_saturday'],
+					)];
 				}
 				if ($request['sunday'] == 'on') {
-					$data['work_time'][] = array(
-						'sunday' =>
-						array(
-							'from' => $request['from_sunday'],
-							'to' => $request['to_sunday'],
-						),
-					);
+					$work_time += ['sunday' =>
+					array(
+						'from' => $request['from_sunday'],
+						'to' => $request['to_sunday'],
+					)];
 				}
-				$data['work_time'] = json_encode($data['work_time']);
+				if (!empty($work_time)) {
+					$data['work_time'] = json_encode($work_time);
+				}
 			}
 		} else {
 			$data = $this->anonymValidateData();
@@ -201,37 +189,34 @@ class RequestInfoController extends Controller
 	{
 		$request_info = RequestInfo::findOrFail($request_id);
 		if ($request_info->session_id == session()->getId() || (Auth::check() && (Auth::user()->id == $request_info->user_id || Auth::user()->is_admin))) {
-			$work_time = '';
+			$work_time_string = '';
 			if (!empty($request_info->work_time)) {
-				foreach (json_decode($request_info->work_time) as $first_key => $first_val) {
-					foreach ($first_val as $second_key => $second_val) {
-						if ($second_key === 'monday') {
-							$work_time .= 'ПН ' . 'С: ' . $second_val->from .  ' До: ' . $second_val->to . PHP_EOL;
-						}
-						if ($second_key === 'tuesday') {
-							$work_time .= 'ВТ ' . 'С: ' . $second_val->from .  ' До: ' . $second_val->to . PHP_EOL;
-						}
-						if ($second_key === 'wednesday') {
-							$work_time .= 'СР ' . 'С: ' . $second_val->from .  ' До: ' . $second_val->to . PHP_EOL;
-						}
-						if ($second_key === 'thursday') {
-							$work_time .= 'ЧТ ' . 'С: ' . $second_val->from .  ' До: ' . $second_val->to . PHP_EOL;
-						}
-						if ($second_key === 'friday') {
-							$work_time .= 'ПТ ' . 'С: ' . $second_val->from .  ' До: ' . $second_val->to . PHP_EOL;
-						}
-						if ($second_key === 'saturday') {
-							$work_time .= 'СБ ' . 'С: ' . $second_val->from .  ' До: ' . $second_val->to . PHP_EOL;
-						}
-						if ($second_key === 'sunday') {
-							$work_time .= 'ВС ' . 'С: ' . $second_val->from .  ' До: ' . $second_val->to . PHP_EOL;
-						}
-					}
+				$work_time = json_decode($request_info->work_time);
+				if (!empty($work_time->monday)) {
+					$work_time_string .= 'ПН ' . 'С: ' . $work_time->monday->from .  ' До: ' . $work_time->monday->to . PHP_EOL;
+				}
+				if (!empty($work_time->tuesday)) {
+					$work_time_string .= 'ВТ ' . 'С: ' . $work_time->tuesday->from .  ' До: ' . $work_time->tuesday->to . PHP_EOL;
+				}
+				if (!empty($work_time->wednesday)) {
+					$work_time_string .= 'СР ' . 'С: ' . $work_time->wednesday->from .  ' До: ' . $work_time->wednesday->to . PHP_EOL;
+				}
+				if (!empty($work_time->thursday)) {
+					$work_time_string .= 'ЧТ ' . 'С: ' . $work_time->thursday->from .  ' До: ' . $work_time->thursday->to . PHP_EOL;
+				}
+				if (!empty($work_time->friday)) {
+					$work_time_string .= 'ПТ ' . 'С: ' . $work_time->friday->from .  ' До: ' . $work_time->friday->to . PHP_EOL;
+				}
+				if (!empty($work_time->saturday)) {
+					$work_time_string .= 'СБ ' . 'С: ' . $work_time->saturday->from .  ' До: ' . $work_time->saturday->to . PHP_EOL;
+				}
+				if (!empty($work_time->sunday)) {
+					$work_time_string .= 'ВС ' . 'С: ' . $work_time->sunday->from .  ' До: ' . $work_time->sunday->to . PHP_EOL;
 				}
 			}
 			return view('requests.show', compact('request_info'))
 				->with('comments', json_decode($request_info->comments, true))
-				->with('work_time', $work_time, true);
+				->with('work_time_string', $work_time_string, true);
 		}
 		abort(404);
 	}

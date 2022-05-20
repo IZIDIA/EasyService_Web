@@ -69,27 +69,58 @@ class ApiRequestInfoController extends Controller
 					} else {
 						$data['solution_with_me'] = false;
 					}
-					$data['work_time'] = '';
+					$work_time = array();
 					if ($request['monday'] == 'on') {
-						$data['work_time'] .= 'ПН ' . 'С: ' . $request['from_monday'] . ' До: ' . $request['to_monday'] . PHP_EOL;
+						$work_time += ['monday' =>
+						array(
+							'from' => $request['from_monday'],
+							'to' => $request['to_monday'],
+						)];
 					}
 					if ($request['tuesday'] == 'on') {
-						$data['work_time'] .= 'ВТ ' . 'С: ' . $request['from_tuesday'] . ' До: ' . $request['to_tuesday'] . PHP_EOL;
+						$work_time += ['tuesday' =>
+						array(
+							'from' => $request['from_tuesday'],
+							'to' => $request['to_tuesday'],
+						)];
 					}
 					if ($request['wednesday'] == 'on') {
-						$data['work_time'] .= 'СР ' . 'С: ' . $request['from_wednesday'] . ' До: ' . $request['to_wednesday'] . PHP_EOL;
+						$work_time += ['wednesday' =>
+						array(
+							'from' => $request['from_wednesday'],
+							'to' => $request['to_wednesday'],
+						)];
 					}
 					if ($request['thursday'] == 'on') {
-						$data['work_time'] .= 'ЧТ ' . 'С: ' . $request['from_thursday'] . ' До: ' . $request['to_thursday'] . PHP_EOL;
+						$work_time += ['thursday' =>
+						array(
+							'from' => $request['from_thursday'],
+							'to' => $request['to_thursday'],
+						)];
 					}
 					if ($request['friday'] == 'on') {
-						$data['work_time'] .= 'ПТ ' . 'С: ' . $request['from_friday'] . ' До: ' . $request['to_friday'] . PHP_EOL;
+						$work_time += ['friday' =>
+						array(
+							'from' => $request['from_friday'],
+							'to' => $request['to_friday'],
+						)];
 					}
 					if ($request['saturday'] == 'on') {
-						$data['work_time'] .= 'СБ ' . 'С: ' . $request['from_saturday'] . ' До: ' . $request['to_saturday'] . PHP_EOL;
+						$work_time += ['saturday' =>
+						array(
+							'from' => $request['from_saturday'],
+							'to' => $request['to_saturday'],
+						)];
 					}
 					if ($request['sunday'] == 'on') {
-						$data['work_time'] .= 'ВС ' . 'С: ' . $request['from_sunday'] . ' До: ' . $request['to_sunday'] . PHP_EOL;
+						$work_time += ['sunday' =>
+						array(
+							'from' => $request['from_sunday'],
+							'to' => $request['to_sunday'],
+						)];
+					}
+					if (!empty($work_time)) {
+						$data['work_time'] = json_encode($work_time);
 					}
 				}
 			} else {

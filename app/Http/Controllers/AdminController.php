@@ -164,6 +164,31 @@ class AdminController extends Controller
 	{
 		if (Auth::user()->is_admin) {
 			$request_info = RequestInfo::findOrFail($request_id);
+			$work_time_string = '';
+			if (!empty($request_info->work_time)) {
+				$work_time = json_decode($request_info->work_time);
+				if (!empty($work_time->monday)) {
+					$work_time_string .= 'ПН ' . 'С: ' . $work_time->monday->from .  ' До: ' . $work_time->monday->to . PHP_EOL;
+				}
+				if (!empty($work_time->tuesday)) {
+					$work_time_string .= 'ВТ ' . 'С: ' . $work_time->tuesday->from .  ' До: ' . $work_time->tuesday->to . PHP_EOL;
+				}
+				if (!empty($work_time->wednesday)) {
+					$work_time_string .= 'СР ' . 'С: ' . $work_time->wednesday->from .  ' До: ' . $work_time->wednesday->to . PHP_EOL;
+				}
+				if (!empty($work_time->thursday)) {
+					$work_time_string .= 'ЧТ ' . 'С: ' . $work_time->thursday->from .  ' До: ' . $work_time->thursday->to . PHP_EOL;
+				}
+				if (!empty($work_time->friday)) {
+					$work_time_string .= 'ПТ ' . 'С: ' . $work_time->friday->from .  ' До: ' . $work_time->friday->to . PHP_EOL;
+				}
+				if (!empty($work_time->saturday)) {
+					$work_time_string .= 'СБ ' . 'С: ' . $work_time->saturday->from .  ' До: ' . $work_time->saturday->to . PHP_EOL;
+				}
+				if (!empty($work_time->sunday)) {
+					$work_time_string .= 'ВС ' . 'С: ' . $work_time->sunday->from .  ' До: ' . $work_time->sunday->to . PHP_EOL;
+				}
+			}
 			$pc_info = PcInfo::where('request_info_id', $request_id)->first();
 			if (!is_null($pc_info)) {
 				$warningMessage = RequestService::check_criterion($request_id);
@@ -184,6 +209,7 @@ class AdminController extends Controller
 					'performance' => json_decode($pc_info->performance, true),
 					'pc_info_show' => true,
 					'warningMessage' => $warningMessage,
+					'work_time_string' => $work_time_string,
 				]);
 			}
 			return view('admin.requests.show', [
@@ -192,6 +218,7 @@ class AdminController extends Controller
 				'distributed_request' => AdminQueue::where('request_id', $request_id)->first(),
 				'user' => Auth::user(),
 				'pc_info_show' => false,
+				'work_time_string' => $work_time_string,
 			]);
 		}
 		abort(404);
