@@ -120,7 +120,6 @@ class RequestService
 		if ($criterions->gpu_install && empty($temps['GPUTemp']) && empty($performance['GPULoad'])) {
 			$warning_message[] = 'Отсутствует дискретная видеокарта';
 		}
-
 		if ($criterions->disk_status && !empty($disks['Disk'])) {
 			foreach ($disks['Disk'] as $item) {
 				if ($item['MediaStatus'] !== 'OK') {
@@ -128,7 +127,6 @@ class RequestService
 				}
 			}
 		}
-
 		if ($criterions->check_max_temp_cpu && !empty($temps['CPUTemp'])) {
 			foreach ($temps['CPUTemp'] as $item) {
 				if ($item['Value'] >= $criterions->max_temp_cpu) {
