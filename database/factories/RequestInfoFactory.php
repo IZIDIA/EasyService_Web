@@ -27,7 +27,7 @@ class RequestInfoFactory extends Factory
 				'Message' => 'Заявка создана',
 			),
 		));
-		//if (count(User::all()) == 1) {
+		if (count(User::all()) == 1) {
 			return [
 				'from_pc' => false,
 				'name' => User::find(1)->name,
@@ -42,7 +42,7 @@ class RequestInfoFactory extends Factory
 				'status' => 'В обработке',
 				'comments' => $json_comment,
 			];
-	/*	} else {
+		} else {
 			return [
 				'from_pc' => false,
 				'name' => User::find($counter)->name,
@@ -57,6 +57,6 @@ class RequestInfoFactory extends Factory
 				'status' => 'В обработке',
 				'comments' => $json_comment,
 			];
-		}*/
+		}
 	}
 }

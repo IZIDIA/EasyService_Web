@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['api'])->group(function () {
 	Route::get('/{mac}/requests', [ApiRequestInfoController::class, 'index']);
 	Route::get('/{mac}/{id}', [ApiRequestInfoController::class, 'show']);
+	Route::post('/{mac}/{id}/comment', [ApiRequestInfoController::class, 'comment']);
+	Route::get('/{mac}/{id}/cancel', [ApiRequestInfoController::class, 'cancel']);
 	Route::get('/info', [ApiRequestInfoController::class, 'info']);
 	//Route::middleware(['throttle:uploads'])->group(function () {
 	Route::post('/requests', [ApiRequestInfoController::class, 'store']);

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api\v1;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin;
 use App\Models\Option;
 use App\Models\PcInfo;
 use App\Models\RequestInfo;
@@ -23,7 +24,8 @@ class ApiRequestInfoController extends Controller
 			$json =  RequestInfo::select('id', 'status', 'topic')
 				->where('mac', $mac)
 				->where('created_at', '>=', DB::raw('DATE_SUB(CURRENT_DATE, INTERVAL 90 DAY)'))
-				->orderBy('created_at', 'desc')->get();
+				->orderBy('created_at', 'desc')
+				->get();
 			return $json;
 		}
 		return abort(404);
@@ -32,8 +34,7 @@ class ApiRequestInfoController extends Controller
 	public function show($mac, $id, Request $request)
 	{
 		if ($request->header('Checker') == self::$checker) {
-			$json =  RequestInfo::where('mac', $mac)
-				->find($id);
+			$json =  RequestInfo::where('mac', $mac)->findOrFail($id);
 			if (!is_null($json->user_admin)) {
 				$json['admin'] = $json->user_admin->name;
 			}
@@ -152,6 +153,53 @@ class ApiRequestInfoController extends Controller
 				$this->storePcInfo($request_info);
 			}
 			RequestService::distribute();
+			return response(['Message' => 'Successfully']);
+		}
+		return abort(404);
+	}
+
+	public function cancel($mac, $id, Request $request)
+	{
+		if ($request->header('Checker') == self::$checker) {
+			$request_info =  RequestInfo::where('mac', $mac)->findOrFail($id);
+			$request_info->status = 'Отменено';
+			$json_comment = json_decode($request_info->comments, true);
+			$json_comment[] =
+				array(
+					'Time' => Carbon::now()->format('d.m.y H:i'),
+					'Name' => 'Система',
+					'Message' => 'Заявка отменена, заявителем ' . '"' . $request_info->name . '"',
+				);
+			$request_info->comments = json_encode($json_comment);
+			$request_info->save();
+			if (!is_null($request_info->admin_id)) {
+				RequestService::check_free(Admin::where('user_id', 	$request_info->admin_id)->first());
+			}
+			if (Option::find(1)->distributed_requests) {
+				RequestService::clear_request_id($request_info);
+				RequestService::distribute();
+			}
+			return response(['Message' => 'Successfully']);
+		}
+		return abort(404);
+	}
+
+	public function comment($mac, $id, Request $request)
+	{
+		if ($request->header('Checker') == self::$checker) {
+			$request_info =  RequestInfo::where('mac', $mac)->findOrFail($id);
+			$data = request()->validate([
+				'comment_text' => 'required|min:1|max:512',
+			]);
+			$json_comment = json_decode($request_info->comments, true);
+			$json_comment[] =
+				array(
+					'Time' => Carbon::now()->format('d.m.y H:i'),
+					'Name' => $request_info->name,
+					'Message' => str_replace(PHP_EOL, ' ', $data['comment_text']),
+				);
+			$request_info->comments = json_encode($json_comment);
+			$request_info->save();
 			return response(['Message' => 'Successfully']);
 		}
 		return abort(404);
