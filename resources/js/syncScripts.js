@@ -14,7 +14,7 @@ window.setTimer = function (start, time, id) {
 		if (minutes < 10) minutes = "0" + minutes;
 		let seconds = Math.floor((timeLeft % (60000)) / 1000);
 		if (seconds < 10) seconds = "0" + seconds;
-		document.getElementById(id).innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+		document.getElementById(id).innerHTML = `${days}д ${hours}ч ${minutes}м`;
 		if (timeLeft <= 0) {
 			clearInterval(timing);
 			document.getElementById(id).innerHTML =

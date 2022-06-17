@@ -18,7 +18,7 @@ window.setTimer = function (start, time, id) {
     if (minutes < 10) minutes = "0" + minutes;
     var seconds = Math.floor(timeLeft % 60000 / 1000);
     if (seconds < 10) seconds = "0" + seconds;
-    document.getElementById(id).innerHTML = "".concat(days, "d ").concat(hours, "h ").concat(minutes, "m ").concat(seconds, "s");
+    document.getElementById(id).innerHTML = "".concat(days, "\u0434 ").concat(hours, "\u0447 ").concat(minutes, "\u043C");
 
     if (timeLeft <= 0) {
       clearInterval(timing);

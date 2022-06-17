@@ -130,35 +130,35 @@ class RequestService
 		if ($criterions->check_max_temp_cpu && !empty($temps['CPUTemp'])) {
 			foreach ($temps['CPUTemp'] as $item) {
 				if ($item['Value'] >= $criterions->max_temp_cpu) {
-					$warning_message[] = 'Температура ' . $item['Key'] . ' превышает ' . $criterions->max_temp_cpu . ' °C';
+					$warning_message[] = 'Температура ' . $item['Key'] . ' превышает порог ' . $criterions->max_temp_cpu . ' °C';
 				}
 			}
 		}
 		if ($criterions->check_max_temp_gpu && !empty($temps['GPUTemp'])) {
 			foreach ($temps['GPUTemp'] as $item) {
 				if ($item['Value'] >= $criterions->max_temp_gpu) {
-					$warning_message[] = 'Температура ' . $item['Key'] . ' превышает ' . $criterions->max_temp_gpu . ' °C';
+					$warning_message[] = 'Температура ' . $item['Key'] . ' превышает порог ' . $criterions->max_temp_gpu . ' °C';
 				}
 			}
 		}
 		if ($criterions->check_max_load_cpu && !empty($performance['CPULoad'])) {
 			foreach ($performance['CPULoad'] as $item) {
 				if ($item['Value'] >= $criterions->max_load_cpu) {
-					$warning_message[] = 'Использование ' . $item['Key'] . ' превышает ' . $criterions->max_load_cpu . ' %';
+					$warning_message[] = 'Использование ' . $item['Key'] . ' превышает порог ' . $criterions->max_load_cpu . ' %';
 				}
 			}
 		}
 		if ($criterions->check_max_load_gpu && !empty($performance['GPULoad'])) {
 			foreach ($performance['GPULoad'] as $item) {
 				if ($item['Value'] >= $criterions->max_load_gpu) {
-					$warning_message[] = 'Использование ' . $item['Key'] . ' превышает ' . $criterions->max_load_gpu . ' %';
+					$warning_message[] = 'Использование ' . $item['Key'] . ' превышает порог ' . $criterions->max_load_gpu . ' %';
 				}
 			}
 		}
 		if ($criterions->check_max_load_ram && !empty($performance['RAMLoad'])) {
 			foreach ($performance['RAMLoad'] as $item) {
 				if ($item['Value'] >= $criterions->max_load_ram) {
-					$warning_message[] = 'Использование ОЗУ превышает ' . $criterions->max_load_ram . ' %';
+					$warning_message[] = 'Использование ОЗУ превышает порог ' . $criterions->max_load_ram . ' %';
 				}
 			}
 		}

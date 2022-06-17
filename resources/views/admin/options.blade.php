@@ -235,7 +235,7 @@
 									<div class="form-check form-switch">
 										<input id="check_max_temp_cpu" name="check_max_temp_cpu" class="form-check-input toggle-class" type="checkbox"
 											{{ $criterions->check_max_temp_cpu ? 'checked' : '' }}>
-										<label class="form-check-label required-label" for="check_max_temp_cpu">Максимальная температура CPU:</label>
+										<label class="form-check-label required-label" for="check_max_temp_cpu">Верхний порог температуры CPU:</label>
 									</div>
 									<div class="d-flex align-items-center">
 										<input type="number" maxlength="3" min="0" max="999" type="max_temp_cpu" class="form-control w-25"
@@ -253,7 +253,7 @@
 									<div class="form-check form-switch">
 										<input id="check_max_temp_gpu" name="check_max_temp_gpu" class="form-check-input toggle-class" type="checkbox"
 											{{ $criterions->check_max_temp_gpu ? 'checked' : '' }}>
-										<label class="form-check-label required-label" for="check_max_temp_gpu">Максимальная температура GPU:</label>
+										<label class="form-check-label required-label" for="check_max_temp_gpu">Верхний порог температуры GPU:</label>
 									</div>
 									<div class="d-flex align-items-center">
 										<input type="number" maxlength="3" min="0" max="999" type="max_temp_gpu" class="form-control w-25"
@@ -271,7 +271,7 @@
 									<div class="form-check form-switch">
 										<input id="check_max_load_cpu" name="check_max_load_cpu" class="form-check-input toggle-class" type="checkbox"
 											{{ $criterions->check_max_load_cpu ? 'checked' : '' }}>
-										<label class="form-check-label required-label" for="check_max_load_cpu">Максимальная загруженность
+										<label class="form-check-label required-label" for="check_max_load_cpu">Верхний порог загруженности
 											CPU:</label>
 									</div>
 									<div class="d-flex align-items-center">
@@ -290,7 +290,7 @@
 									<div class="form-check form-switch">
 										<input id="check_max_load_gpu" name="check_max_load_gpu" class="form-check-input toggle-class" type="checkbox"
 											{{ $criterions->check_max_load_gpu ? 'checked' : '' }}>
-										<label class="form-check-label required-label" for="check_max_load_gpu">Максимальная загруженность
+										<label class="form-check-label required-label" for="check_max_load_gpu">Верхний порог загруженности
 											GPU:</label>
 									</div>
 									<div class="d-flex align-items-center">
@@ -309,7 +309,7 @@
 									<div class="form-check form-switch">
 										<input id="check_max_load_ram" name="check_max_load_ram" class="form-check-input toggle-class" type="checkbox"
 											{{ $criterions->check_max_load_ram ? 'checked' : '' }}>
-										<label class="form-check-label required-label" for="check_max_load_ram">Максимальная загруженность
+										<label class="form-check-label required-label" for="check_max_load_ram">Верхний порог загруженности
 											ОЗУ:</label>
 									</div>
 									<div class="d-flex align-items-center">
@@ -328,7 +328,7 @@
 									<div class="form-check form-switch">
 										<input id="check_min_cores_count" name="check_min_cores_count" class="form-check-input toggle-class"
 											type="checkbox" {{ $criterions->check_min_cores_count ? 'checked' : '' }}>
-										<label class="form-check-label required-label" for="check_min_cores_count">Минимальное кол-во логических
+										<label class="form-check-label required-label" for="check_min_cores_count">Минимально необходимое кол-во логических
 											ядер:</label>
 									</div>
 									<input type="number" maxlength="3" min="1" max="999" type="min_cores_count" class="form-control w-25"
@@ -344,7 +344,7 @@
 									<div class="form-check form-switch">
 										<input id="check_min_ram_size" name="check_min_ram_size" class="form-check-input toggle-class"
 											type="checkbox" {{ $criterions->check_min_ram_size ? 'checked' : '' }}>
-										<label class="form-check-label required-label" for="check_min_ram_size">Минимальный объём ОЗУ:</label>
+										<label class="form-check-label required-label" for="check_min_ram_size">Минимально необходимый объём ОЗУ:</label>
 									</div>
 									<div class="d-flex align-items-center">
 										<input type="number" maxlength="3" min="1" max="999" type="min_ram_size" class="form-control w-25"
