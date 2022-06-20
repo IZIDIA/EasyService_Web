@@ -47,7 +47,6 @@
 					@endif
 				</div>
 			</div>
-			@if (1 == 1)
 				<div class="mt-3 d-flex justify-content-between">
 					<div class="d-flex gap-2">
 						@if (Auth::user()->admin->is_master)
@@ -82,7 +81,6 @@
 						</form>
 					@endif
 				</div>
-			@endif
 		</div>
 
 

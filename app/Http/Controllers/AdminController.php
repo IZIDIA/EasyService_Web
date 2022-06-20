@@ -737,4 +737,28 @@ class AdminController extends Controller
 		}
 		abort(404);
 	}
+
+	public function contacts()
+	{
+		if (Auth::user()->is_admin) {
+			return view('admin.contacts');
+		}
+		abort(404);
+	}
+
+	public function docs()
+	{
+		if (Auth::user()->is_admin) {
+			return view('admin.docs');
+		}
+		abort(404);
+	}
+
+	public function summary_information()
+	{
+		if (Auth::user()->is_admin) {
+			return view('admin.info');
+		}
+		abort(404);
+	}
 }

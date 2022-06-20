@@ -104,6 +104,10 @@ Route::post('/admin/requests/bulk_remove', [AdminController::class, 'bulk_remove
 Route::get('/admin/requests/bulk_remove', function () {
 	abort(404);
 });
+//Сводная информация, контакты, документы
+Route::get('/admin/contacts', [AdminController::class, 'contacts'])->middleware(['auth']);
+Route::get('/admin/docs', [AdminController::class, 'docs'])->middleware(['auth']);
+Route::get('/admin/info', [AdminController::class, 'summary_information'])->middleware(['auth']);
 
 //Пользователь
 Route::get('/requests', [RequestInfoController::class, 'index'])->name('requests.index');

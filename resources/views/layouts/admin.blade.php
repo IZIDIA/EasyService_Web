@@ -20,6 +20,7 @@
 			color: #00f7ff;
 			font-size: 0.7rem;
 		}
+		
 	</style>
 
 </head>
@@ -156,19 +157,19 @@
 							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link text-white text-nowrap" href="#">
+							<a class="nav-link {{ request()->is('admin/contacts') ? 'active' : 'text-white' }} text-nowrap" href="/admin/contacts">
 								<i class="bi bi-telephone-fill feather"></i>
 								Контакты
 							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link text-white text-nowrap" href="#">
+							<a class="nav-link {{ request()->is('admin/docs') ? 'active' : 'text-white' }} text-nowrap" href="/admin/docs">
 								<i class="bi bi-file-text-fill feather"></i>
 								Документы
 							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link text-white text-nowrap" href="#">
+							<a class="nav-link {{ request()->is('admin/info') ? 'active' : 'text-white' }} text-nowrap" href="/admin/info">
 								<i class="bi bi-bar-chart-line-fill feather"></i>
 								Информация
 							</a>
